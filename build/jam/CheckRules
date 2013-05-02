@@ -1,0 +1,77 @@
+# CheckRules
+#
+# Common checks.
+
+rule CheckGccPlatform
+{
+	# CheckGccPlatform ;
+	# Detects if we are using gcc4 and set IS_GCC4_PLATFORM according.
+
+	# First find out which gcc version the platform uses.
+	IS_GCC4_PLATFORM = ;
+	if $(OS) = HAIKU {
+		# Only Haiku might use gcc 4. We use the existence of a libstdc++.r4.so in
+		# /boot/develop/lib/x86 to judge whether this is a BeOS compatible and thus
+		# gcc 2 platform. This is not entirely correct, but should be good enough
+		# for the time being.
+		local haveLibStdC++.R4 = [ Glob /boot/develop/lib/x86 : libstdc++.r4.so ] ;
+		if ! $(haveLibStdC++.R4) {
+			IS_GCC4_PLATFORM = 1 ;
+			Echo Using GCC4 platform ;
+		}
+	}
+}
+
+rule CheckOpenSSL
+{
+	# CheckOpenSSL ;
+	# Check for OpenSSL and defined HAVE_OPENSSL according, it also defines
+	# OPENSSL_INCLUDE_DIR and OPENSSL_LIBRARY_DIR with location of respectively
+	# include and library files.
+
+	HAVE_OPENSSL = ;
+	OPENSSL_INCLUDE_DIR = ;
+	OPENSSL_LIBRARY_DIR = ;
+
+	local haveHeaders = [ Glob $(COMMON_INCLUDE_DIRECTORY)/openssl : ssl.h ] ;
+	if $(haveHeaders) {
+		OPENSSL_INCLUDE_DIR = $(COMMON_INCLUDE_DIRECTORY)/openssl ;
+
+		local haveLibs = [ Glob $(COMMON_LIB_DIRECTORY) : libssl.so ] ;
+		if $(haveLibs) {
+			OPENSSL_LIBRARY_DIR = $(COMMON_LIB_DIRECTORY) ;
+
+			Echo OpenSSL Headers: $(OPENSSL_INCLUDE_DIR) ;
+			Echo OpenSSL Libs: $(OPENSSL_LIBRARY_DIR) ;
+		}
+
+		HAVE_OPENSSL = $(haveLibs) ;
+	}
+}
+
+rule CheckCurl
+{
+	# CheckCurl ;
+	# Check for Curl and defined HAVE_CURL according, it also defines
+	# CURL_INCLUDE_DIR and CURL_LIBRARY_DIR with location of respectively
+	# include and library files.
+
+	HAVE_CURL = ;
+	CURL_INCLUDE_DIR = ;
+	CURL_LIBRARY_DIR = ;
+
+	local haveHeaders = [ Glob $(COMMON_INCLUDE_DIRECTORY)/curl : curl.h ] ;
+	if $(haveHeaders) {
+		CURL_INCLUDE_DIR = $(COMMON_INCLUDE_DIRECTORY)/curl ;
+
+		local haveLibs = [ Glob $(COMMON_LIB_DIRECTORY) : libcurl.so ] ;
+		if $(haveLibs) {
+			CURL_LIBRARY_DIR = $(COMMON_LIB_DIRECTORY) ;
+
+			Echo Curl Headers: $(CURL_INCLUDE_DIR) ;
+			Echo Curl Libs: $(CURL_LIBRARY_DIR) ;
+		}
+
+		HAVE_CURL = $(haveLibs) ;
+	}
+}

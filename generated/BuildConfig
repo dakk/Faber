@@ -1,0 +1,25 @@
+RC = /bin/rc ;
+XRES = /bin/xres ;
+SETTYPE = /bin/settype ;
+MIMESET = /bin/mimeset ;
+SETVERSION = /bin/setversion ;
+COPYATTR = /bin/copyattr ;
+
+COMMON_DIRECTORY = /boot/common ;
+COMMON_BIN_DIRECTORY = /boot/common/bin ;
+COMMON_INCLUDE_DIRECTORY = /boot/common/include ;
+COMMON_LIB_DIRECTORY = /boot/common/lib ;
+COMMON_SERVERS_DIRECTORY = /boot/common/servers ;
+COMMON_ADDONS_DIRECTORY = /boot/common/add-ons ;
+COMMON_DEVELOP_DIRECTORY = /boot/common/develop ;
+USER_CONFIG_DIRECTORY = /boot/home/config ;
+USER_INCLUDE_DIRECTORY = /boot/home/config/include ;
+SYSTEM_DIRECTORY = /boot/system ;
+SYSTEM_LIB_DIRECTORY = /boot/system/lib ;
+BEOS_PREFERENCES_DIRECTORY = /boot/system/preferences ;
+PREFERENCES_DIRECTORY = /boot/preferences ;
+USER_PREFERENCES_DIRECTORY = /boot/home/config/be/Preferences ;
+APPS_DIRECTORY = /boot/apps ;
+FABER_DIRECTORY = /boot/apps/Faber ;
+
+DEFINES += HAIKU_TARGET_PLATFORM_HAIKU=1 ;

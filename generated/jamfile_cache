@@ -1,0 +1,1464 @@
+14
+/Dati_Haiku/Faber/Jamfile
+1367515690
+5
+SubDir TOP ;
+
+SubInclude TOP src ;
+
+UninstallTarget $(FABER_DIRECTORY) ;
+/Dati_Haiku/Faber/Jamrules
+1366732226
+58
+
+BUILD_DIR           = [ FDirName $(TOP) build ] ;
+JAM_DIR             = [ FDirName $(BUILD_DIR) jam ] ;
+SCRIPTS_DIR         = [ FDirName $(JAM_DIR) scripts ] ;
+GENERATED_DIR       = [ FDirName $(TOP) generated ] ;
+DISTRO_DIR          = [ FDirName $(TOP) generated distro ] ;
+FULL_DISTRO_DIR     = [ FDirName $(TOP) generated fulldistro ] ;
+PACKAGE_DIR	        = [ FDirName $(GENERATED_DIR) packages ] ;
+PACKAGE_OBJECT_DIR  = [ FDirName $(PACKAGE_DIR) objects ] ;
+
+
+
+
+VERSION = 0.0.1 ;
+DEFINES += VERSION=\"\\\"$(VERSION)\\\"\" ;
+DEFINES += BUILD_DATE=\"\\\"$(JAMDATE)\\\"\" ;
+CHGRP = ;
+CHOWN = ;
+
+
+{
+local buildConfig = [ Glob $(GENERATED_DIR) : BuildConfig ] ;
+if $(buildConfig) {
+LOCATE on BuildConfig = $(GENERATED_DIR) ;
+include BuildConfig ;
+} else {
+Exit "Run ./configure first!" ;
+}
+}
+
+
+{
+local userBuildConfig = [ Glob $(JAM_DIR) : UserBuildConfig ] ;
+if $(userBuildConfig) {
+LOCATE on UserBuildConfig = $(JAM_DIR) ;
+include UserBuildConfig ;
+}
+}
+
+
+HCACHEFILE = header_cache ;
+JCACHEFILE = jamfile_cache ;
+LOCATE on $(HCACHEFILE) $(JCACHEFILE) = $(GENERATED_DIR) ;
+
+
+include [ FDirName $(JAM_DIR) CheckRules ] ;
+CheckGccPlatform ;
+
+
+include [ FDirName $(JAM_DIR) HelperRules ] ;
+include [ FDirName $(JAM_DIR) ConfigRules ] ;
+include [ FDirName $(JAM_DIR) OverriddenJamRules ] ;
+include [ FDirName $(JAM_DIR) MainBuildRules ] ;
+include [ FDirName $(JAM_DIR) FileRules ] ;
+include [ FDirName $(JAM_DIR) InstallRules ] ;
+include [ FDirName $(JAM_DIR) PackageRules ] ;
+include [ FDirName $(JAM_DIR) DistroRules ] ;
+include [ FDirName $(JAM_DIR) BuildSettings ] ;
+/Dati_Haiku/Faber/generated/BuildConfig
+1367515776
+25
+RC = /bin/rc ;
+XRES = /bin/xres ;
+SETTYPE = /bin/settype ;
+MIMESET = /bin/mimeset ;
+SETVERSION = /bin/setversion ;
+COPYATTR = /bin/copyattr ;
+
+COMMON_DIRECTORY = /boot/common ;
+COMMON_BIN_DIRECTORY = /boot/common/bin ;
+COMMON_INCLUDE_DIRECTORY = /boot/common/include ;
+COMMON_LIB_DIRECTORY = /boot/common/lib ;
+COMMON_SERVERS_DIRECTORY = /boot/common/servers ;
+COMMON_ADDONS_DIRECTORY = /boot/common/add-ons ;
+COMMON_DEVELOP_DIRECTORY = /boot/common/develop ;
+USER_CONFIG_DIRECTORY = /boot/home/config ;
+USER_INCLUDE_DIRECTORY = /boot/home/config/include ;
+SYSTEM_DIRECTORY = /boot/system ;
+SYSTEM_LIB_DIRECTORY = /boot/system/lib ;
+BEOS_PREFERENCES_DIRECTORY = /boot/system/preferences ;
+PREFERENCES_DIRECTORY = /boot/preferences ;
+USER_PREFERENCES_DIRECTORY = /boot/home/config/be/Preferences ;
+APPS_DIRECTORY = /boot/apps ;
+FABER_DIRECTORY = /boot/apps/Faber ;
+
+DEFINES += HAIKU_TARGET_PLATFORM_HAIKU=1 ;
+/Dati_Haiku/Faber/build/jam/CheckRules
+1366732226
+77
+
+
+
+
+rule CheckGccPlatform
+{
+
+
+
+
+IS_GCC4_PLATFORM = ;
+if $(OS) = HAIKU {
+
+
+
+
+local haveLibStdC++.R4 = [ Glob /boot/develop/lib/x86 : libstdc++.r4.so ] ;
+if ! $(haveLibStdC++.R4) {
+IS_GCC4_PLATFORM = 1 ;
+Echo Using GCC4 platform ;
+}
+}
+}
+
+rule CheckOpenSSL
+{
+
+
+
+
+
+HAVE_OPENSSL = ;
+OPENSSL_INCLUDE_DIR = ;
+OPENSSL_LIBRARY_DIR = ;
+
+local haveHeaders = [ Glob $(COMMON_INCLUDE_DIRECTORY)/openssl : ssl.h ] ;
+if $(haveHeaders) {
+OPENSSL_INCLUDE_DIR = $(COMMON_INCLUDE_DIRECTORY)/openssl ;
+
+local haveLibs = [ Glob $(COMMON_LIB_DIRECTORY) : libssl.so ] ;
+if $(haveLibs) {
+OPENSSL_LIBRARY_DIR = $(COMMON_LIB_DIRECTORY) ;
+
+Echo OpenSSL Headers: $(OPENSSL_INCLUDE_DIR) ;
+Echo OpenSSL Libs: $(OPENSSL_LIBRARY_DIR) ;
+}
+
+HAVE_OPENSSL = $(haveLibs) ;
+}
+}
+
+rule CheckCurl
+{
+
+
+
+
+
+HAVE_CURL = ;
+CURL_INCLUDE_DIR = ;
+CURL_LIBRARY_DIR = ;
+
+local haveHeaders = [ Glob $(COMMON_INCLUDE_DIRECTORY)/curl : curl.h ] ;
+if $(haveHeaders) {
+CURL_INCLUDE_DIR = $(COMMON_INCLUDE_DIRECTORY)/curl ;
+
+local haveLibs = [ Glob $(COMMON_LIB_DIRECTORY) : libcurl.so ] ;
+if $(haveLibs) {
+CURL_LIBRARY_DIR = $(COMMON_LIB_DIRECTORY) ;
+
+Echo Curl Headers: $(CURL_INCLUDE_DIR) ;
+Echo Curl Libs: $(CURL_LIBRARY_DIR) ;
+}
+
+HAVE_CURL = $(haveLibs) ;
+}
+}
+/Dati_Haiku/Faber/build/jam/HelperRules
+1366732226
+52
+
+
+
+
+rule FFilter
+{
+
+
+
+
+local list = $(1) ;
+local excludes = $(2) ;
+local newList ;
+local item ;
+for item in $(list) {
+local skip ;
+local exclude ;
+for exclude in $(excludes) {
+if $(item) = $(exclude) {
+skip = true ;
+}
+}
+if ! $(skip) {
+newList += $(item) ;
+}
+}
+return $(newList) ;
+}
+
+rule FSplitPath
+{
+
+
+
+
+
+
+local path = $(1:G=) ;
+
+local components ;
+
+while $(path:D) && $(path:D) != $(path)
+{
+
+components = $(path:D=) $(components) ;
+path = $(path:D) ;
+}
+components = $(components) ;
+
+
+return $(components) ;
+}
+/Dati_Haiku/Faber/build/jam/ConfigRules
+1366732226
+146
+
+
+
+
+
+
+
+
+
+rule ConfigObject
+{
+
+
+
+
+
+
+
+
+local config = __config__ ;
+local grist = [ FGrist root $(1) ] ;
+return $(config:G=$(grist)) ;
+}
+
+rule SetConfigVar
+{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local var = $(1[1]) ;
+local config = [ ConfigObject $(2) ] ;
+local scope = $(4) ;
+if ! $(scope) {
+scope = global ;
+}
+$(var) on $(config) = $(3) ;
+__set_$(var) on $(config) = $(scope) ;
+}
+
+rule AppendToConfigVar
+{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SetConfigVar $(1) : $(2) : [ ConfigVar $(1) : $(2) ] $(3) : $(4) ;
+}
+
+rule ConfigVar
+{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local var = $(1[1]) ;
+local dir = $(2) ;
+local config = [ ConfigObject $(dir) ] ;
+local scope = $(3) ;
+local varScope = [ on $(config) return $(__set_$(var)) ] ;
+if ( ! $(scope) && $(varScope) )
+|| ( $(scope) && $(scope) = $(varScope) )
+|| ! $(dir) {
+on $(config) return $($(var)) ;
+} else {
+dir = [ FReverse $(dir) ] ;
+return [ ConfigVar $(var) : [ FReverse $(dir[2-]) ] : global ] ;
+}
+}
+
+rule SetUpConfigVars {
+
+
+
+
+
+
+
+
+local dir = $(1) ;
+
+
+
+
+local var ;
+if ! $(__config_var_backup__) {
+__config_var_backup__ = true ;
+for var in $(AUTO_SET_UP_CONFIG_VARIABLES) {
+__config_var_backup_$(var)__ = $($(var)) ;
+}
+} else {
+for var in $(AUTO_SET_UP_CONFIG_VARIABLES) {
+$(var) = $(__config_var_backup_$(var)__) ;
+}
+}
+
+
+for var in $(AUTO_SET_UP_CONFIG_VARIABLES) {
+$(var) = [ ConfigVar $(var) : $(dir) ] ;
+}
+}
+
+
+
+
+SUBDIRRULES = SetUpConfigVars $(SUBDIRRULES) ;
+
+
+AUTO_SET_UP_CONFIG_VARIABLES +=
+CCFLAGS C++FLAGS DEBUG DEFINES HDRS LINKFLAGS OPTIM OPTIMIZE
+SYSHDRS WARNINGS
+;
+/Dati_Haiku/Faber/build/jam/OverriddenJamRules
+1366732226
+218
+
+
+
+
+
+
+
+rule Link
+{
+local dbg = [ on $(1) return $(DEBUG) ] ;
+if $(STRIP_APPS) && $(STRIP_APPS) != 0 && (!$(dbg) || $(dbg) = 0) {
+
+Strip $(1) ;
+}
+
+MODE on $(1) = $(EXEMODE) ;
+on $(1) XRes $(1) : $(RESFILES) ;
+Chmod $(1) ;
+MimeSet $(1) ;
+LINKFLAGS on $(1) = [ on $(1) return $(LINKFLAGS) ] ;
+}
+
+actions Link bind NEEDLIBS
+{
+$(LINK) $(LINKFLAGS) -o "$(1)" $(UNDEFS) "$(2)" "$(NEEDLIBS)" $(LINKLIBS)
+}
+
+
+
+actions Chmod1
+{
+$(CHMOD) "$(MODE)" "$(1)"
+}
+
+
+actions piecemeal together existing Clean
+{
+$(RM) -rf "$(>)"
+}
+
+
+
+
+if $(OSPLAT) = X86 {
+if $(IS_GCC4_PLATFORM) = 1 {
+HDRS_INCLUDES_SEPARATOR = -iquote- ;
+} else {
+HDRS_INCLUDES_SEPARATOR = -I- ;
+}
+} else {
+HDRS_INCLUDES_SEPARATOR = -i- ;
+}
+
+rule Cc
+{
+Depends $(<) : $(>) ;
+
+
+
+if $(RELOCATE)
+{
+CcMv $(<) : $(>) ;
+}
+
+
+
+
+
+
+CCFLAGS on $(<) += $(CCFLAGS) $(SUBDIRCCFLAGS) $(OPTIM) ;
+
+CCHDRS on $(<) = [ on $(<) FIncludes $(HDRS) ]
+$(HDRS_INCLUDES_SEPARATOR) [ on $(<) FSysIncludes $(SYSHDRS) ] ;
+CCDEFS on $(<) = [ on $(<) FDefines $(DEFINES) ] ;
+}
+
+rule C++
+{
+Depends $(<) : $(>) ;
+
+if $(RELOCATE)
+{
+CcMv $(<) : $(>) ;
+}
+
+C++FLAGS on $(<) += $(C++FLAGS) $(SUBDIRC++FLAGS) $(OPTIM) ;
+
+CCHDRS on $(<) = [ on $(<) FIncludes $(HDRS) ]
+$(HDRS_INCLUDES_SEPARATOR) [ on $(<) FSysIncludes $(SYSHDRS) ] ;
+CCDEFS on $(<) = [ on $(<) FDefines $(DEFINES) ] ;
+}
+
+rule Object
+{
+
+
+Clean clean : $(<) ;
+
+MakeLocate $(<) : $(LOCATE_TARGET) ;
+SEARCH on $(>) = $(SEARCH_SOURCE) ;
+
+
+
+
+
+
+
+HDRS on $(<) = $(SEARCH_SOURCE) $(SUBDIRHDRS) $(HDRS) ;
+SYSHDRS on $(<) = $(SUBDIRSYSHDRS) $(SYSHDRS) ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+HDRRULE on $(>) = HdrRule ;
+HDRSCAN on $(>) = $(HDRPATTERN) ;
+HDRSEARCH on $(>) = 
+$(SEARCH_SOURCE:E) $(SUBDIRHDRS) $(HDRS) $(SYSHDRS) $(STDHDRS) ;
+
+HDRGRIST on $(>) = $(HDRGRIST) ;
+
+
+
+DEFINES on $(<) += $(DEFINES) ;
+
+
+
+switch $(>:S)
+{
+case .asm : As $(<) : $(>) ;
+case .c :	Cc $(<) : $(>) ;
+case .C :	C++ $(<) : $(>) ;
+case .cc :	C++ $(<) : $(>) ;
+case .cpp : C++ $(<) : $(>) ;
+case .f :	Fortran $(<) : $(>) ;
+case .l :	Cc $(<) : $(<:S=.c) ;
+LexC++ $(<:S=.c) : $(>) ;
+case .s :	As $(<) : $(>) ;
+case .y :	Cc $(<) : $(<:S=.c) ;
+Bison $(<:S=.c) : $(>) ;
+case * :	UserObject $(<) : $(>) ;
+}
+}
+
+rule ObjectHdrs
+{
+local s ;
+for s in [ FGristFiles $(<:S=$(SUFOBJ)) ] {
+HDRS on $(s) += $(>) ;
+CCHDRS on $(s) = [ on $(s) FIncludes $(HDRS) ]
+$(HDRS_INCLUDES_SEPARATOR) [ on $(s) FSysIncludes $(SYSHDRS) ] ;
+}
+}
+
+
+
+rule MakeLocate
+{
+if $(2[1])
+{
+local dir = $(2[1]) ;
+if ! $(dir:G) {
+dir = $(dir:G=dir) ;
+}
+LOCATE on $(1) = $(dir:G=) ;
+Depends $(1) : $(dir) ;
+MkDir $(dir) ;
+}
+}
+
+rule MkDir
+{
+
+
+
+local dir = $(<) ;
+if ! $(dir:G) {
+dir = $(dir:G=dir) ;
+}
+
+NoUpdate $(dir) ;
+
+if $(dir:G=) != $(DOT) && ! $($(dir:G=)-mkdir) {
+local s ;
+
+
+
+
+
+$(dir:G=)-mkdir = true ;
+MkDir1 $(dir) ;
+Depends dirs : $(dir) ;
+
+
+
+
+s = $(dir:P) ;	# parent keeps grist
+
+if $(s:G=) && $(s) != $(dir) {
+Depends $(dir) : $(s) ;
+MkDir $(s) ;
+} else if $(s) {
+NotFile $(s) ;
+}
+}
+}
+
+
+
+SUBDIRRESET += SYSHDRS ;
+/Dati_Haiku/Faber/build/jam/MainBuildRules
+1366732226
+380
+
+
+
+
+rule AddResources
+{
+
+
+
+
+
+
+
+local resfiles ;
+local file ;
+for file in $(2) {
+if ! $(file:G) {
+file = [ FGristFiles $(file) ] ;
+}
+resfiles += $(file) ;
+}
+
+SEARCH on $(resfile) += $(SEARCH_SOURCE) ;
+
+for file in $(resfiles) {
+if $(file:S) = .rdef {
+local rdef = $(file) ;
+file = $(rdef:S=.rsrc) ;
+ResComp $(file) : $(rdef) ;
+}
+RESFILES on $(1) += $(file) ;
+}
+}
+
+rule Application
+{
+
+
+
+
+
+
+
+
+
+local app = $(1) ;
+local sources = $(2) ;
+local libs = $(3) ;
+local res = $(4) ;
+
+AddResources $(app) : $(res) ;
+Main $(app) : $(sources) ;
+MakeLocate $(app) : $(LOCATE_MAIN_TARGET) ;
+LinkAgainst $(app) : $(libs) ;
+}
+
+actions Strip
+{
+strip "$(1)" ;
+}
+
+rule AddOn
+{
+
+
+
+
+
+
+
+
+
+SharedLibrary $(1) : $(2) : $(3) : $(4) ;
+}
+
+rule SharedLibrary
+{
+
+
+
+
+
+
+
+
+
+local lib = $(1) ;
+local sources = $(2) ;
+local libs = $(3) ;
+local res = $(4) ;
+
+AddResources $(lib) : $(res) ;
+Main $(lib) : $(sources) ;
+MakeLocate $(lib) : $(LOCATE_MAIN_TARGET) ;
+local linkFlags ;
+if $(OSPLAT) = X86 {
+linkFlags = -nostart -Xlinker -soname=\"$(lib)\" -Xlinker --no-undefined ;
+} else {
+linkFlags = -xms ;
+}
+LINKFLAGS on $(lib) = [ on $(lib) return $(LINKFLAGS) ] $(linkFlags) ;
+LinkAgainst $(lib) : $(libs) ;
+}
+
+rule StaticLibrary
+{
+
+
+
+
+
+
+
+local lib = $(1) ;
+Library $(lib) : $(2) ;
+MakeLocate $(lib) : $(LOCATE_MAIN_TARGET) ;
+
+
+if $(KEEPOBJS) {
+Depends lib : $(lib) ;
+}
+}
+
+rule LinkAgainst
+{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+for i in $(>)
+{
+local isfile = ;
+if $(i:D) || $(i:G) {
+isfile = true ;
+if $(i:G) = <nogrist> {
+i = $(i:G=) ;
+}
+} else {
+switch $(i:B)
+{
+
+case _APP_ : isfile = true ;
+case _KERNEL_ : isfile = true ;
+case lib*	: isfile = true ;
+case *	: isfile = ;
+}
+if ! $(isfile) && ( $(i:S) = .so || $(i:S) = .o || $(i:S) = .a ) {
+isfile = true ;
+}
+}
+if $(isfile) {
+NEEDLIBS on $(1) = [ on $(1) return $(NEEDLIBS) ] $(i) ;
+Depends $(1) : $(i) ;
+} else {
+LINKLIBS on $(1) = [ on $(1) return $(LINKLIBS) ] -l$(i) ;
+}
+}
+}
+
+rule XRes
+{
+
+
+
+
+
+
+
+if $(2)
+{
+Depends $(1) : $(2) ;
+XRes1 $(1) : $(2) ;
+}
+}
+
+rule ResComp
+{
+
+
+
+
+
+
+
+local defines ;
+
+on $(1) {
+defines = $(DEFINES) ;
+}
+
+DEFINES on $(1) = $(defines) ;
+CCDEFS on $(1) = [ FDefines $(defines) ] ;
+HDRS on $(1) = [ on $(1) FIncludes $(SEARCH_SOURCE) $(SUBDIRHDRS) $(HDRS) ]
+$(HDRS_INCLUDES_SEPARATOR) ;
+RCHDRS on $(1) = [ FRcIncludes $(SEARCH_SOURCE) $(SUBDIRHDRS) $(HDRS) ] ;
+
+SEARCH on $(2) += $(SEARCH_SOURCE) ;
+MakeLocate $(1) : $(LOCATE_TARGET) ;
+Depends $(1) : $(2) $(RC) ;
+LocalClean clean : $(1) ;
+ResComp1 $(1) : $(RC) $(2) ;
+}
+
+
+
+actions ResComp1
+{
+cat "$(2[2-])" | $(CC) -E $(CCDEFS) $(HDRS) - | egrep -v '^#' | $(2[1]) $(RCHDRS) --auto-names -o "$(1)" -
+}
+
+actions XRes1
+{
+xres -o "$(1)" "$(2)" ;
+}
+
+actions MimeSet
+{
+mimeset -f "$(1)" ;
+}
+
+rule LexC++
+{
+Depends $(1) : $(2) ;
+MakeLocate $(1) : $(LOCATE_SOURCE) ;
+Clean clean : $(1) ;
+}
+
+actions LexC++
+{
+$(LEX) -i -P$(<:B) -o$(1) $(2)
+}
+
+rule Bison
+{
+local _h ;
+
+_h = $(1:S=.h) ;
+
+MakeLocate $(<) $(_h) : $(LOCATE_SOURCE) ;
+
+Depends $(<) : $(>) ;
+BisonC++ $(<) : $(>) ;
+Clean clean : $(<) $(_h) ;
+
+
+
+
+Includes $(<) : $(_h) ;
+}
+
+actions BisonC++
+{
+$(BISON) -v -d -p $(2:B) -o $(1) $(2)
+}
+
+rule Rez
+{
+Depends $(<) : $(>) ;	
+}
+
+rule PreCompile
+{
+
+
+
+
+local _hdr = $(1) ;
+local _src = $(2) ;
+MakeLocate $(_hdr) : $(LOCATE_TARGET) ;
+PreComp $(_hdr) : $(_src) ;
+Clean clean : $(_hdr) ;
+}
+
+rule PreComp
+{
+Depends $(<) : $(>) ;
+}
+
+actions PreComp
+{
+mwcc -precompile $(<) -lang cplus "$(>)" ;
+}
+
+rule SubDirSysHdrs
+{
+
+
+
+
+
+
+
+
+
+SUBDIRSYSHDRS += [ FDirName $(1) ] ;
+}
+
+rule ObjectSysHdrs
+{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local s ;
+for s in [ FGristFiles $(<:S=$(SUFOBJ)) ] {
+SYSHDRS on $(s) += $(>) ;
+CCHDRS on $(s) = [ on $(s) FIncludes $(HDRS) ]
+$(HDRS_INCLUDES_SEPARATOR) [ on $(s) FSysIncludes $(SYSHDRS) ] ;
+}
+}
+
+
+
+
+
+
+if $(OSPLAT) = X86 {
+rule FSysIncludes { return -I$(<) ; }
+} else {
+rule FSysIncludes { return "-i "$(<) ; }
+}
+
+
+
+
+
+rule FRcIncludes
+{
+return "-I "$(<) ;
+}
+
+
+if $(OSPLAT) = X86 {
+if $(IS_GCC4_PLATFORM) = 1 {
+TARGET_LIBSTDC++ = stdc++ ;
+} else {
+TARGET_LIBSTDC++ = stdc++.r4 ;
+}
+} else {
+TARGET_LIBSTDC++ = mslcpp_4_0 ;
+}
+
+
+rule CreateSVNRevisionFile file
+{
+
+
+local svnEntries = <svn>entries ;
+SEARCH on $(svnEntries) = [ FDirName $(TOP) .svn ] ;
+Depends $(file) : $(svnEntries) ;
+}
+
+actions CreateSVNRevisionFile
+{
+(LANG=C svn info $(TOP) 2> /dev/null || echo Revision: 0) |
+grep Revision | awk '{printf $2}' > $(1)
+}
+/Dati_Haiku/Faber/build/jam/FileRules
+1366732226
+31
+
+
+
+
+rule SymLink
+{
+
+
+
+
+
+
+
+local target = $(1) ;
+local source = $(2) ;
+local makeDefaultDependencies = $(3) ;
+if ! $(makeDefaultDependencies) {
+makeDefaultDependencies = true ;
+}
+LINKCONTENTS on $(target) = $(source) ;
+SymLink1 $(target) ;
+if $(makeDefaultDependencies) = true {
+LocalDepends files : $(target) ;
+LocalClean clean : $(target) ;
+}
+}
+
+actions SymLink1
+{
+$(RM) "$(1)" && $(LN) -s "$(LINKCONTENTS)" "$(1)"
+}
+/Dati_Haiku/Faber/build/jam/InstallRules
+1366732226
+27
+
+
+
+
+rule InstallSymLink
+{
+
+
+LocalDepends install : $(>) ;
+LocalDepends install : $(<) ;
+LocalClean uninstall : $(<) ;
+
+NoCare $(>) ;
+InstallSymLink1 $(<) : $(>) ;
+}
+
+actions InstallSymLink1
+{
+$(RM) $(<) && $(LN) -s $(>) $(<)
+}
+
+rule UninstallTarget
+{
+
+
+LocalClean uninstall : $(<) ;
+}
+/Dati_Haiku/Faber/build/jam/PackageRules
+1366732226
+247
+
+
+
+
+rule Copy
+{
+if $(2) {
+SEARCH on $(2) += $(SEARCH_SOURCE) ;
+Depends $(1) : $(COPYATTR) $(2) ;
+Copy1 $(1) : $(COPYATTR) $(2) ;
+}
+}
+
+actions Copy1
+{
+"$(2[1])" -d "$(2[2-])" "$(1)"
+}
+
+rule Packages
+{
+local packagenames = $(1) ;
+local packagefiles = $(2) ;
+local path = $(3) ;
+for name in $(packagenames) {
+Package $(name) : $(packagefiles) : $(path) ;
+}
+}
+
+rule FPackageConfigSubPath
+{
+
+
+local packagename = $(1) ;
+
+local configSubPath ;
+on $(packagename) {
+configSubPath = $(OS:L) $(OSPLAT:L) ;
+
+if $(DEBUG) = 0 {
+configSubPath += release ;
+} else {
+configSubPath += debug_$(DEBUG) ;
+}
+}
+
+return $(configSubPath) ;
+}
+
+rule Package
+{
+local packagename = $(1) ;
+local packagefiles = $(2) ;
+local path = $(3) ;
+
+local configSubPath = [ FPackageConfigSubPath $(packagename) ] ;
+
+local packagezip = $(packagename:S=-$(VERSION).zip:G=_packages) ;
+local targetDir = [ FDirName $(PACKAGE_DIR) $(configSubPath) ] ;
+local packagedir = [ FDirName $(targetDir) $(packagename) ] ;
+
+local installscript = install.sh ;
+local packageinstallscript = $(installscript:G=_packages!$(packagename)) ;
+local installzip = install.zip ;
+local packageinstallzip = $(installzip:G=_packages!$(packagename)) ;
+
+local packageobjectdir = [ FDirName $(PACKAGE_OBJECT_DIR)
+$(configSubPath) $(packagename) ] ;
+local packagefiledir =  [ FDirName $(packageobjectdir) $(path) ] ;
+local packagefileinstallzip
+= $(installzip:G=_package_objects!$(packagename)) ;
+
+
+local packagefilegrist = [ FGrist _package_files $(packagename) $(path) ] ;
+for file in $(packagefiles) {
+if $(path[0]) = "boot" {
+local packagefile = $(file:G=$(packagefilegrist)) ;
+MakeLocate $(packagefile) : $(packagefiledir) ;
+Copy $(packagefile) : $(file) ;
+Clean cleanPackages : $(packagefile) ;
+PackageInstallZip $(packagefileinstallzip) : $(packagefile) ;
+} else {
+local packagefile = $(file:G=_packages!$(packagename)) ;
+MakeLocate $(packagefile) : $(packagedir) ;
+Copy $(packagefile) : [ FGristFiles $(file) ] ;
+Clean cleanPackages : $(packagefile) ;
+Depends $(packagezip) : $(packagefile) ;
+}
+}
+
+
+if ! $(_setup_$(packagename)) {
+_setup_$(packagename) = true ;
+
+NotFile $(packagename) ;
+LocalDepends packages : $(packagename) ;
+
+MakeLocate $(packagezip) : $(targetDir) ;
+MakeLocate $(packageinstallscript) : $(packagedir) ;
+MakeLocate $(packageinstallzip) : $(packagedir) ;
+MakeLocate $(packagefileinstallzip) : $(packageobjectdir) ;
+
+PackageInstallScript $(packageinstallscript) : $(packagedir) ;
+LinkInstallZip $(packageinstallzip) : $(packagefileinstallzip) ;
+Depends $(packagename) : $(packagezip) ;
+PackageZip $(packagezip) : $(packagedir)
+: $(packageinstallscript) $(packageinstallzip) ;
+}
+
+}
+
+rule PackageSymLink
+{
+
+
+
+local packagename = $(1) ;
+local symlinkPath = $(2) ;
+local symlinkTarget = $(3) ;
+
+local configSubPath = [ FPackageConfigSubPath $(packagename) ] ;
+
+local symlinkDir = [ FReverse $(symlinkPath) ] ;
+local symlink = $(symlinkDir[1]) ;
+symlinkDir = [ FReverse $(symlinkDir[2-]) ] ;
+local symlinkGrist = [ FGrist _package $(packagename) $(symlinkDir) ] ;
+symlink = $(symlink:G=$(symlinkGrist)) ;
+
+if $(symlinkDir[1]) = boot {
+local installzip = install.zip ;
+local packagefileinstallzip
+= $(installzip:G=_package_objects!$(packagename)) ;
+
+local packageobjectdir = [ FDirName $(PACKAGE_OBJECT_DIR)
+$(configSubPath) $(packagename) ] ;
+symlinkDir = [ FDirName $(packageobjectdir) $(symlinkDir) ] ;
+
+PackageInstallZip $(packagefileinstallzip) : $(symlink) ;
+
+} else {
+
+local packagezip = $(packagename:S=-$(VERSION).zip:G=_packages) ;
+
+local packagedir = [ FDirName $(PACKAGE_DIR) $(configSubPath)
+$(packagename) ] ;
+symlinkDir = [ FDirName $(packagedir) $(symlinkDir) ] ;
+
+Depends $(packagezip) : $(symlink) ;
+}
+
+MakeLocate $(symlink) : $(symlinkDir) ;
+SymLink $(symlink) : $(symlinkTarget) : false ;
+Clean cleanPackages : $(symlink) ;
+}
+
+rule PackageDriverSymLink
+{
+
+
+
+
+
+
+local packageName = $(1) ;
+local symlinkComponents = $(2) ;
+
+
+local symlinkPath = [ FReverse $(symlinkComponents) ] ;
+symlinkPath = bin $(symlinkPath[1]) ;
+
+for i in $(symlinkComponents) {
+symlinkPath = $(DOTDOT) $(symlinkPath) ;
+}
+
+PackageSymLink $(packageName)
+: boot home config add-ons kernel drivers dev $(symlinkComponents)
+: [ FDirName $(symlinkPath) ] ;
+}
+
+rule PackageZip
+{
+local dir = $(2:G=dir) ;
+Depends $(1) : $(dir) $(3) ;
+Clean cleanPackages : $(1) ;
+PackageZip1 $(1) : $(dir) ;
+}
+
+actions together PackageZip1 {
+cd "$(2:P)" ;
+zip -rq "$(1:BS)" "$(2:BS)" ;
+}
+
+rule PackageInstallScript
+{
+MakeLocate $(1) : $(2) ;
+Clean cleanPackages : $(1) ;
+PackageInstallScript1 $(1) : $(2:G=dir) ;
+}
+
+actions together PackageInstallScript1
+{
+echo '#!/bin/sh
+base=`dirname "$0"`
+cd "$base"
+if [ -n "$TTY" ]
+then
+unzip -d / install.zip
+else
+response=`alert "Would you like to automatically overwrite existing files, or receive a prompt?" "Overwrite" "Prompt"`
+if [ $response == "Overwrite" ]
+then
+unzip -od / install.zip
+alert "Finished installing" "Thanks"
+else
+if [ -e /boot/beos/apps/Terminal ]
+then
+terminal=/boot/beos/apps/Terminal
+else
+terminal=`query Terminal | head -1`
+fi
+$terminal -t "installer" /bin/sh "$0"
+fi
+fi' > "$(1)" ;
+chmod 755 "$(1)" ;
+}
+
+rule PackageInstallZip
+{
+Depends $(1) : $(2) ;
+Clean cleanPackages : $(1) ;
+}
+
+actions together PackageInstallZip
+{
+cd "$(1:P)" ;
+zip -rqy "$(1:BS)" boot ;
+}
+
+rule LinkInstallZip
+{
+Depends $(1) : $(2) ;
+Clean cleanPackages : $(1) ;
+}
+
+actions together LinkInstallZip
+{
+ln -sf "`pwd`/$(2)" "$(1)" ;
+}
+/Dati_Haiku/Faber/build/jam/DistroRules
+1366732226
+35
+
+
+
+
+rule Distro
+{
+local target = $(1) ;
+
+NotFile $(target) ;
+Always $(target) ;
+}
+
+actions Distro
+{
+echo "== Making distro $(DISTRO_DIR) ==" ;
+mimeset $(DISTRO_DIR) ;
+}
+
+Depends fulldistro : distro ;
+
+rule FullDistro
+{
+local target = $(1) ;
+
+NotFile $(target) ;
+Always $(target) ;
+}
+
+actions FullDistro
+{
+echo "== Making full distro $(FULL_DISTRO_DIR) ==" ;
+rm -rf $(FULL_DISTRO_DIR) ;
+cp -a $(DISTRO_DIR) $(FULL_DISTRO_DIR) ;
+mimeset $(FULL_DISTRO_DIR) ;
+}
+/Dati_Haiku/Faber/build/jam/BuildSettings
+1366732226
+113
+
+
+
+
+
+if $(OSPLAT) = PPC {
+
+CFLAGS = [ FFilter $(CFLAGS) : -nosyspath ] ;
+C++FLAGS = [ FFilter $(C++FLAGS) : -nosyspath ] ;
+LINKFLAGS += -warn -export pragma ;
+}
+
+
+CP = copyattr --data ;
+
+
+BISON = bison ;
+LEX = flex ;
+
+
+MKDIR = mkdir -p ;
+
+
+STRIP_APPS ?= 0 ;
+BUILD_TESTS ?= 0 ;
+
+
+DEBUG ?= 1 ;
+
+rule SetUpSubDirBuildSettings
+{
+
+
+
+
+
+
+
+
+
+local dir = $(1) ;
+
+
+if $(WARNINGS) != 0 {
+if $(OSPLAT) = X86 {
+CCFLAGS += -Wall -Wno-multichar -Wpointer-arith 
+-Wmissing-prototypes -Wcast-align -Wsign-compare ;
+C++FLAGS += -Wall -Wno-multichar -Wno-ctor-dtor-privacy -Woverloaded-virtual 
+-Wconversion -Wpointer-arith -Wcast-align
+-Wsign-compare -Wno-reorder -Wno-unknown-pragmas ;
+} else {
+CCFLAGS += -w on -requireprotos ;
+}
+}
+
+local gccString = ;
+if $(IS_GCC4_PLATFORM) {
+gccString += gcc4 ;
+} else {
+gccString += gcc2 ;
+}
+
+local binModeString = ;
+if $(DEBUG) && $(DEBUG) != 0 {
+binModeString += debug ;
+} else {
+binModeString += release ;
+}
+
+
+if $(DEBUG) && $(DEBUG) != 0 {
+OPTIMIZE = 0 ;
+STRIP_APPS = 0 ;
+DEFINES += DEBUG=$(DEBUG) BM_REF_DEBUGGING ;
+CCFLAGS += -g ;
+C++FLAGS += -g -fno-inline ;
+LINKFLAGS += -g ;
+}
+
+DISTRO_DIR = [ FDirName $(TOP) generated distro-$(OS:L)-$(OSPLAT:L)-$(gccString)-$(binModeString) ] ;
+OBJECTS_DIR = [ FDirName $(TOP) generated objects-$(OS:L)-$(OSPLAT:L)-$(gccString)-$(binModeString) ] ;
+
+
+if $(OPTIMIZE) = 0 {
+if $(OSPLAT) = X86 {
+OPTIM = -O0 ;
+} else {
+OPTIM = -O0 ;
+}
+} else {
+if $(OSPLAT) = X86 {
+OPTIM ?= -O3 -fstrict-aliasing ;
+} else {
+OPTIM ?= -O7 ;
+}
+}
+
+
+local objdir = [ FDirName $(OBJECTS_DIR) $(dir[2-]) ] ;
+SEARCH_SOURCE += $(objdir) ;
+LOCATE_SOURCE = $(objdir) ;
+LOCATE_TARGET = $(objdir) ;
+
+
+LOCATE_MAIN_TARGET ?= [ FDirName $(DISTRO_DIR) ] ;
+}
+
+
+AUTO_SET_UP_CONFIG_VARIABLES += LOCATE_MAIN_TARGET ;
+
+
+
+SUBDIRRULES += SetUpSubDirBuildSettings ;
+/Dati_Haiku/Faber/src/Jamfile
+1367515760
+7
+SubDir TOP ;
+
+SubInclude TOP app ;
+SubInclude TOP audio ;
+SubInclude TOP gui ;
+
+UninstallTarget $(FABER_DIRECTORY) ;

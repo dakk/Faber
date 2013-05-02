@@ -1,0 +1,13 @@
+SubDir TOP src ;
+
+SubDirSysHdrs [ FDirName $(TOP) ] ;
+
+SEARCH_SOURCE += [ FDirName $(TOP) src ] ;
+
+Application Faber :
+
+	: be media $(TARGET_LIBSTDC++)
+	: Faber.rdef
+;
+
+InstallBin $(FABER_DIRECTORY) : Faber ;
