@@ -1,0 +1,16 @@
+resource app_signature "application/x-vnd.Faber-Media-Editor";
+
+resource app_version {
+	major  = 0,
+	middle = 0,
+	minor  = 1,
+
+	variety = B_APPV_BETA,
+
+	internal = 0,
+
+	short_info = "Faber",
+	long_info = "Faber Audio Editor, v1.0 Alpha1 Copyright (c) 2009 - 2013 Versut"
+};
+
+
