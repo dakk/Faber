@@ -1,0 +1,14 @@
+Rework of the code :
+
+	* Investigate about replacing the ToolTip with the haiku's implementation, if possible.
+	* Rework the About.
+	* Fix codestyle.
+	* Merge window/Settings* classes with the BeAE ones.
+	* Replace image buttons with hvif versions.
+	* Investigate on replace other controls.
+
+New features
+
+	* Add multitrack support
+	* Work on src/audio/filter/vodoo to add new filters
+	* Work on src/audio/node to have the Nodes needed for recording.
