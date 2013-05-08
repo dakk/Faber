@@ -7,6 +7,8 @@ SEARCH_SOURCE += [ FDirName $(TOP) src gui ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src audio filter ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src views ] ;
 SEARCH_SOURCE += [ FDirName $(TOP) src window ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src common ] ;
+SEARCH_SOURCE += [ FDirName $(TOP) src preferences ] ;
 
 
 Application Faber :

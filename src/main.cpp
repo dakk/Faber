@@ -54,7 +54,7 @@ int main()
 	return (0);
 }
 
-MyApplication::MyApplication():BApplication("application/x-vnd.BeAE-BeAE")
+MyApplication::MyApplication():BApplication("application/x-vnd-Faber")
 {
 	BRect rect(50,50,800,600);
 	mainWindow = new MainWindow(rect);
@@ -67,8 +67,7 @@ MyApplication::MyApplication():BApplication("application/x-vnd.BeAE-BeAE")
 bool MyApplication::QuitRequested()
 {
 	if (mainWindow){
-		mainWindow->Lock();
-		if(mainWindow->QuitRequested()){
+		if(mainWindow->Lock() && mainWindow->QuitRequested()){
 			mainWindow->Quit();
 	
 			if (fOpenPanel)
@@ -77,9 +76,8 @@ bool MyApplication::QuitRequested()
 			if (fSavePanel)
 				delete fSavePanel;
 
-			return true;
-		}else{
 			mainWindow->Unlock();
+			return true;
 		}
 	}
 	return false;
@@ -150,7 +148,7 @@ void MyApplication::RefsReceived(BMessage *message)
 		if (inFile.InitCheck() == B_OK){
 
 			char s[B_FILE_NAME_LENGTH +20];
-			sprintf(s, "BeAE - %s", ref.name);
+			sprintf(s, "Faber - %s", ref.name);
 			mainWindow->SetTitle(s);
 
 			Pool.sample_view_dirty = true;	// update the sample-view

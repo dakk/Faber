@@ -373,7 +373,7 @@ void BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_au
 MainWindow::MainWindow(BRect frame)
 	:BWindow(frame, NULL ,B_TITLED_WINDOW,B_ASYNCHRONOUS_CONTROLS)
 {
-	Looper()->SetName("BeAE");
+	Looper()->SetName("Faber");
 
 	// create global access
 	Pool.mainWindow = this;			// handle to this window
@@ -423,7 +423,7 @@ MainWindow::MainWindow(BRect frame)
 	FiltersInit();
 
 	char s[255];
-	sprintf(s, "BeAE - %s", Language.get("UNTITLED"));
+	sprintf(s, "Faber - %s", Language.get("UNTITLED"));
 	SetTitle(s);
 
 // GUI
