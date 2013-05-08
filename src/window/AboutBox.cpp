@@ -33,32 +33,44 @@
 #include <TranslationKit.h>
 #include <Bitmap.h>
 
+#include "Globals.h"
+
+
 class AboutView : public BView
 {
-  public:
-	AboutView(BRect r);
-	virtual void MouseDown(BPoint);
-	virtual void Draw(BRect r);
-	virtual void Pulse();
-  private:
-	int mode;
-	int count;
-	const char *p;
-	int line;
-	uint8 r,g,b;
+public:
+						AboutView(BRect r);
+	virtual void 		MouseDown(BPoint);
+	virtual void 		Draw(BRect r);
+	virtual void 		Pulse();
+
+private:
+			int 		mode;
+			int 		count;
+			int 		line;
+			uint8 		r,g,b;
+			const char*	p;
 };
 
-enum {FADE_IN, FADE_OUT, PAUSE};
+enum {
+	FADE_IN,
+	FADE_OUT,
+	PAUSE
+};
 
 #define FADE_STEPS	20
 #define PAUSE_STEPS	30
 
-const char *version = "Version 1.2 October 31, 2009";
+const char *version = "Version 0.0.1 May 1, 2013";
 
+// TODO investigate about making about in line with license
+// i'm not sure if the xentronix copyright should be leaved here
 static const char *txt[] = {
 "Faber - Audio Editor for Haiku",
+"Developers:\n Dario Casalinuovo and Davide Gessa\n",
 "Faber is based on BeAE, Created by Frans van Nispen (frans@xentronix.com)",
 "© 2000 Xentronix Software http://www.xentronix.com",
+"© 2013 Versut http://www.versut.com",
 "Now hosted on Berlios.de, maintained by Cian Duffy & Scott McCreary.",
 "Special thanks goes to:",
 "Preference & Language classes: John 'YNOP' Talton,",
@@ -77,10 +89,11 @@ static const char *txt[] = {
 "Humdinger for spiffing up the html help and history pages.",
 "And those who helped pay the $250 Open Source Fee.",
 "Patches welcome...",
-
 NULL};
 
-AboutView::AboutView(BRect rect) : BView(rect, NULL, B_FOLLOW_ALL, B_WILL_DRAW | B_PULSE_NEEDED)
+AboutView::AboutView(BRect rect)
+	:
+	BView(rect, NULL, B_FOLLOW_ALL, B_WILL_DRAW | B_PULSE_NEEDED)
 {
 	mode = FADE_IN;
 	count = FADE_STEPS;
@@ -90,12 +103,14 @@ AboutView::AboutView(BRect rect) : BView(rect, NULL, B_FOLLOW_ALL, B_WILL_DRAW |
 	r=224; g=238; b=252;
 }
 
-void AboutView::MouseDown(BPoint p)
+void
+AboutView::MouseDown(BPoint p)
 {
 	Window()->Quit();
 }
 
-void AboutView::Draw(BRect rect)
+void
+AboutView::Draw(BRect rect)
 {
 	rect = Bounds();
 	BFont font;
@@ -103,7 +118,7 @@ void AboutView::Draw(BRect rect)
 	SetLowColor(255, 255, 255);
 	SetHighColor(0,0,0);
 	DrawString(version, BPoint(rect.right - font.StringWidth(version)-5, rect.bottom-5)); 
-	DrawString("http://developer.berlios.de/projects/beae", BPoint(rect.left+5, rect.bottom-5)); 
+	DrawString(FABER_HOMEPAGE, BPoint(rect.left+5, rect.bottom-5)); 
 	
 	SetLowColor(224,238,252);
 	SetHighColor(r,g,b);
@@ -111,7 +126,8 @@ void AboutView::Draw(BRect rect)
 
 }
 
-void AboutView::Pulse()
+void
+AboutView::Pulse()
 {
 	BRect rect = Bounds();
 	rect.top = 200;
@@ -161,11 +177,17 @@ void AboutView::Pulse()
 /*******************************************************
 *   
 *******************************************************/
-AboutBox::AboutBox(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),"About",B_MODAL_WINDOW_LOOK,B_MODAL_APP_WINDOW_FEEL,B_ASYNCHRONOUS_CONTROLS|B_NOT_RESIZABLE){//B_NOT_ANCHORED_ON_ACTIVATE|
+AboutBox::AboutBox(BPoint p)
+	:
+	BWindow(BRect(p.x, p.y, p.x, p.y), "About",
+		B_MODAL_WINDOW_LOOK, B_MODAL_APP_WINDOW_FEEL,
+		B_ASYNCHRONOUS_CONTROLS | B_NOT_RESIZABLE)
+{//B_NOT_ANCHORED_ON_ACTIVATE|
 	BView *view;
 
 	BBitmap *bitmap = BTranslationUtils::GetBitmapFile("./Bitmaps/SplashBasic.png");
-	if (!bitmap)	bitmap = new BBitmap(BRect(0,0,100,100), B_RGB32);
+	if (!bitmap)
+		bitmap = new BBitmap(BRect(0,0,100,100), B_RGB32);
 
 	BRect r = bitmap->Bounds();
 	ResizeTo(r.Width(), r.Height());
@@ -185,13 +207,18 @@ AboutBox::AboutBox(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),"About",B_MODAL_WI
 /*******************************************************
 *   
 *******************************************************/
-void AboutBox::MessageReceived(BMessage* msg){
-	switch(msg->what){
-	default:
-		BWindow::MessageReceived(msg);
+void
+AboutBox::MessageReceived(BMessage* msg)
+{
+	switch(msg->what)
+	{
+		default:
+			BWindow::MessageReceived(msg);
 	}
 }
 
-bool AboutBox::QuitRequested(){
+bool
+AboutBox::QuitRequested()
+{
 	return true;
 }

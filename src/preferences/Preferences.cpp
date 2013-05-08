@@ -60,7 +60,7 @@ void Preferences::Init(){
    FactorySettings();
    
    // Get that damn file 
-   YPreferences prefs(SETTINGS_DIR"/BeAE");
+   YPreferences prefs(SETTINGS_DIR"/Faber");
    if (prefs.InitCheck() != B_OK) {
       find_directory(B_USER_SETTINGS_DIRECTORY, &path);
       path.Append(SETTINGS_DIR);

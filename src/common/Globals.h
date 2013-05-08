@@ -5,32 +5,7 @@
  * Authors:
  *		Davide Gessa, dak.linux@gmail.com
  */
-#ifndef GLOBALS_H
-#define GLOBALS_H
-
-#include <stdio.h>
-#include <SupportDefs.h>
-
-#define MIDI
-#define AUDIO
-#define AUDIO_SURROUND
-#define VIDEO
-#define SUBTITLE
-
-
-const int32 WINDOW_DEFAULT_SIZE_X			= 600;
-const int32 WINDOW_DEFAULT_SIZE_Y			= 400;
-
-const int32	FABER_MSG_MASTER_VOLUME			= 'FMVo';
-const int32 FABER_MSG_TRACK_ADD				= 'FTAd';
-const int32	FABER_MSG_TRACK_MUTE			= 'FTMu';
-const int32	FABER_MSG_TRACK_SOLO			= 'FTSo';
-const int32	FABER_MSG_TRACK_VOLUME			= 'FTVo';
-const int32 FABER_MSG_TRACK_PAN				= 'FTPa';
-
-// BeAE globals
-
-/*
+ /*
    	Copyright (c) 2003, Xentronix
 	Author: Frans van Nispen (frans@xentronix.com)
 	All rights reserved.
@@ -57,9 +32,33 @@ const int32 FABER_MSG_TRACK_PAN				= 'FTPa';
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#ifndef GLOBALS_H
+#define GLOBALS_H
 
-//#define __SAMPLE_STUDIO_LE	1	// this enables the compilation of the LE version
-//#define __VM_SYSTEM	1				// this enables Virtual Memory
+#include <stdio.h>
+#include <SupportDefs.h>
+
+// TODO investigate about it and remove #ifdefs as well
+#define __SAMPLE_STUDIO_LE	1	// this enables the compilation of the LE version
+
+// TODO investigate about it and check if we should remove it
+// or enable it.
+//#define __VM_SYSTEM	1		// this enables Virtual Memory
+
+// Various settings
+
+const int32 WINDOW_DEFAULT_SIZE_X			= 800;
+const int32 WINDOW_DEFAULT_SIZE_Y			= 600;
+
+#define MIN_W 	530
+#define MIN_H	256
+#define MAX_W 	2048
+#define MAX_H	1536
+
+#define TIMEBAR_HEIGHT		16
+#define VALUEBAR_WIDTH		32
+#define INDEXVIEW_HEIGHT	20	//POINTER_BAR_HEIGHT +24	//+32
+#define POINTER_BAR_HEIGHT	12
 
 #include "CommonPool.h"
 #include "CommonClass.h"
@@ -68,6 +67,25 @@ const int32 FABER_MSG_TRACK_PAN				= 'FTPa';
 #include "History.h"
 #include "MouseIcons.h"
 
+// TODO replace them where needed in the code
+#define VERSUT_HOMEPAGE "http://www.versut.com/"
+#define FABER_MIMETYPE 	"application/x-vnd-Faber"
+
+#define FABER_HOMEPAGE	"https://github.com/Barrett17/Faber"
+
+#define TOOL_TIP_WINDOW	"Help System"
+#define COPY_RIGHT 		"Copyright 2002 Xentronix\n Copyright 2013 Versut"
+
+// This is our offical Ver description Build data/time is built into about box
+//#define VERSION       "Final"
+// The directory off of /boot/home/settings that we look for Inferno settings
+#define SETTINGS_DIR    "Faber"
+// Current directory that Inferno pulls plugins from
+#define FILTERS_DIR		"Plug-Ins/Filters"
+// Mime type for IDF files
+#define DOCUMENT_MIME	"image/x-Faber"
+
+// Math
 #define INT_MUL(a,b,t)				((t) = (a) * (b) + 0x80, ((((t) >> 8) + (t)) >> 8))
 #define INT_MUL3(a,b,c,t)			((t) = (a) * (b) * (c)+ 0x7F5B, ((((t) >> 7) + (t)) >> 16))
 #define INT_BLEND(a,b,alpha,tmp)	(INT_MUL((a)-(b), alpha, tmp) + (b))
@@ -79,40 +97,32 @@ const int32 FABER_MSG_TRACK_PAN				= 'FTPa';
 	#define PI 3.14159265358979323846
 #endif
 
-// The thread names
-#define TOOL_TIP_WINDOW		"Help System"
+// Enums
+enum {
+	NONE=0,
+	LEFT,
+	RIGHT,
+	BOTH
+};
 
-#define MIN_W 	530
-#define MIN_H	256
-#define MAX_W 	2048
-#define MAX_H	1536
+enum {
+	SAMPLES,
+	TIME
+};
 
-#define TIMEBAR_HEIGHT		16
-#define VALUEBAR_WIDTH		32
-#define INDEXVIEW_HEIGHT	20	//POINTER_BAR_HEIGHT +24	//+32
+enum {
+	PLAY=1,
+	RECORD,
+	PLAY_PAUSE,
+	RECORD_PAUSE
+};
 
-#define COPY_RIGHT "Copyright 2002 Xentronix"
+enum {
+	MONO=1,
+	STEREO=2
+};
 
-// This is our offical Ver description Build data/time is built into about box
-//#define VERSION                "Final"
-
-// The directory off of /boot/home/settings that we look for Inferno settings
-#define SETTINGS_DIR           "BeAE"
-
-// Current directory that Inferno pulls plugins from
-#define FILTERS_DIR             "Plug-Ins/Filters"
-
-// Mime type for IDF files
-#define DOCUMENT_MIME   "image/x-BeAE"
-
-
-enum {NONE=0, LEFT, RIGHT, BOTH};
-enum {SAMPLES, TIME};
-enum {PLAY=1, RECORD, PLAY_PAUSE, RECORD_PAUSE};
-enum {MONO=1, STEREO=2};
-
-#define POINTER_BAR_HEIGHT	12
-
+// Messages
 #define SPLITTER			'sltr'	// used to separate key-bind catagories
 #define SAVE_AS   			'ssam'
 #define NEW					'Bnew'
