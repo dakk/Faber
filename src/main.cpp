@@ -54,9 +54,9 @@ int main()
 	return (0);
 }
 
-MyApplication::MyApplication():BApplication("application/x-vnd-Faber")
+MyApplication::MyApplication():BApplication(FABER_MIMETYPE)
 {
-	BRect rect(50,50,800,600);
+	BRect rect(50, 50, WINDOW_DEFAULT_SIZE_X, WINDOW_DEFAULT_SIZE_Y);
 	mainWindow = new MainWindow(rect);
 	fOpenPanel = new OpenPanel(this);
 	fSavePanel = new SavePanel(this);
@@ -66,8 +66,8 @@ MyApplication::MyApplication():BApplication("application/x-vnd-Faber")
 
 bool MyApplication::QuitRequested()
 {
-	if (mainWindow){
-		if(mainWindow->Lock() && mainWindow->QuitRequested()){
+	if (mainWindow && mainWindow->Lock()) {
+		if(mainWindow->QuitRequested()) {
 			mainWindow->Quit();
 	
 			if (fOpenPanel)
@@ -76,11 +76,12 @@ bool MyApplication::QuitRequested()
 			if (fSavePanel)
 				delete fSavePanel;
 
-			mainWindow->Unlock();
 			return true;
 		}
+	mainWindow->Unlock();
 	}
-	return false;
+
+	return true;
 }
 
 void MyApplication::MessageReceived(BMessage *message)

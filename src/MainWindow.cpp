@@ -60,8 +60,6 @@ cookie_record play_cookie;
 
 // URL to the homepage/Tutorials/others
 //char *TUTORIALS_URL = "http://www.xentronix.com/module.php?mod=document";
-const char *HOMEPAGE_URL = "http://developer.berlios.de/projects/beae/";
-
 
 class MyMenuBar : public BMenuBar{
   public:
@@ -1053,8 +1051,11 @@ void MainWindow::MessageReceived(BMessage *message)
 }		break;
 		
 	case HOMEPAGE:
-		be_roster->Launch("text/html",1, const_cast<char**>(&HOMEPAGE_URL));
+	{
+		const char* homepage = FABER_HOMEPAGE;
+		be_roster->Launch("text/html",1, const_cast<char**>(&homepage));
 		break;
+	}
 		
 	case PREFERENCES:
 		if(Pool.PrefWin != NULL){
