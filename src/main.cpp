@@ -66,21 +66,20 @@ MyApplication::MyApplication():BApplication(FABER_MIMETYPE)
 
 bool MyApplication::QuitRequested()
 {
-	if (mainWindow && mainWindow->Lock()) {
-		if(mainWindow->QuitRequested()) {
+	if (mainWindow) {
+		if (mainWindow->Lock() && mainWindow->QuitRequested()) {
 			mainWindow->Quit();
-	
+
 			if (fOpenPanel)
 				delete fOpenPanel;
-	
+
 			if (fSavePanel)
 				delete fSavePanel;
 
+			mainWindow->Unlock();
 			return true;
 		}
-	mainWindow->Unlock();
 	}
-
 	return true;
 }
 
