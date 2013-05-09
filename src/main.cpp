@@ -430,7 +430,7 @@ void MyApplication::Save(BMessage *message){
 
 				if (save_start == 0){			// save as
 					char s[B_FILE_NAME_LENGTH +20];
-					sprintf(s, "BeAE - %s", file_ref.name);
+					sprintf(s, "Faber - %s", file_ref.name);
 					mainWindow->SetTitle(s);
 				}
 
