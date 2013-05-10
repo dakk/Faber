@@ -35,15 +35,23 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include <stdio.h>
-#include <SupportDefs.h>
-
 // TODO investigate about it and remove #ifdefs as well
 #define __SAMPLE_STUDIO_LE	1	// this enables the compilation of the LE version
 
 // TODO investigate about it and check if we should remove it
 // or enable it.
 //#define __VM_SYSTEM	1		// this enables Virtual Memory
+
+#include <SupportDefs.h>
+
+#include "CommonPool.h"
+#include "CommonClass.h"
+#include "YLanguageClass.h"
+#include "Preferences.h"
+#include "History.h"
+#include "MouseIcons.h"
+
+#include <stdio.h>
 
 // Various settings
 
@@ -60,18 +68,12 @@ const int32 WINDOW_DEFAULT_SIZE_Y			= 600;
 #define INDEXVIEW_HEIGHT	20	//POINTER_BAR_HEIGHT +24	//+32
 #define POINTER_BAR_HEIGHT	12
 
-#include "CommonPool.h"
-#include "CommonClass.h"
-#include "YLanguageClass.h"
-#include "Preferences.h"
-#include "History.h"
-#include "MouseIcons.h"
 
 // TODO replace them where needed in the code
 #define VERSUT_HOMEPAGE "http://www.versut.com/"
-#define FABER_MIMETYPE 	"application/x-vnd-Faber"
+#define FABER_MIMETYPE 	"application/x-vnd.Faber"
 
-#define FABER_HOMEPAGE	"https://github.com/Barrett17/Faber"
+#define FABER_HOMEPAGE	"http://www.versut.com/Faber"
 
 #define TOOL_TIP_WINDOW	"Help System"
 #define COPY_RIGHT 		"Copyright 2002 Xentronix\n Copyright 2013 Versut"

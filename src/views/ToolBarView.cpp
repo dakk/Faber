@@ -26,17 +26,18 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <TranslationKit.h>
 #include <Bitmap.h>
-#include <stdio.h>
-#include <PictureButton.h>
-#include <View.h>
 #include <Cursor.h>
-#include "CommonPool.h"
+#include <PictureButton.h>
+#include <TranslationKit.h>
+#include <View.h>
 
-#include "ToolBarView.h"
 #include "CommonPool.h"
 #include "MyClipBoard.h"
+#include "ToolBarView.h"
+
+#include <stdio.h>
+
 
 BPictureButton *ToolBarButton(BRect buttonsize, int32 index, const char *tip, BMessage *msg, uint32 state, BView *view)
 {
@@ -100,7 +101,8 @@ BPictureButton *ToolBarButton(BRect buttonsize, int32 index, const char *tip, BM
 	view->Sync();
 
 	BPictureButton *PBut = new BPictureButton(buttonsize, NULL, Up, Down, msg, state, B_FOLLOW_ALL, B_WILL_DRAW);
-	Pool.AddTip(PBut, tip);
+
+	PBut->SetToolTip(tip);
 	
 	PBut->SetDisabledOff(DUp);
 	PBut->SetDisabledOn(DDown);

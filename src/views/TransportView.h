@@ -25,11 +25,12 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
 #ifndef _Transport_VIEW
 #define _Transport_VIEW
-#include <View.h>
+
 #include <Bitmap.h>
+#include <PictureButton.h>
+#include <View.h>
 
 #include "Globals.h"
 
