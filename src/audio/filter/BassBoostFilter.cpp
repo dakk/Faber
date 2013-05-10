@@ -39,7 +39,7 @@
 /*******************************************************
 *   
 *******************************************************/
-BassBoostFilter::BassBoostFilter(bool b) : RealtimeFilter(Language.get("BASSBOOST"), b)
+BassBoostFilter::BassBoostFilter(bool b) : RealtimeFilter(B_TRANSLATE("Bass Boost"), b)
 {
 
 }
@@ -56,12 +56,12 @@ BView *BassBoostFilter::ConfigView()
 
 	r.InsetBy(8,8);
 	r.bottom = r.top + 23;
-	freq = new SpinSlider(r, NULL, Language.get("BB_FREQUENCY"), new BMessage(CONTROL_CHANGED), 1, 1000);
+	freq = new SpinSlider(r, NULL, B_TRANSLATE("Frequency (Hz)"), new BMessage(CONTROL_CHANGED), 1, 1000);
 	freq->SetValue(Prefs.filter_bassboost_frequency);
 	view->AddChild(freq);
 
 	r.OffsetBy(0,40);
-	boost = new SpinSlider(r, NULL, Language.get("BB_BOOST"), new BMessage(CONTROL_CHANGED), 0, 24);
+	boost = new SpinSlider(r, NULL, B_TRANSLATE("Boost (dB)"), new BMessage(CONTROL_CHANGED), 0, 24);
 	boost->SetValue(Prefs.filter_bassboost_boost);
 	view->AddChild(boost);
 

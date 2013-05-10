@@ -25,22 +25,20 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
 #include <Application.h>
+#include <Alert.h>
+#include <File.h>
 #include <Entry.h>
 #include <Path.h>
-#include <File.h>
-#include <Volume.h>
 #include <String.h>
-#include <stdio.h>
-
-// Needed for malloc and friends with gcc4
-#if defined(__HAIKU__)
-#include <stdlib.h>
-#endif
+#include <Roster.h>
+#include <Volume.h>
 
 #include "MyClipBoard.h"
 #include "CommonPool.h"
+
+#include <stdio.h>
+#include <stdlib.h>
 
 MyClipBoard ClipBoard;
 
@@ -129,7 +127,7 @@ bool MyClipBoard::Copy(){
 
 	BVolume vol(file_ref.device);
 	if(vol.FreeBytes() < (size+(Prefs.keep_free*1024*1224))){
-		(new BAlert(NULL,Language.get("CLIP_ERROR"),Language.get("OK")))->Go();
+		(new BAlert(NULL,B_TRANSLATE("ClipBoard Error, Disk Full!"),B_TRANSLATE("OK")))->Go();
 		release_sem(clipSem);
 		return false;
 	}
@@ -154,7 +152,7 @@ bool MyClipBoard::Copy(){
 				p+=2;
 			}
 		}else{
-			Pool.StartProgress(Language.get("SAVE_CLIP"), size);
+			Pool.StartProgress(B_TRANSLATE("Saving to ClipBoard..."), size);
 			
 			float *buffer = new float[BLOCK_SIZE2 / 4];
 			
@@ -183,7 +181,7 @@ bool MyClipBoard::Copy(){
 		if (size < BLOCK_SIZE*4){					// files smaller than 2Mb without progressBar
 			MyClipBoardFile->Write((void*)(Pool.sample_memory+Pool.pointer*Pool.sample_type), size);
 		}else{
-			Pool.StartProgress(Language.get("SAVE_CLIP"), size);
+			Pool.StartProgress(B_TRANSLATE("Saving to ClipBoard..."), size);
 			char *p = (char*)(Pool.sample_memory+Pool.pointer*Pool.sample_type);
 			while(size>=BLOCK_SIZE){
 				MyClipBoardFile->Write((void*)p, BLOCK_SIZE);
@@ -235,7 +233,7 @@ void MyClipBoard::DoSilence()
 	float *end = Pool.sample_memory + Pool.r_sel_pointer*Pool.sample_type;
 
 	int count = 10000;
-	Pool.StartProgress(Language.get("WORKING"), end-p);
+	Pool.StartProgress(B_TRANSLATE("Working..."), end-p);
 
 	if (Pool.sample_type == MONO || Pool.selection == BOTH){
 		while (p<=end){
@@ -389,7 +387,7 @@ void MyClipBoard::Paste(){
 		if (p){
 			Pool.sample_memory = p;		// new block
 		}else{
-			(new BAlert(NULL,Language.get("MEM_ERROR"),Language.get("OK")))->Go();
+			(new BAlert(NULL,B_TRANSLATE("MEM_ERROR"),B_TRANSLATE("OK")))->Go();
 			Pool.size = old_size;
 			if (Pool.r_pointer>Pool.size)
 				Pool.r_pointer = Pool.size;
@@ -410,7 +408,7 @@ void MyClipBoard::Paste(){
 			if (size < BLOCK_SIZE*4){					// files smaller than 256Kb without progressBar
 				MyClipBoardFile->Read((void*)(Pool.sample_memory+start*Pool.sample_type), size);
 			}else{
-				Pool.StartProgress(Language.get("PASTING"), size);
+				Pool.StartProgress(B_TRANSLATE("Pasting file..."), size);
 				char *p = (char*)(Pool.sample_memory+start*Pool.sample_type);
 				while(size>=BLOCK_SIZE){
 					MyClipBoardFile->Read((void*)p, BLOCK_SIZE);
@@ -424,7 +422,7 @@ void MyClipBoard::Paste(){
 				Pool.HideProgress();
 			}
 		}else if (sample_type == STEREO && Pool.sample_type == MONO){
-			Pool.StartProgress(Language.get("PASTE_MONO"), size);
+			Pool.StartProgress(B_TRANSLATE("Paste "), size);
 			float *p = Pool.sample_memory + Pool.pointer*Pool.sample_type;	// start of clip
 			float left, right;
 			
@@ -449,7 +447,7 @@ void MyClipBoard::Paste(){
 			delete buffer;
 			Pool.HideProgress();
 		}else if (Pool.sample_type == STEREO && sample_type == MONO){
-			Pool.StartProgress(Language.get("PASTE_STEREO"), size);
+			Pool.StartProgress(B_TRANSLATE("Pasting & Converting to Stereo..."), size);
 			float *p = Pool.sample_memory + Pool.pointer*Pool.sample_type;	// start of clip
 			float left;
 			float *buffer = new float[BLOCK_SIZE2/4];
@@ -500,7 +498,7 @@ void MyClipBoard::Paste(){
 		if (p){
 			Pool.sample_memory = p;		// new block
 		}else{
-			(new BAlert(NULL,Language.get("MEM_ERROR"),Language.get("OK")))->Go();
+			(new BAlert(NULL,B_TRANSLATE("MEM_ERROR"),B_TRANSLATE("OK")))->Go();
 			Pool.size = old_size;
 			if (Pool.r_pointer>Pool.size)
 				Pool.r_pointer = Pool.size;
@@ -530,7 +528,7 @@ void MyClipBoard::Paste(){
 			}
 
 			if (sample_type == MONO){
-				Pool.StartProgress(Language.get("PASTE_MONO"), size);
+				Pool.StartProgress(B_TRANSLATE("Pasting & Converting to Mono..."), size);
 				float *p = Pool.sample_memory + Pool.pointer*Pool.sample_type - (Pool.selection == RIGHT);	// start of clip
 				float left;
 				float *buffer = new float[BLOCK_SIZE2/4];
@@ -553,7 +551,7 @@ void MyClipBoard::Paste(){
 				delete buffer;
 				Pool.HideProgress();
 			}else if (sample_type == STEREO){
-				Pool.StartProgress(Language.get("PASTE_STEREO"), size);
+				Pool.StartProgress(B_TRANSLATE("Pasting & Converting to Stereo..."), size);
 				float *p = Pool.sample_memory + Pool.pointer*Pool.sample_type - (Pool.selection == RIGHT);	// start of clip
 				float left, right;
 				float *buffer = new float[BLOCK_SIZE2/4];
@@ -594,7 +592,7 @@ void MyClipBoard::Paste(){
 			}
 
 			if (sample_type == MONO){
-				Pool.StartProgress(Language.get("PASTE_MONO"), size);
+				Pool.StartProgress(B_TRANSLATE("Pasting & Converting to Mono..."), size);
 				float *p = Pool.sample_memory + Pool.pointer*Pool.sample_type - (Pool.selection == RIGHT);	// start of clip
 				float left;
 				while(size>=BLOCK_SIZE2){
@@ -615,7 +613,7 @@ void MyClipBoard::Paste(){
 				}
 				Pool.HideProgress();
 			}else if (sample_type == STEREO){
-				Pool.StartProgress(Language.get("PASTE_STEREO"), size);
+				Pool.StartProgress(B_TRANSLATE("Pasting & Converting to Stereo..."), size);
 				float *p = Pool.sample_memory + Pool.pointer*Pool.sample_type - (Pool.selection == RIGHT);	// start of clip
 				float left, right;
 				while(size>=BLOCK_SIZE2){

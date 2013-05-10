@@ -25,10 +25,10 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
-#include <TranslationKit.h>
 #include <Bitmap.h>
-#include <stdio.h>
+#include <MenuItem.h>
+#include <PopUpMenu.h>
+#include <TranslationKit.h>
 
 #include "SampleView.h"
 #include "MainWindow.h"
@@ -38,6 +38,8 @@
 #include "Shortcut.h"
 #include "MyClipBoard.h"
 #include "VMSystem.h"
+
+#include <stdio.h>
 
 extern cookie_record play_cookie;
 
@@ -351,53 +353,53 @@ void SampleView::MouseDown(BPoint p)
 				BMenuItem *menuItem;
 				BPopUpMenu *menu = new BPopUpMenu("");
 
-				menu->AddItem(new BMenuItem(Language.get("TRANSPORT_PLAYS"), new BMessage(TRANSPORT_PLAYS), KeyBind.GetKey("TRANSPORT_PLAYS"), KeyBind.GetMod("TRANSPORT_PLAYS")));
-				menu->AddItem(menuItem = new BMenuItem(Language.get("TRANSPORT_PAUSE"), new BMessage(TRANSPORT_PAUSE_MAN), KeyBind.GetKey("TRANSPORT_PAUSE"), KeyBind.GetMod("TRANSPORT_PAUSE")));
+				menu->AddItem(new BMenuItem(B_TRANSLATE("Play"), new BMessage(TRANSPORT_PLAYS), KeyBind.GetKey("TRANSPORT_PLAYS"), KeyBind.GetMod("TRANSPORT_PLAYS")));
+				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Pause"), new BMessage(TRANSPORT_PAUSE_MAN), KeyBind.GetKey("TRANSPORT_PAUSE"), KeyBind.GetMod("TRANSPORT_PAUSE")));
 				if (((MainWindow*)Pool.mainWindow)->transport_view->pause->Value() == B_CONTROL_ON)
 					menuItem->SetMarked(true);
-				menu->AddItem(new BMenuItem(Language.get("TRANSPORT_STOP"), new BMessage(TRANSPORT_STOP), KeyBind.GetKey("TRANSPORT_STOP"), KeyBind.GetMod("TRANSPORT_STOP")));
+				menu->AddItem(new BMenuItem(B_TRANSLATE("Stop"), new BMessage(TRANSPORT_STOP), KeyBind.GetKey("TRANSPORT_STOP"), KeyBind.GetMod("TRANSPORT_STOP")));
 				menu->AddSeparatorItem();
-				menu->AddItem(menuItem = new BMenuItem(Language.get("COPY"), new BMessage(B_COPY), KeyBind.GetKey("COPY"), KeyBind.GetMod("COPY")));
+				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy"), new BMessage(B_COPY), KeyBind.GetKey("COPY"), KeyBind.GetMod("COPY")));
 				menuItem->SetEnabled(Pool.selection != NONE);
-				menu->AddItem(menuItem = new BMenuItem(Language.get("COPY_SILENCE"), new BMessage(COPY_SILENCE), KeyBind.GetKey("COPY_SILENCE"), KeyBind.GetMod("COPY_SILENCE")));
+				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy & Silence"), new BMessage(COPY_SILENCE), KeyBind.GetKey("COPY_SILENCE"), KeyBind.GetMod("COPY_SILENCE")));
 				menuItem->SetEnabled(Pool.selection != NONE);
-				menu->AddItem(menuItem = new BMenuItem(Language.get("CUT"), new BMessage(B_CUT), KeyBind.GetKey("CUT"), KeyBind.GetMod("CUT")));
+				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Cut"), new BMessage(B_CUT), KeyBind.GetKey("CUT"), KeyBind.GetMod("CUT")));
 				menuItem->SetEnabled(Pool.selection != NONE);
-				menu->AddItem(menuItem = new BMenuItem(Language.get("PASTE"), new BMessage(B_PASTE), KeyBind.GetKey("PASTE"), KeyBind.GetMod("PASTE")));
+				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Paste"), new BMessage(B_PASTE), KeyBind.GetKey("PASTE"), KeyBind.GetMod("PASTE")));
 				menuItem->SetEnabled(ClipBoard.HasClip());
-				menu->AddItem(menuItem = new BMenuItem(Language.get("PASTE_NEW"), new BMessage(PASTE_NEW), KeyBind.GetKey("PASTE_NEW"), KeyBind.GetMod("PASTE_NEW")));
+				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Paste as New"), new BMessage(PASTE_NEW), KeyBind.GetKey("PASTE_NEW"), KeyBind.GetMod("PASTE_NEW")));
 				menuItem->SetEnabled(ClipBoard.HasClip());
 				#ifdef __SAMPLE_STUDIO_LE
-					menu->AddItem(menuItem = new BMenuItem(Language.get("EDIT_PASTE_MIX"), new BMessage(PASTE_MIXED), KeyBind.GetKey("EDIT_PASTE_MIX"), KeyBind.GetMod("EDIT_PASTE_MIX")));
+					menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Paste & mix..."), new BMessage(PASTE_MIXED), KeyBind.GetKey("EDIT_PASTE_MIX"), KeyBind.GetMod("EDIT_PASTE_MIX")));
 					menuItem->SetEnabled(ClipBoard.HasClip());
-					menu->AddItem(menuItem = new BMenuItem(Language.get("COPY_TO_STACK"), new BMessage(TO_STACK), KeyBind.GetKey("COPY_TO_STACK"), KeyBind.GetMod("COPY_TO_STACK")));
+					menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy to stack"), new BMessage(TO_STACK), KeyBind.GetKey("COPY_TO_STACK"), KeyBind.GetMod("COPY_TO_STACK")));
 					menuItem->SetEnabled(Pool.selection != NONE);
 				#endif
 				menu->AddSeparatorItem();
-				menu->AddItem(menuItem = new BMenuItem(Language.get("SELECT_ALL"), new BMessage(B_SELECT_ALL), KeyBind.GetKey("SELECT_ALL"), KeyBind.GetMod("SELECT_ALL")));
-				menu->AddItem(menuItem = new BMenuItem(Language.get("UNSELECT_ALL"), new BMessage(UNSELECT_ALL), KeyBind.GetKey("UNSELECT_ALL"), KeyBind.GetMod("UNSELECT_ALL")));
+				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Select All"), new BMessage(B_SELECT_ALL), KeyBind.GetKey("SELECT_ALL"), KeyBind.GetMod("SELECT_ALL")));
+				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Unselect All"), new BMessage(UNSELECT_ALL), KeyBind.GetKey("UNSELECT_ALL"), KeyBind.GetMod("UNSELECT_ALL")));
 				menuItem->SetEnabled(Pool.selection != NONE);
 				menu->AddSeparatorItem();
-				BMenu *sub = new BMenu(Language.get("ZERO_CROSS"));
-				sub->AddItem(new BMenuItem(Language.get("ZERO_IN"), new BMessage(ZERO_IN), KeyBind.GetKey("ZERO_IN"), KeyBind.GetMod("ZERO_IN")));
-				sub->AddItem(new BMenuItem(Language.get("ZERO_OUT"), new BMessage(ZERO_OUT), KeyBind.GetKey("ZERO_OUT"), KeyBind.GetMod("ZERO_OUT")));
-				sub->AddItem(new BMenuItem(Language.get("ZERO_LL"), new BMessage(ZERO_LL), KeyBind.GetKey("ZERO_LL"), KeyBind.GetMod("ZERO_LL")));
-				sub->AddItem(new BMenuItem(Language.get("ZERO_LR"), new BMessage(ZERO_LR), KeyBind.GetKey("ZERO_LR"), KeyBind.GetMod("ZERO_LR")));
-				sub->AddItem(new BMenuItem(Language.get("ZERO_RL"), new BMessage(ZERO_RL), KeyBind.GetKey("ZERO_RL"), KeyBind.GetMod("ZERO_RL")));
-				sub->AddItem(new BMenuItem(Language.get("ZERO_RR"), new BMessage(ZERO_RR), KeyBind.GetKey("ZERO_RR"), KeyBind.GetMod("ZERO_RR")));
+				BMenu *sub = new BMenu(B_TRANSLATE("Zero Crossings"));
+				sub->AddItem(new BMenuItem(B_TRANSLATE("Inwards"), new BMessage(ZERO_IN), KeyBind.GetKey("ZERO_IN"), KeyBind.GetMod("ZERO_IN")));
+				sub->AddItem(new BMenuItem(B_TRANSLATE("Outwards"), new BMessage(ZERO_OUT), KeyBind.GetKey("ZERO_OUT"), KeyBind.GetMod("ZERO_OUT")));
+				sub->AddItem(new BMenuItem(B_TRANSLATE("Left to Left"), new BMessage(ZERO_LL), KeyBind.GetKey("ZERO_LL"), KeyBind.GetMod("ZERO_LL")));
+				sub->AddItem(new BMenuItem(B_TRANSLATE("Left to Right"), new BMessage(ZERO_LR), KeyBind.GetKey("ZERO_LR"), KeyBind.GetMod("ZERO_LR")));
+				sub->AddItem(new BMenuItem(B_TRANSLATE("Right to Left"), new BMessage(ZERO_RL), KeyBind.GetKey("ZERO_RL"), KeyBind.GetMod("ZERO_RL")));
+				sub->AddItem(new BMenuItem(B_TRANSLATE("Right to Right"), new BMessage(ZERO_RR), KeyBind.GetKey("ZERO_RR"), KeyBind.GetMod("ZERO_RR")));
 				sub->SetTargetForItems(Window());
 				menu->AddItem(sub);
 
 				menu->AddSeparatorItem();
-				sub = new BMenu(Language.get("ZOOM_FUNCTIONS"));
-				sub->AddItem(new BMenuItem(Language.get("ZOOM_IN"), new BMessage(ZOOM_IN), KeyBind.GetKey("ZOOM_IN"), KeyBind.GetMod("ZOOM_IN")));
-				sub->AddItem(new BMenuItem(Language.get("ZOOM_OUT"), new BMessage(ZOOM_OUT), KeyBind.GetKey("ZOOM_OUT"), KeyBind.GetMod("ZOOM_OUT")));
-				sub->AddItem(new BMenuItem(Language.get("ZOOM_FULL"), new BMessage(ZOOM_FULL), KeyBind.GetKey("ZOOM_FULL"), KeyBind.GetMod("ZOOM_FULL")));
-				sub->AddItem(menuItem = new BMenuItem(Language.get("ZOOM_SELECTION"), new BMessage(ZOOM_SELECTION), KeyBind.GetKey("ZOOM_SELECTION"), KeyBind.GetMod("ZOOM_SELECTION")));
+				sub = new BMenu(B_TRANSLATE("Zoom Functions"));
+				sub->AddItem(new BMenuItem(B_TRANSLATE("Zoom in"), new BMessage(ZOOM_IN), KeyBind.GetKey("ZOOM_IN"), KeyBind.GetMod("ZOOM_IN")));
+				sub->AddItem(new BMenuItem(B_TRANSLATE("Zoom out"), new BMessage(ZOOM_OUT), KeyBind.GetKey("ZOOM_OUT"), KeyBind.GetMod("ZOOM_OUT")));
+				sub->AddItem(new BMenuItem(B_TRANSLATE("View full wave"), new BMessage(ZOOM_FULL), KeyBind.GetKey("ZOOM_FULL"), KeyBind.GetMod("ZOOM_FULL")));
+				sub->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Zoom to selection"), new BMessage(ZOOM_SELECTION), KeyBind.GetKey("ZOOM_SELECTION"), KeyBind.GetMod("ZOOM_SELECTION")));
 				menuItem->SetEnabled(Pool.selection != NONE);
-				sub->AddItem(menuItem = new BMenuItem(Language.get("ZOOM_LEFT"), new BMessage(ZOOM_LEFT), KeyBind.GetKey("ZOOM_LEFT"), KeyBind.GetMod("ZOOM_LEFT")));
+				sub->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Zoom to left pointer"), new BMessage(ZOOM_LEFT), KeyBind.GetKey("ZOOM_LEFT"), KeyBind.GetMod("ZOOM_LEFT")));
 				menuItem->SetEnabled(Pool.selection != NONE);
-				sub->AddItem(menuItem = new BMenuItem(Language.get("ZOOM_RIGHT"), new BMessage(ZOOM_RIGHT), KeyBind.GetKey("ZOOM_RIGHT"), KeyBind.GetMod("ZOOM_RIGHT")));
+				sub->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Zoom to right pointer"), new BMessage(ZOOM_RIGHT), KeyBind.GetKey("ZOOM_RIGHT"), KeyBind.GetMod("ZOOM_RIGHT")));
 				menuItem->SetEnabled(Pool.selection != NONE);
 				sub->SetTargetForItems(Window());
 				menu->AddItem(sub);

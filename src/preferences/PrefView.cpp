@@ -67,18 +67,18 @@ PrefView::PrefView(BRect frame):BView(frame, "Prefs view", B_FOLLOW_ALL_SIDES, B
 	configBox->SetLabel(" - ");
 	AddChild(configBox);
 
-	list->AddItem(new StringItem(Language.get("GENERAL")));
-	list->AddItem(new StringItem(Language.get("COLORSET")));
-	list->AddItem(new StringItem(Language.get("KEYBINDINGS")));
+	list->AddItem(new StringItem(B_TRANSLATE("General settings")));
+	list->AddItem(new StringItem(B_TRANSLATE("Color layout")));
+	list->AddItem(new StringItem(B_TRANSLATE("Key bindings")));
 
 	r = Bounds();
-	AddChild(new BButton(BRect(r.right-120,r.bottom-32,r.right-8,r.bottom-8), NULL, Language.get("OK"), new BMessage(QUIT)) );
-	AddChild(new BButton(BRect(8,r.bottom-32,146,r.bottom-8), NULL, Language.get("FACTORY"), new BMessage(SET_FACTORY)) );
+	AddChild(new BButton(BRect(r.right-120,r.bottom-32,r.right-8,r.bottom-8), NULL, B_TRANSLATE("OK"), new BMessage(QUIT)) );
+	AddChild(new BButton(BRect(8,r.bottom-32,146,r.bottom-8), NULL, B_TRANSLATE("Default"), new BMessage(SET_FACTORY)) );
 
 	r = configBox->Bounds();
 	r.InsetBy(5,5); r.top += 10;
 	configBox->AddChild(new PrefGeneral(r));
-	configBox->SetLabel(Language.get("GENERAL"));
+	configBox->SetLabel(B_TRANSLATE("General Settings"));
 }
 
 /*******************************************************
@@ -127,15 +127,15 @@ void PrefView::MessageReceived(BMessage *msg){
 		switch(i){
 		case 0:		// general
 			configBox->AddChild(new PrefGeneral(r));
-			configBox->SetLabel(Language.get("GENERAL"));
+			configBox->SetLabel(B_TRANSLATE("General Settings"));
 			break;
 		case 2:		// keys
 			configBox->AddChild(new PrefKeys(r));
-			configBox->SetLabel(Language.get("KEYBINDINGS"));
+			configBox->SetLabel(B_TRANSLATE("Key bindings"));
 			break;
 		case 1:		// colors
 			configBox->AddChild(new PrefColors(r));
-			configBox->SetLabel(Language.get("COLORSET"));
+			configBox->SetLabel(B_TRANSLATE("Color Layout"));
 			break;
 		}
 		break;

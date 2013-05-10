@@ -40,7 +40,7 @@
 /*******************************************************
 *   
 *******************************************************/
-LimiterFilter::LimiterFilter(bool b) : RealtimeFilter(Language.get("LIMITFILTER"), b)
+LimiterFilter::LimiterFilter(bool b) : RealtimeFilter(B_TRANSLATE("LIMITFILTER"), b)
 {
 
 }
@@ -57,12 +57,12 @@ BView *LimiterFilter::ConfigView()
 
 	r.InsetBy(8,8);
 	r.bottom = r.top + 23;
-	value = new SpinSlider(r, NULL, Language.get("LEVEL"), new BMessage(CONTROL_CHANGED), 0, 100);
+	value = new SpinSlider(r, NULL, B_TRANSLATE("Level (%)"), new BMessage(CONTROL_CHANGED), 0, 100);
 	value->SetValue(Prefs.filter_limiter_value);
 	view->AddChild(value);
 
 	r.OffsetBy(0,40);
-	mix = new SpinSlider(r, NULL, Language.get("MIX_LEVEL"), new BMessage(CONTROL_CHANGED), 0, 100);
+	mix = new SpinSlider(r, NULL, B_TRANSLATE("Mix Level (%)"), new BMessage(CONTROL_CHANGED), 0, 100);
 	mix->SetValue(Prefs.filter_limiter_mix);
 	view->AddChild(mix);
 

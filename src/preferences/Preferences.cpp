@@ -60,7 +60,7 @@ void Preferences::Init(){
    FactorySettings();
    
    // Get that damn file 
-   YPreferences prefs(SETTINGS_DIR"/Faber");
+   YPreferences prefs(SETTINGS_DIR "/" FABER_CONF_NAME);
    if (prefs.InitCheck() != B_OK) {
       find_directory(B_USER_SETTINGS_DIRECTORY, &path);
       path.Append(SETTINGS_DIR);
@@ -214,10 +214,10 @@ void Preferences::Init(){
 *******************************************************/
 void Preferences::Sync(){
 	// Save the prefs for the App
-	YPreferences prefs(SETTINGS_DIR"/BeAE");
+	YPreferences prefs(SETTINGS_DIR "/" FABER_CONF_NAME);
 	if (prefs.InitCheck() != B_OK)	return;
    
-	prefs.SetString("Language_Name",Language.Name());
+	//prefs.SetString("Language_Name",Language.Name());
 	prefs.SetString("temp_dir",temp_dir.String());
 	prefs.SetRect("window_frame", frame);
 

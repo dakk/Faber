@@ -40,7 +40,7 @@
 /*******************************************************
 *   
 *******************************************************/
-RoomWindow::RoomWindow(bool b) : RealtimeFilter(Language.get("ROOM"), b)
+RoomWindow::RoomWindow(bool b) : RealtimeFilter(B_TRANSLATE("Room"), b)
 {
 	// can do some initiation here
 }
@@ -57,17 +57,17 @@ BView *RoomWindow::ConfigView()
 
 	r.InsetBy(8,8);
 	r.bottom = r.top + 23;
-	delay = new SpinSlider(r, NULL, Language.get("DELAY_MS"), new BMessage(CONTROL_CHANGED), 1, 500);
+	delay = new SpinSlider(r, NULL, B_TRANSLATE("Delay (ms)"), new BMessage(CONTROL_CHANGED), 1, 500);
 	delay->SetValue(Prefs.filter_room_delay * 1000);
 	view->AddChild(delay);
 
 	r.OffsetBy(0,40);
-	damping = new SpinSlider(r, NULL, Language.get("DAMPING"), new BMessage(CONTROL_CHANGED), 1, 100);
+	damping = new SpinSlider(r, NULL, B_TRANSLATE("Damping %"), new BMessage(CONTROL_CHANGED), 1, 100);
 	damping->SetValue(Prefs.filter_room_damping * 200);
 	view->AddChild(damping);
 
 	r.OffsetBy(0,40);
-	gain = new SpinSlider(r, NULL, Language.get("GAIN"), new BMessage(CONTROL_CHANGED), 1, 100);
+	gain = new SpinSlider(r, NULL, B_TRANSLATE("Gain (dB)"), new BMessage(CONTROL_CHANGED), 1, 100);
 	gain->SetValue(Prefs.filter_room_gain * 200);
 	view->AddChild(gain);
 

@@ -50,7 +50,7 @@
 /*******************************************************
 *   
 *******************************************************/
-ResampleWindow::ResampleWindow(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),Language.get("RESAMPLE_WINDOW"),B_FLOATING_WINDOW_LOOK,B_MODAL_APP_WINDOW_FEEL, B_NOT_RESIZABLE|B_NOT_ZOOMABLE)
+ResampleWindow::ResampleWindow(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),B_TRANSLATE("Resample"),B_FLOATING_WINDOW_LOOK,B_MODAL_APP_WINDOW_FEEL, B_NOT_RESIZABLE|B_NOT_ZOOMABLE)
 {
 	m_frequency = Pool.frequency;
 
@@ -63,7 +63,7 @@ ResampleWindow::ResampleWindow(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),Langua
 	rect.InsetBy(8,8);
 	rect.right = 110;
 	BBox *rate_box = new BBox(rect, NULL);
-	rate_box->SetLabel(Language.get("RATE"));
+	rate_box->SetLabel(B_TRANSLATE("RATE"));
 	BRect r = rate_box->Bounds();
 	r.InsetBy(8,8);
 
@@ -91,27 +91,27 @@ ResampleWindow::ResampleWindow(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),Langua
 	r.bottom = 130;
 	r.right = 250;
 	BBox *c_box = new BBox(r, NULL);
-	c_box->SetLabel(Language.get("CHANNELS"));
+	c_box->SetLabel(B_TRANSLATE("CHANNELS"));
 	r = c_box->Bounds();
 	r.InsetBy(8,8);
 	r.OffsetBy(0,8);
 	r.bottom = r.top + 19;
-	c_box->AddChild(mono = new BRadioButton(r, NULL, Language.get("MONO"), new BMessage(CHANGE_CHANNEL)));
+	c_box->AddChild(mono = new BRadioButton(r, NULL, B_TRANSLATE("Mono"), new BMessage(CHANGE_CHANNEL)));
 	if (Pool.sample_type == MONO)	mono->SetValue(B_CONTROL_ON);
 	r.OffsetBy(0,20);
-	c_box->AddChild(stereo = new BRadioButton(r, NULL, Language.get("STEREO"), new BMessage(CHANGE_CHANNEL)));
+	c_box->AddChild(stereo = new BRadioButton(r, NULL, B_TRANSLATE("Stereo"), new BMessage(CHANGE_CHANNEL)));
 	if (Pool.sample_type == STEREO)	stereo->SetValue(B_CONTROL_ON);
 
-	float x = 8 + MAX( be_plain_font->StringWidth(Language.get("LEFT_MIX")), be_plain_font->StringWidth(Language.get("RIGHT_MIX")));
+	float x = 8 + MAX( be_plain_font->StringWidth(B_TRANSLATE("Left Mix (%)")), be_plain_font->StringWidth(B_TRANSLATE("RIGHT_MIX")));
 	r.OffsetBy(0,30);
 	if (Pool.sample_type==MONO){
-		c_box->AddChild(left = new SpinControl(r, NULL, Language.get("LEFT_MIX"), NULL, 0, 400, Prefs.filter_resample_sl, 1));
+		c_box->AddChild(left = new SpinControl(r, NULL, B_TRANSLATE("Left Mix (%)"), NULL, 0, 400, Prefs.filter_resample_sl, 1));
 		r.OffsetBy(0,24);
-		c_box->AddChild(right = new SpinControl(r, NULL, Language.get("RIGHT_MIX"), NULL, 0, 400, Prefs.filter_resample_sr, 1));
+		c_box->AddChild(right = new SpinControl(r, NULL, B_TRANSLATE("Right Mix (%)"), NULL, 0, 400, Prefs.filter_resample_sr, 1));
 	}else{
-		c_box->AddChild(left = new SpinControl(r, NULL, Language.get("LEFT_MIX"), NULL, 0, 400, Prefs.filter_resample_ml, 1));
+		c_box->AddChild(left = new SpinControl(r, NULL, B_TRANSLATE("Left Mix (%)"), NULL, 0, 400, Prefs.filter_resample_ml, 1));
 		r.OffsetBy(0,24);
-		c_box->AddChild(right = new SpinControl(r, NULL, Language.get("RIGHT_MIX"), NULL, 0, 400, Prefs.filter_resample_mr, 1));
+		c_box->AddChild(right = new SpinControl(r, NULL, B_TRANSLATE("Right Mix (%)"), NULL, 0, 400, Prefs.filter_resample_mr, 1));
 	}
 	left->SetEnabled(false);
 	right->SetEnabled(false);
@@ -124,7 +124,7 @@ ResampleWindow::ResampleWindow(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),Langua
 	r.bottom = 130;
 	r.left = 258;
 	BBox *r_box = new BBox(r, NULL);
-	r_box->SetLabel(Language.get("RESOLUTION"));
+	r_box->SetLabel(B_TRANSLATE("Resolution"));
 	r = r_box->Bounds();
 	r.InsetBy(8,8);
 	r.top += 36;		// space for the textbox
@@ -158,10 +158,10 @@ ResampleWindow::ResampleWindow(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),Langua
 	r.top = r.bottom - 32;
 	r.bottom -=8;
 	r.right -= 8;
-	view->AddChild(new BButton(r, NULL, Language.get("APPLY"), new BMessage(SET)) );
+	view->AddChild(new BButton(r, NULL, B_TRANSLATE("Apply"), new BMessage(SET)) );
 //	r.OffsetBy(-(r.Width()+8), 0);
 	r.OffsetBy(0,-30);
-	view->AddChild(new BButton(r, NULL, Language.get("CANCEL"), new BMessage(B_QUIT_REQUESTED)) );
+	view->AddChild(new BButton(r, NULL, B_TRANSLATE("Cancel"), new BMessage(B_QUIT_REQUESTED)) );
 
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	AddChild(view);

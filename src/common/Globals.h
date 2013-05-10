@@ -43,15 +43,23 @@
 //#define __VM_SYSTEM	1		// this enables Virtual Memory
 
 #include <SupportDefs.h>
+#include <Locale.h>
+#include <Catalog.h>
 
 #include "CommonPool.h"
 #include "CommonClass.h"
-#include "YLanguageClass.h"
 #include "Preferences.h"
 #include "History.h"
 #include "MouseIcons.h"
 
 #include <stdio.h>
+
+// Translation
+
+#define B_TRANSLATION_CONTEXT "Faber"
+
+#define catSig "x-vnd.Be.locale.Faber"
+#define catName catSig".catalog"
 
 // Various settings
 
@@ -82,6 +90,10 @@ const int32 WINDOW_DEFAULT_SIZE_Y			= 600;
 //#define VERSION       "Final"
 // The directory off of /boot/home/settings that we look for Inferno settings
 #define SETTINGS_DIR    "Faber"
+#define FABER_CONF_NAME	"Faber"
+#define KEYBINDINGS_CONF_NAME "KeyBindings"
+#define LANGUAGE_CONF	"Languages"
+
 // Current directory that Inferno pulls plugins from
 #define FILTERS_DIR		"Plug-Ins/Filters"
 // Mime type for IDF files

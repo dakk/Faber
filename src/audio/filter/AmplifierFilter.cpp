@@ -39,7 +39,7 @@
 /*******************************************************
 *   
 *******************************************************/
-AmplifierFilter::AmplifierFilter(bool b) : RealtimeFilter(Language.get("AMPLIFIER"), b)
+AmplifierFilter::AmplifierFilter(bool b) : RealtimeFilter(B_TRANSLATE("Amplifier"), b)
 {
 
 }
@@ -56,7 +56,7 @@ BView *AmplifierFilter::ConfigView()
 
 	r.InsetBy(8,8);
 	r.bottom = r.top + 23;
-	value = new SpinSlider(r, NULL, Language.get("LEVEL"), new BMessage(CONTROL_CHANGED), 1, 300);
+	value = new SpinSlider(r, NULL, B_TRANSLATE("Level (%)"), new BMessage(CONTROL_CHANGED), 1, 300);
 	value->SetValue(Prefs.filter_amplifier_value);
 	view->AddChild(value);
 

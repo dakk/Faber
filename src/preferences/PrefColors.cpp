@@ -102,19 +102,19 @@ PrefColors::PrefColors(BRect frame):BView(frame, "Prefs color", B_FOLLOW_ALL,0){
 
 	r.right -= 32;
 	r.left = 8;
-	scheme = new BPopUpMenu(Language.get("COLORSCHEME"));
+	scheme = new BPopUpMenu(B_TRANSLATE("Color Scheme"));
 	BMenuItem *menuItem;
-	BMenuField *menu = new BMenuField(r,NULL,Language.get("COLORSCHEME"),scheme);
+	BMenuField *menu = new BMenuField(r,NULL,B_TRANSLATE("Color Scheme"),scheme);
 	BMessage *m;
 	for (int i=0; i<=4; i++){
 		m = new BMessage(NEW_SCHEME);
 		m->AddInt32("scheme",i);
 		sprintf(s, "SCHEME%d", i+1);
-		scheme->AddItem(menuItem = new BMenuItem(Language.get(s), m));
+		scheme->AddItem(menuItem = new BMenuItem(B_TRANSLATE(s), m));
 		if (i==0)	menuItem->SetMarked(true);
 	}
 
-	menu->SetDivider(be_plain_font->StringWidth(Language.get("COLORSCHEME")) +10);
+	menu->SetDivider(be_plain_font->StringWidth(B_TRANSLATE("Color Scheme")) +10);
 	AddChild(menu);
 
 	// add the prefs list at the left
@@ -131,7 +131,7 @@ PrefColors::PrefColors(BRect frame):BView(frame, "Prefs color", B_FOLLOW_ALL,0){
 
 	for (int i=1; i<=36; i++){
 		sprintf(s, "COLOR%d", i);
-		list->AddItem(new StringItem(Language.get(s)));
+		list->AddItem(new StringItem(B_TRANSLATE(s)));
 	}
 
 	AddChild(control = new BColorControl(BPoint(r.left+8, r.bottom+16), B_CELLS_32x8, 1, "colorControl", new BMessage(COLOR_CHANGE)));

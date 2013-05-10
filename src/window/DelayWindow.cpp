@@ -39,7 +39,7 @@
 /*******************************************************
 *   
 *******************************************************/
-DelayWindow::DelayWindow(bool b) : RealtimeFilter(Language.get("DELAY"), b)
+DelayWindow::DelayWindow(bool b) : RealtimeFilter(B_TRANSLATE("Delay..."), b)
 {
 
 }
@@ -56,12 +56,12 @@ BView *DelayWindow::ConfigView()
 
 	r.InsetBy(8,8);
 	r.bottom = r.top + 23;
-	delay = new SpinSlider(r, NULL, Language.get("DELAY_MS"), new BMessage(CONTROL_CHANGED), 1, 500);
+	delay = new SpinSlider(r, NULL, B_TRANSLATE("Delay (ms)"), new BMessage(CONTROL_CHANGED), 1, 500);
 	delay->SetValue(Prefs.filter_delay_delay * 1000);
 	view->AddChild(delay);
 
 	r.OffsetBy(0,40);
-	gain = new SpinSlider(r, NULL, Language.get("GAIN"), new BMessage(CONTROL_CHANGED), 1, 200);
+	gain = new SpinSlider(r, NULL, B_TRANSLATE("Gain %"), new BMessage(CONTROL_CHANGED), 1, 200);
 	gain->SetValue(Prefs.filter_delay_gain * 100);
 	view->AddChild(gain);
 

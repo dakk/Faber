@@ -237,20 +237,3 @@ status_t YPreferences::FindColor(const char *name, rgb_color *c){
    if(FindInt8(s.String(),(int8*)&(c->alpha)) != B_OK){ return B_ERROR; }
    return B_OK;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

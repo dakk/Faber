@@ -18,29 +18,34 @@ Application Faber :
 	AboutBox.cpp
 	BigView.cpp
 	MyClipBoard.cpp
-	PrefView.cpp
-
 	CommonClass.cpp
 	OpenPanel.cpp
-	PrefWindow.cpp
 	VMSystem.cpp
 	CommonPool.cpp
 	PeakFile.cpp
 	ProjectManager.cpp
 	VUView.cpp
 	Debug.cpp
-	PrefColors.cpp
+
 	SavePanel.cpp
-	YLanguageClass.cpp
 	History.cpp
+	MyStringItem.cpp
+	BitmapDrawer.cpp
+	SampleScopeWindow.cpp
+
+	# Settings
+	YPreferences.cpp
+	#YLanguageClass.cpp
 	Preferences.cpp
 	PrefGeneral.cpp
 	Shortcut.cpp
 	PrefKeys.cpp
-	MyStringItem.cpp
-	YPreferences.cpp
-	BitmapDrawer.cpp
-	SampleScopeWindow.cpp
+	PrefView.cpp
+	#PrefWindow.cpp
+	PrefColors.cpp
+
+	SettingsWindow.cpp
+	SettingsView.cpp
 
 	# Implementations were they will merge
 	IndexView.cpp
@@ -66,6 +71,7 @@ Application Faber :
 	PeakView.cpp
 	SampleView.cpp
 	SpinButton.cpp
+	VolumeSlider.cpp
 
 	# filters
 	AmplifierFilter.cpp

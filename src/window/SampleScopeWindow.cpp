@@ -100,7 +100,7 @@ void SampleScopeView::Draw(BRect r)
 /*******************************************************
 *   
 *******************************************************/
-SampleScopeWindow::SampleScopeWindow() : AnalyzeWindow(BRect(50, 50, 270, 150),Language.get("SAMPLE_SCOPE"))
+SampleScopeWindow::SampleScopeWindow() : AnalyzeWindow(BRect(50, 50, 270, 150),B_TRANSLATE("Sample Scope"))
 {
 	AddChild(view = new SampleScopeView(Bounds()));
 }

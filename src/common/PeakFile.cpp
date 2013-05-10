@@ -25,13 +25,14 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
-#include <stdlib.h>
-#include <stdio.h>
+#include <Alert.h>
 
 #include "Globals.h"
 #include "PeakFile.h"
 #include "VMSystem.h"
+
+#include <stdlib.h>
+#include <stdio.h>
 
 CPeakFile Peak;
 
@@ -72,7 +73,7 @@ void CPeakFile::Init(int32 size, bool mono)
 		buffer_left = p;				// new block
 		memset( buffer_left, 0, mem);	// wipe buffer
 	}else{
-		(new BAlert(NULL,Language.get("MEM_ERROR"),Language.get("OK")))->Go();
+		(new BAlert(NULL,B_TRANSLATE("Not enough memory to load file!"),B_TRANSLATE("OK")))->Go();
 		be_app->Quit();
 	}
 	
@@ -82,7 +83,7 @@ void CPeakFile::Init(int32 size, bool mono)
 			buffer_right = p;				// new block
 			memset( buffer_right, 0, mem);	// wipe buffer
 		}else{
-			(new BAlert(NULL,Language.get("MEM_ERROR"),Language.get("OK")))->Go();
+			(new BAlert(NULL,B_TRANSLATE("Not enough memory to load file!"),B_TRANSLATE("OK")))->Go();
 			be_app->Quit();
 		}
 	}else{

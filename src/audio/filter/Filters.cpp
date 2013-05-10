@@ -26,7 +26,8 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <stdio.h>
+
+#include <Path.h>
 #include <File.h>
 
 #include "Globals.h"
@@ -44,6 +45,8 @@
 #include "CompressorFilter.h"
 #include "NormalizeFilter.h"
 
+#include <stdio.h>
+
 #define FILTER_BLOCK	2048
 
 float filmod[11][260]; // stores for 9 band EQ 
@@ -55,22 +58,22 @@ int32 __FilterCount = 0;		// nr of open filters
 
 filter_info __FilterList[] = { 	
 	{"---", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
-	{"SILENCE", FILTER_BOTH, 1},
+	{"Silence", FILTER_BOTH, 1},
 	{"---", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
-	{"FADE_IN", FILTER_BOTH, 1},
-	{"FADE_OUT", FILTER_BOTH, 1},
-	{"NORMALIZE", FILTER_BOTH | FILTER_GUI, 2},
+	{"Fade In", FILTER_BOTH, 1},
+	{"Fade Out", FILTER_BOTH, 1},
+	{"Normalize", FILTER_BOTH | FILTER_GUI, 2},
 	{"---", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
-	{"BASSBOOST", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
-	{"COMPRESSOR", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
-	{"AMPLIFIER", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
+	{"Bass Boost", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
+	{"Compressor", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
+	{"Amplifier", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
 	{"---", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
-	{"DELAY", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
-	{"REVERB", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
-	{"ROOM", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
+	{"Delay", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
+	{"Reverb", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
+	{"Room", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
 	{"---", FILTER_BOTH | FILTER_REALTIME | FILTER_GUI, 1},
-	{"INVERT", FILTER_BOTH, 1},
-	{"SWAP", FILTER_STEREO, 1},
+	{"Invert", FILTER_BOTH, 1},
+	{"Swap", FILTER_STEREO, 1},
 {NULL,0, 0} };
 
 // reinstate the last filter using the tag from the prefs
@@ -95,40 +98,40 @@ RealtimeFilter *CreateFilter(int32 filter)
 	RealtimeFilter *pFilter = NULL;
 	bool bRealtime = __FilterList[filter].type & FILTER_REALTIME;
 	
-	if (strcmp(__FilterList[filter].name, "ROOM") == 0)
+	if (strcmp(__FilterList[filter].name, "Room") == 0)
 		pFilter = new RoomWindow(bRealtime);
 
-	else if (strcmp(__FilterList[filter].name, "DELAY") == 0)
+	else if (strcmp(__FilterList[filter].name, "Delay") == 0)
 		pFilter = new DelayWindow(bRealtime);
 
-	else if (strcmp(__FilterList[filter].name, "REVERB") == 0)
+	else if (strcmp(__FilterList[filter].name, "Reverb") == 0)
 		pFilter = new ReverbWindow(bRealtime);
 
-	else if (strcmp(__FilterList[filter].name, "BASSBOOST") == 0)
+	else if (strcmp(__FilterList[filter].name, "Bass Boost") == 0)
 		pFilter = new BassBoostFilter(bRealtime);
 
-	else if (strcmp(__FilterList[filter].name, "INVERT") == 0)
+	else if (strcmp(__FilterList[filter].name, "Invert") == 0)
 		pFilter = new InvertFilter();
 
-	else if (strcmp(__FilterList[filter].name, "SWAP") == 0)
+	else if (strcmp(__FilterList[filter].name, "Swap") == 0)
 		pFilter = new SwapFilter();
 
-	else if (strcmp(__FilterList[filter].name, "AMPLIFIER") == 0)
+	else if (strcmp(__FilterList[filter].name, "Amplifier") == 0)
 		pFilter = new AmplifierFilter(bRealtime);
 
-	else if (strcmp(__FilterList[filter].name, "COMPRESSOR") == 0)
+	else if (strcmp(__FilterList[filter].name, "Compressor") == 0)
 		pFilter = new CompressorFilter(bRealtime);
 
-	else if (strcmp(__FilterList[filter].name, "SILENCE") == 0)
+	else if (strcmp(__FilterList[filter].name, "Silence") == 0)
 		pFilter = new SilenceFilter();
 
-	else if (strcmp(__FilterList[filter].name, "FADE_IN") == 0)
+	else if (strcmp(__FilterList[filter].name, "Fade In") == 0)
 		pFilter = new FadeInFilter();
 
-	else if (strcmp(__FilterList[filter].name, "FADE_OUT") == 0)
+	else if (strcmp(__FilterList[filter].name, "Fade Out") == 0)
 		pFilter = new FadeOutFilter();
 
-	else if (strcmp(__FilterList[filter].name, "NORMALIZE") == 0)
+	else if (strcmp(__FilterList[filter].name, "Normalize") == 0)
 		pFilter = new NormalizeFilter();
 
 	// set the passes the filter needs
@@ -229,7 +232,7 @@ void ExecuteFilter(RealtimeFilter *pFilter)
 		float *filter_buffer = new float[FILTER_BLOCK];
 		
 		int32 size = (Pool.r_sel_pointer - Pool.pointer +1)*Pool.sample_type;
-		Pool.StartProgress(Language.get("WORKING"), size * pFilter->Passes());
+		Pool.StartProgress(B_TRANSLATE("Working..."), size * pFilter->Passes());
 
 #ifndef __VM_SYSTEM	// RAM
 		for (int32 filter_pass = 0; filter_pass < pFilter->Passes(); filter_pass++)
@@ -449,7 +452,7 @@ void DoResample()
 
 	int32 buffer_pointer = 0;
 
-	Pool.StartProgress(Language.get("RESAMPLING"), Pool.size);
+	Pool.StartProgress(B_TRANSLATE("Resampling..."), Pool.size);
 	if (Pool.sample_type == MONO && Prefs.filter_resample_mono){		// mono to mono
 		while(mem<= end){
 			left = *mem;

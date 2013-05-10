@@ -101,18 +101,18 @@ void TransportView::AttachedToWindow()
 	AddChild(loop = TransportButton( r, "./Bitmaps/LoopButton.png", new BMessage(TRANSPORT_LOOP), B_TWO_STATE_BUTTON, this));
 
 	r.OffsetTo(144,9);
-	AddChild( ToolBarButton( r, 16, Language.get("ZOOM_IN"), new BMessage(ZOOM_IN), B_ONE_STATE_BUTTON, this));
+	AddChild( ToolBarButton( r, 16, B_TRANSLATE("Zoom in"), new BMessage(ZOOM_IN), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( ToolBarButton( r, 21, Language.get("ZOOM_SELECTION"), new BMessage(ZOOM_SELECTION), B_ONE_STATE_BUTTON, this));
+	AddChild( ToolBarButton( r, 21, B_TRANSLATE("Zoom to selection"), new BMessage(ZOOM_SELECTION), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( ToolBarButton( r, 18, Language.get("ZOOM_LEFT"), new BMessage(ZOOM_LEFT), B_ONE_STATE_BUTTON, this));
+	AddChild( ToolBarButton( r, 18, B_TRANSLATE("Zoom to left pointer"), new BMessage(ZOOM_LEFT), B_ONE_STATE_BUTTON, this));
 
 	r.OffsetTo(144,31);
-	AddChild( ToolBarButton( r, 17, Language.get("ZOOM_OUT"), new BMessage(ZOOM_OUT), B_ONE_STATE_BUTTON, this));
+	AddChild( ToolBarButton( r, 17, B_TRANSLATE("Zoom to right pointer"), new BMessage(ZOOM_OUT), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( ToolBarButton( r, 20, Language.get("ZOOM_FULL"), new BMessage(ZOOM_FULL), B_ONE_STATE_BUTTON, this));
+	AddChild( ToolBarButton( r, 20, B_TRANSLATE("Zoom full wave"), new BMessage(ZOOM_FULL), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( ToolBarButton( r, 19, Language.get("ZOOM_RIGHT"), new BMessage(ZOOM_RIGHT), B_ONE_STATE_BUTTON, this));
+	AddChild( ToolBarButton( r, 19, B_TRANSLATE("Zoom to right pointer"), new BMessage(ZOOM_RIGHT), B_ONE_STATE_BUTTON, this));
 }
 
 //*****************************************************

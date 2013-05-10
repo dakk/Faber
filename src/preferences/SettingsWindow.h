@@ -13,8 +13,9 @@
 #include <GroupLayout.h>
 #include <Window.h>
 #include <View.h>
-#include "SettingsView.h"
 
+#include "SettingsView.h"
+#include "Globals.h"
 
 /**
  * Finestra dei settaggi

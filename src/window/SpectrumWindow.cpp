@@ -152,7 +152,7 @@ void SpectrumView::Pulse()
 /*******************************************************
 *   
 *******************************************************/
-SpectrumWindow::SpectrumWindow() : AnalyzeWindow(BRect(50,200,270, 300),Language.get("SPECTRUM_ANALYZER"))
+SpectrumWindow::SpectrumWindow() : AnalyzeWindow(BRect(50,200,270, 300),B_TRANSLATE("Spectrum Analyzer"))
 {
 	AddChild(view = new SpectrumView(Bounds()));
 }

@@ -51,7 +51,7 @@
 #include "CommonPool.h"
 #include "ProgressWindow.h"
 #include "YPreferences.h"
-#include "YLanguageClass.h"
+//#include "YLanguageClass.h"
 #include "AboutBox.h"
 #include "MyClipBoard.h"
 #include "MainWindow.h"
@@ -162,7 +162,7 @@ void CommonPool::ResetIndexView()
 {
 	if (sample_type == NONE) return;
 
-	StartProgress(Language.get("INDEXING"), size);
+	StartProgress(B_TRANSLATE("Indexing..."), size);
 
 	Peak.Init(size+1, (Pool.sample_type == MONO) );
 	Peak.CreatePeaks(0, size+1, size+1);
@@ -381,7 +381,7 @@ void CommonPool::UpdateMenu()
 	}
 	
 	if (Prefs.repeat_message)
-		menu_transform->AddItem(menuItem = new BMenuItem(Language.get(Prefs.repeat_tag.String()), new BMessage(RUN_LAST_FILTER), KeyBind.GetKey("REPEAT_ACTION"), KeyBind.GetMod("REPEAT_ACTION")));
+		menu_transform->AddItem(menuItem = new BMenuItem(B_TRANSLATE(Prefs.repeat_tag.String()), new BMessage(RUN_LAST_FILTER), KeyBind.GetKey("REPEAT_ACTION"), KeyBind.GetMod("REPEAT_ACTION")));
 
 // transform menu
 
@@ -399,7 +399,7 @@ void CommonPool::UpdateMenu()
 			// can do some stuff to organise menu here
 		 	filter_msg = new BMessage(RUN_FILTER);
 			filter_msg->AddInt32("filter", filter);
-			sprintf(name, Language.get(__FilterList[filter].name));
+			sprintf(name, B_TRANSLATE(__FilterList[filter].name));
 			if ( __FilterList[filter].type & FILTER_GUI )
 				strcat(name, "...");
 			menu_transform->AddItem(menuItem = new BMenuItem(name, filter_msg, KeyBind.GetKey(__FilterList[filter].name), KeyBind.GetMod(__FilterList[filter].name)));
@@ -414,8 +414,8 @@ void CommonPool::UpdateMenu()
 		delete menuItem;
 	}
 	
-	menu_analyze->AddItem(menuItem = new BMenuItem(Language.get("SPECTRUM_ANALYZER"), new BMessage(SPECTRUM), KeyBind.GetKey("SPECTRUM_ANALYZER"), KeyBind.GetMod("SPECTRUM_ANALYZER")));
-	menu_analyze->AddItem(menuItem = new BMenuItem(Language.get("SAMPLE_SCOPE"), new BMessage(SAMPLE_SCOPE), KeyBind.GetKey("SAMPLE_SCOPE"), KeyBind.GetMod("SAMPLE_SCOPE")));
+	menu_analyze->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Spectrum Analyzer"), new BMessage(SPECTRUM), KeyBind.GetKey("SPECTRUM_ANALYZER"), KeyBind.GetMod("SPECTRUM_ANALYZER")));
+	menu_analyze->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Sample Scope"), new BMessage(SAMPLE_SCOPE), KeyBind.GetKey("SAMPLE_SCOPE"), KeyBind.GetMod("SAMPLE_SCOPE")));
 
 	menu_transform->SetEnabled(sample_type != NONE);	// transform menu
 	menu_analyze->SetEnabled(sample_type != NONE);		// analyzers menu
@@ -457,7 +457,7 @@ void CommonPool::UpdateMenu()
 bool CommonPool::IsChanged(int32 mode)
 {
 	if (changed){
-		int32 k = (new BAlert(NULL,Language.get("SAVE_NEEDED"),Language.get("SAVE"),Language.get("DISCARD"),Language.get("CANCEL")))->Go();
+		int32 k = (new BAlert(NULL,B_TRANSLATE("This project has changed. Do you want to save it now?"),B_TRANSLATE("SAVE"),B_TRANSLATE("DISCARD"),B_TRANSLATE("CANCEL")))->Go();
 		switch(k){
 		case 0:
 			save_selection = false;
@@ -787,7 +787,7 @@ status_t CommonPool::AddFilter(BEntry entry){
       tmp.Append(name);
       tmp.Append("\" does not have a Catagory set, Adding to General");
       ICommon.Log(tmp.String());
-      fe->catagory = new char[strlen(Language.get("GENERAL_FILTER_MENU"))+1]; strcpy(fe->catagory,Language.get("GENERAL_FILTER_MENU"));
+      fe->catagory = new char[strlen(B_TRANSLATE("GENERAL_FILTER_MENU"))+1]; strcpy(fe->catagory,B_TRANSLATE("GENERAL_FILTER_MENU"));
    }
    if(desc && *desc){
       fe->desc = new char[strlen(desc)+1]; strcpy(fe->desc,desc);

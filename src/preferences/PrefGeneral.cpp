@@ -55,67 +55,67 @@ PrefGeneral::PrefGeneral(BRect frame):BView(frame, "Prefs general", B_FOLLOW_ALL
 //	r.right /=2;
 	r.top = 5;	r.bottom = 25;
 	float right = r.right;
-	
-	langmenu = new BPopUpMenu(Language.Name());
 	BMenuField *menu;
+	/*langmenu = new BPopUpMenu(Language.Name());
+
 	r.right *= .75;
-	AddChild(menu = new BMenuField(r,NULL,Language.get("LANGUAGE"),langmenu));
+	AddChild(menu = new BMenuField(r,NULL,B_TRANSLATE("Set Language"),langmenu));
 	r.right = right;
-	menu->SetDivider(be_plain_font->StringWidth(Language.get("LANGUAGE")) +10);
-	
+	menu->SetDivider(be_plain_font->StringWidth(B_TRANSLATE("Set Language")) +10);
+	*/
 	
 	r.OffsetBy(0,30);
-	AddChild(c_grid = new BCheckBox(r, "grid", Language.get("SHOWGRID"), new BMessage(BOOL_CHANGED)));
+	AddChild(c_grid = new BCheckBox(r, "grid", B_TRANSLATE("Showgrid"), new BMessage(BOOL_CHANGED)));
 	if (Prefs.show_grid)	c_grid->SetValue(B_CONTROL_ON);
 	r.OffsetBy(0,18);
-	AddChild(c_peak = new BCheckBox(r, "peak", Language.get("SHOWPEAK"), new BMessage(BOOL_CHANGED)));
+	AddChild(c_peak = new BCheckBox(r, "peak", B_TRANSLATE("Show Peak lines"), new BMessage(BOOL_CHANGED)));
 	if (Prefs.show_peak)	c_peak->SetValue(B_CONTROL_ON);
 	r.OffsetBy(0,18);
 	r.right *= .6;
-	AddChild(s_peak = new SpinControl(r, NULL, Language.get("PEAKLEVEL"), new BMessage(PEAK_LEVEL), 1, 100, Prefs.peak*100, 2));
+	AddChild(s_peak = new SpinControl(r, NULL, B_TRANSLATE("Peak level %"), new BMessage(PEAK_LEVEL), 1, 100, Prefs.peak*100, 2));
 	r.right = right;
 	s_peak->SetDivider(r.Width()*.4);
 
 	r.OffsetBy(0,28);
-	AddChild(c_paste = new BCheckBox(r, "paste", Language.get("SELECT_PASTE"), new BMessage(BOOL_CHANGED)));
+	AddChild(c_paste = new BCheckBox(r, "paste", B_TRANSLATE("Select Pasted clip"), new BMessage(BOOL_CHANGED)));
 	if (Prefs.select_after_paste)	c_paste->SetValue(B_CONTROL_ON);
 	r.OffsetBy(0,18);
-	AddChild(c_follow_playing = new BCheckBox(r, "follow", Language.get("FOLLOW_PLAYING"), new BMessage(BOOL_CHANGED)));
+	AddChild(c_follow_playing = new BCheckBox(r, "follow", B_TRANSLATE("Follow while playing"), new BMessage(BOOL_CHANGED)));
 	if (Prefs.follow_playing)	c_follow_playing->SetValue(B_CONTROL_ON);
 	r.OffsetBy(0,18);
-	AddChild(c_play = new BCheckBox(r, "play", Language.get("PLAYONLOAD"), new BMessage(BOOL_CHANGED)));
+	AddChild(c_play = new BCheckBox(r, "play", B_TRANSLATE("Play when loaded"), new BMessage(BOOL_CHANGED)));
 	if (Prefs.play_when_loaded)	c_play->SetValue(B_CONTROL_ON);
 	r.OffsetBy(0,18);
-	AddChild(c_double = new BCheckBox(r, "double", Language.get("SELECT_DOUBLE"), new BMessage(BOOL_CHANGED)));
+	AddChild(c_double = new BCheckBox(r, "double", B_TRANSLATE("Select All on double click"), new BMessage(BOOL_CHANGED)));
 	if (Prefs.select_all_on_double)	c_double->SetValue(B_CONTROL_ON);
 	r.OffsetBy(0,18);
-	AddChild(c_drag_drop = new BCheckBox(r, "dragndrop", Language.get("DRAG_DROP"), new BMessage(BOOL_CHANGED)));
+	AddChild(c_drag_drop = new BCheckBox(r, "dragndrop", B_TRANSLATE("Drag 'n Drop"), new BMessage(BOOL_CHANGED)));
 	if (Prefs.drag_drop)	c_drag_drop->SetValue(B_CONTROL_ON);
 
 	r.OffsetBy(0,28);
-	time = new BPopUpMenu(Language.get("TIMEDISPLAY"));
-	menu = new BMenuField(r,NULL,Language.get("TIMEDISPLAY"),time);
+	time = new BPopUpMenu(B_TRANSLATE("Time display"));
+	menu = new BMenuField(r,NULL,B_TRANSLATE("Time display"),time);
 
 	BMessage *m = new BMessage(SET_TIME);
 	m->AddInt32("time",DISPLAY_SAMPLES);
-	time->AddItem(menu_sample = new BMenuItem(Language.get("SAMPLES"), m));
+	time->AddItem(menu_sample = new BMenuItem(B_TRANSLATE("Samples"), m));
 	if (Prefs.display_time == DISPLAY_SAMPLES)	menu_sample->SetMarked(true);
 
 	m = new BMessage(SET_TIME);
 	m->AddInt32("time",DISPLAY_TIME);
-	time->AddItem(menu_time = new BMenuItem(Language.get("TIME"), m));
+	time->AddItem(menu_time = new BMenuItem(B_TRANSLATE("Time"), m));
 	if (Prefs.display_time == DISPLAY_TIME)	menu_time->SetMarked(true);
 
-	menu->SetDivider(be_plain_font->StringWidth(Language.get("TIMEDISPLAY")) +10);
+	menu->SetDivider(be_plain_font->StringWidth(B_TRANSLATE("Time Display")) +10);
 	AddChild(menu);
 
 	r.OffsetBy(0,28);
 	r.right *= .98;
-	AddChild(temp_file = new BTextControl(r, NULL, Language.get("TEMP_DIR"), Prefs.temp_dir.String(), new BMessage(SET_TEMP) ));
+	AddChild(temp_file = new BTextControl(r, NULL, B_TRANSLATE("Temporary directory"), Prefs.temp_dir.String(), new BMessage(SET_TEMP) ));
 	temp_file->SetDivider(r.Width()*.4);
 
 	r.OffsetBy(0,24);
-	AddChild(s_free = new SpinControl(r, NULL, Language.get("KEEP_FREE"), new BMessage(SPIN_CHANGED), 10, 10000, Prefs.keep_free, 10));
+	AddChild(s_free = new SpinControl(r, NULL, B_TRANSLATE("Minimum diskspace to keep free (Mb)"), new BMessage(SPIN_CHANGED), 10, 10000, Prefs.keep_free, 10));
 	r.right = right;
 	s_free->SetDivider(r.Width()*.74);
 
@@ -125,8 +125,7 @@ PrefGeneral::PrefGeneral(BRect frame):BView(frame, "Prefs general", B_FOLLOW_ALL
 *  
 *******************************************************/
 void PrefGeneral::AddLanguageMenu()
-{
-	while (langmenu->ItemAt(0))
+{/*	while (langmenu->ItemAt(0))
 		langmenu->RemoveItem(langmenu->ItemAt(0));
 
 	app_info ai;
@@ -152,7 +151,7 @@ void PrefGeneral::AddLanguageMenu()
 				menuitem->SetMarked(true);
 			}
 		}
-	}
+	}*/
 }
 
 /*******************************************************
@@ -201,7 +200,7 @@ void PrefGeneral::MessageReceived(BMessage *msg){
 	switch(msg->what){
 	case CHANGE_LANGUAGE:
 		if(msg->FindString("language",(const char**)&lname) == B_OK){
-			Language.SetName(lname);
+			//Language.SetName(lname);
 			Window()->PostMessage(msg);
 			be_app->PostMessage(CHANGE_LANGUAGE);
 		}
@@ -239,7 +238,7 @@ void PrefGeneral::MessageReceived(BMessage *msg){
 	
 	case SET_TEMP:
 		Prefs.temp_dir.SetTo(temp_file->Text());
-		(new BAlert(NULL,Language.get("TEMP_CHANGED"),Language.get("OK")))->Go();
+		(new BAlert(NULL,B_TRANSLATE("TEMP_CHANGED"),B_TRANSLATE("OK")))->Go();
 		break;
 
 	default:

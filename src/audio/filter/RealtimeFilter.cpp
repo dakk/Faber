@@ -51,12 +51,12 @@ RealtimeFilter::RealtimeFilter(const char *name, bool realtime)
 	BView *view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	view->AddChild(new BButton(BRect(r.right-78, r.bottom-30, r.right-8, r.bottom-8), NULL, Language.get("APPLY"), new BMessage(SET),
+	view->AddChild(new BButton(BRect(r.right-78, r.bottom-30, r.right-8, r.bottom-8), NULL, B_TRANSLATE("Apply"), new BMessage(SET),
 		B_FOLLOW_RIGHT | B_FOLLOW_BOTTOM ));
-	view->AddChild(new BButton(BRect(r.right-153, r.bottom-30, r.right-83, r.bottom-8), NULL, Language.get("CANCEL"), new BMessage(B_QUIT_REQUESTED),
+	view->AddChild(new BButton(BRect(r.right-153, r.bottom-30, r.right-83, r.bottom-8), NULL, B_TRANSLATE("Cancel"), new BMessage(B_QUIT_REQUESTED),
 		B_FOLLOW_RIGHT | B_FOLLOW_BOTTOM ));
 
-	view->AddChild(box = new BCheckBox(BRect(8, r.bottom-28, r.right-153, r.bottom-8), NULL, Language.get("BYPASS"), NULL, B_FOLLOW_BOTTOM));
+	view->AddChild(box = new BCheckBox(BRect(8, r.bottom-28, r.right-153, r.bottom-8), NULL, B_TRANSLATE("Bypass"), NULL, B_FOLLOW_BOTTOM));
 	if (!realtime)
 	{
 		box->SetValue(B_CONTROL_ON);

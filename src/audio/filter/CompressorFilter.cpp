@@ -39,7 +39,7 @@
 /*******************************************************
 *   
 *******************************************************/
-CompressorFilter::CompressorFilter(bool b) : RealtimeFilter(Language.get("COMPRESSOR"), b)
+CompressorFilter::CompressorFilter(bool b) : RealtimeFilter(B_TRANSLATE("COMPRESSOR"), b)
 {
 
 }
@@ -56,33 +56,33 @@ BView *CompressorFilter::ConfigView()
 
 	r.InsetBy(8,8);
 	r.bottom = r.top + 23;
-	rms = new BCheckBox(r, NULL, Language.get("RMS"), new BMessage(CONTROL_CHANGED));
+	rms = new BCheckBox(r, NULL, B_TRANSLATE("Calculate in RMS"), new BMessage(CONTROL_CHANGED));
 	rms->SetValue(Prefs.filter_compressor_rms);
 	view->AddChild(rms);
 
 	r.OffsetBy(0,20);
-	attac = new SpinSlider(r, NULL, Language.get("ATTAC"), new BMessage(CONTROL_CHANGED), 0, 1000);
+	attac = new SpinSlider(r, NULL, B_TRANSLATE("Attack Time (ms)"), new BMessage(CONTROL_CHANGED), 0, 1000);
 	attac->SetValue(Prefs.filter_compressor_attac * 1000);
 	view->AddChild(attac);
 
 	r.OffsetBy(0,40);
 	r.bottom = r.top + 23;
-	decay = new SpinSlider(r, NULL, Language.get("DECAY"), new BMessage(CONTROL_CHANGED), 0, 1000);
+	decay = new SpinSlider(r, NULL, B_TRANSLATE("Decay time (ms)"), new BMessage(CONTROL_CHANGED), 0, 1000);
 	decay->SetValue(Prefs.filter_compressor_decay * 1000);
 	view->AddChild(decay);
 
 	r.OffsetBy(0,40);
-	treshold = new SpinSlider(r, NULL, Language.get("CMP_TRESHOLD"), new BMessage(CONTROL_CHANGED), -60, 18);
+	treshold = new SpinSlider(r, NULL, B_TRANSLATE("Threshold (dB)"), new BMessage(CONTROL_CHANGED), -60, 18);
 	treshold->SetValue(Prefs.filter_compressor_treshold);
 	view->AddChild(treshold);
 
 	r.OffsetBy(0,40);
-	ratio = new SpinSlider(r, NULL, Language.get("CMP_RATIO"), new BMessage(CONTROL_CHANGED), 1, 100);
+	ratio = new SpinSlider(r, NULL, B_TRANSLATE("Ratio"), new BMessage(CONTROL_CHANGED), 1, 100);
 	ratio->SetValue(Prefs.filter_compressor_ratio);
 	view->AddChild(ratio);
 
 	r.OffsetBy(0,40);
-	gain = new SpinSlider(r, NULL, Language.get("GAIN_DB"), new BMessage(CONTROL_CHANGED), 0, 24);
+	gain = new SpinSlider(r, NULL, B_TRANSLATE("Gain (dB)"), new BMessage(CONTROL_CHANGED), 0, 24);
 	gain->SetValue(Prefs.filter_compressor_gain);
 	view->AddChild(gain);
 

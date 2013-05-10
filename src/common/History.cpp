@@ -27,16 +27,15 @@
 */
 
 #include <Application.h>
+#include <Alert.h>
 #include <Entry.h>
 #include <Path.h>
 #include <File.h>
+#include <Roster.h>
 #include <Volume.h>
-#include <stdio.h>
 
-// Needed for malloc and friends
-#if defined(__HAIKU__)
+#include <stdio.h>
 #include <stdlib.h>
-#endif
 
 #include "CommonPool.h"
 #include "History.h"
@@ -111,7 +110,7 @@ bool History::Save(uint32 action, uint32 start, uint32 end){
 
 	BVolume vol(file_ref.device);
 	if(vol.FreeBytes() < ((end-start)*4+(Prefs.keep_free*1024*1224))){
-		(new BAlert(NULL,Language.get("UNDO_ERROR"),Language.get("OK")))->Go();
+		(new BAlert(NULL,B_TRANSLATE("Disk Full, no Undo possible!"),B_TRANSLATE("OK")))->Go();
 		release_sem(histSem);
 		return false;
 	}
@@ -143,7 +142,7 @@ bool History::Save(uint32 action, uint32 start, uint32 end){
 		if (size < BLOCK_SIZE*4){					// files smaller than 256Kb without progressBar
 			HistoryFile->Write((void*)(Pool.sample_memory), size);
 		}else{
-			Pool.StartProgress(Language.get("SAVE_UNDO"), size);
+			Pool.StartProgress(B_TRANSLATE("Saving Undo data..."), size);
 			char *p = (char*)(Pool.sample_memory);
 			while(size>=BLOCK_SIZE){
 				HistoryFile->Write((void*)p, BLOCK_SIZE);
@@ -169,7 +168,7 @@ bool History::Save(uint32 action, uint32 start, uint32 end){
 		if (size < BLOCK_SIZE*4){					// files smaller than 256Kb without progressBar
 			HistoryFile->Write((void*)(Pool.sample_memory+start*Pool.sample_type), size);
 		}else{
-			Pool.StartProgress(Language.get("SAVE_UNDO"), size);
+			Pool.StartProgress(B_TRANSLATE("Saving Undo data..."), size);
 			char *p = (char*)(Pool.sample_memory+start*Pool.sample_type);
 			while(size>=BLOCK_SIZE){
 				HistoryFile->Write((void*)p, BLOCK_SIZE);
@@ -243,7 +242,7 @@ bool History::Restore(){
 		if (p){
 			Pool.sample_memory = p;		// new block
 		}else{
-			(new BAlert(NULL,Language.get("UNDO_MEM_ERROR"),Language.get("OK")))->Go();
+			(new BAlert(NULL,B_TRANSLATE("Not enough memory, no Undo possible!"),B_TRANSLATE("OK")))->Go();
 			Pool.size = old_size;
 			if (Pool.r_pointer>Pool.size)
 				Pool.r_pointer = Pool.size;
@@ -262,7 +261,7 @@ bool History::Restore(){
 		if (size < BLOCK_SIZE*4){					// files smaller than 256Kb without progressBar
 			HistoryFile->Read((void*)(Pool.sample_memory+start*Pool.sample_type), size);
 		}else{
-			Pool.StartProgress(Language.get("RESTORE_UNDO"), size);
+			Pool.StartProgress(B_TRANSLATE("Retrieving Undo data..."), size);
 			char *p = (char*)(Pool.sample_memory+start*Pool.sample_type);
 			while(size>=BLOCK_SIZE){
 				HistoryFile->Read((void*)p, BLOCK_SIZE);
@@ -297,7 +296,7 @@ bool History::Restore(){
 		if (size < BLOCK_SIZE*4){					// files smaller than 256Kb without progressBar
 			HistoryFile->Read((void*)(Pool.sample_memory), size);
 		}else{
-			Pool.StartProgress(Language.get("RESTORE_UNDO"), size);
+			Pool.StartProgress(B_TRANSLATE("Retrieving Undo data..."), size);
 			char *p = (char*)(Pool.sample_memory);
 			while(size>=BLOCK_SIZE){
 				HistoryFile->Read((void*)p, BLOCK_SIZE);

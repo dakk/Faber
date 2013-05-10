@@ -25,15 +25,18 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
-#include <TranslationKit.h>
 #include <Bitmap.h>
-#include <stdio.h>
+#include <MenuItem.h>
+#include <PopUpMenu.h>
+#include <TranslationKit.h>
 
 #include "Globals.h"
 #include "PointersView.h"
 #include "MainWindow.h"
 #include "Preferences.h"
+
+#include <stdio.h>
+
 
 class EntryView : public BTextView
 {
@@ -340,12 +343,12 @@ void PointersView::MouseDown(BPoint p)
 
 		BMessage *m = new BMessage(SET_TIME);
 		m->AddInt32("time",DISPLAY_SAMPLES);
-		popUp->AddItem(it = new BMenuItem(Language.get("SAMPLES"), m));
+		popUp->AddItem(it = new BMenuItem(B_TRANSLATE("Samples"), m));
 		if (Prefs.display_time == DISPLAY_SAMPLES)	it->SetMarked(true);
 
 		m = new BMessage(SET_TIME);
 		m->AddInt32("time",DISPLAY_TIME);
-		popUp->AddItem(it = new BMenuItem(Language.get("TIME"), m));
+		popUp->AddItem(it = new BMenuItem(B_TRANSLATE("Time"), m));
 		if (Prefs.display_time == DISPLAY_TIME)	it->SetMarked(true);
 		
 		ConvertToScreen(&p);

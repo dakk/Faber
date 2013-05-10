@@ -65,7 +65,7 @@ void ProgressWindow::MessageReceived(BMessage *message)
 
 void ProgressWindow::StartProgress(const char *label, int32 max)
 {
-	SetTitle(Language.get(label));
+	SetTitle(B_TRANSLATE(label));
 	bar->Reset();
 	bar->SetMaxValue(max);
 

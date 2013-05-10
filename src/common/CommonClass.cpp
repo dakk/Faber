@@ -92,13 +92,6 @@ void CommonClass::UpdateProgress(int32 precentcomplete){
 */
 
 /*******************************************************
-*   
-*******************************************************/
-const char* CommonClass::GetLanguageKey(const char *key){
-   return Language.get(key);
-}
-
-/*******************************************************
 *   This should set the zoom for the current document
 *   and not global alowing much fun!
 *******************************************************/

@@ -47,7 +47,6 @@
 #include "IndexView.h"
 #include "TimeBarView.h"
 #include "Filters.h"
-#include "PrefWindow.h"
 #include "FreqWindow.h"
 #include "MyClipBoard.h"
 #include "Shortcut.h"
@@ -399,13 +398,13 @@ MainWindow::MainWindow(BRect frame)
 	MoveTo( Prefs.frame.left, Prefs.frame.top );
 
 	// Set Language
-	Language.SetName(Prefs.lang_name.String());
+	//Language.SetName(Prefs.lang_name.String());
 	
 	// Now init the keyBindings
 	KeyBind.Init();
 	
 	Pool.progress = new ProgressWindow(BRect(0,0,300,30));
-	Pool.PrefWin = new PrefWindow();
+	Pool.PrefWin = new SettingsWindow();
 	
 	// create the player and recorder nodes
 	Pool.InitBufferPlayer( 44100 );	
@@ -418,7 +417,7 @@ MainWindow::MainWindow(BRect frame)
 	FiltersInit();
 
 	char s[255];
-	sprintf(s, "Faber - %s", Language.get("UNTITLED"));
+	sprintf(s, "Faber - %s", B_TRANSLATE("Untitled"));
 	SetTitle(s);
 
 // GUI
@@ -499,114 +498,114 @@ void MainWindow::AddMenu()
 	mainMenuBar = new MyMenuBar(menuBarRect, "MenuBar");
 	AddChild(mainMenuBar);
 	
-	menu = new BMenu(Language.get("FILE_MENU"));
+	menu = new BMenu(B_TRANSLATE("File"));
 	mainMenuBar->AddItem(menu);
-	menu->AddItem(menuItem = new BMenuItem(Language.get("FILE_NEW"), new BMessage(NEW), KeyBind.GetKey("FILE_NEW"), KeyBind.GetMod("FILE_NEW")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("New"), new BMessage(NEW), KeyBind.GetKey("FILE_NEW"), KeyBind.GetMod("FILE_NEW")));
 
-	recent_menu = new BMenu(Language.get("FILE_OPEN"));
+	recent_menu = new BMenu(B_TRANSLATE("Open..."));
 	UpdateRecent();
 	menu->AddItem(recent_menu);
-	BMenuItem *openitem = menu->FindItem(Language.get("FILE_OPEN"));
+	BMenuItem *openitem = menu->FindItem(B_TRANSLATE("Open..."));
 	openitem->SetShortcut(KeyBind.GetKey("FILE_OPEN"),KeyBind.GetMod("FILE_OPEN"));
 	openitem->SetMessage(new BMessage(OPEN));
 //	openitem->SetShortcut('O', 0);
 
-	menu->AddItem(menuItem = new BMenuItem(Language.get("FILE_INSERT"), new BMessage(INSERT), KeyBind.GetKey("FILE_INSERT"), KeyBind.GetMod("FILE_INSERT")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Insert..."), new BMessage(INSERT), KeyBind.GetKey("FILE_INSERT"), KeyBind.GetMod("FILE_INSERT")));
 	menuItem->SetEnabled(false);
-	menu->AddItem(menuItem = new BMenuItem(Language.get("FILE_APPEND"), new BMessage(APPEND), KeyBind.GetKey("FILE_APPEND"), KeyBind.GetMod("FILE_APPEND")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Append..."), new BMessage(APPEND), KeyBind.GetKey("FILE_APPEND"), KeyBind.GetMod("FILE_APPEND")));
 	menuItem->SetEnabled(false);
-	menu->AddItem(menuItem = new BMenuItem(Language.get("FILE_MIX"), new BMessage(OPEN_MIX), KeyBind.GetKey("FILE_MIX"), KeyBind.GetMod("FILE_MIX")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Mix..."), new BMessage(OPEN_MIX), KeyBind.GetKey("FILE_MIX"), KeyBind.GetMod("FILE_MIX")));
 	menuItem->SetEnabled(false);
 	menu->AddSeparatorItem();
-	menu->AddItem(menuItem = new BMenuItem(Language.get("FILE_SAVE"), new BMessage(SAVE), KeyBind.GetKey("FILE_SAVE"), KeyBind.GetMod("FILE_SAVE")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Save"), new BMessage(SAVE), KeyBind.GetKey("FILE_SAVE"), KeyBind.GetMod("FILE_SAVE")));
 	Pool.mn_save = menuItem;
-	menu->AddItem(menuItem = new BMenuItem(Language.get("FILE_SAVE_AS"), new BMessage(SAVE_AS), KeyBind.GetKey("FILE_SAVE_AS"), KeyBind.GetMod("FILE_SAVE_AS")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Save As..."), new BMessage(SAVE_AS), KeyBind.GetKey("FILE_SAVE_AS"), KeyBind.GetMod("FILE_SAVE_AS")));
 	Pool.mn_save_as = menuItem;
-	menu->AddItem(menuItem = new BMenuItem(Language.get("FILE_SAVE_SELECTION"), new BMessage(SAVE_SELECTION), KeyBind.GetKey("FILE_SAVE_SELECTION"), KeyBind.GetMod("FILE_SAVE_SELECTION")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Save Selection..."), new BMessage(SAVE_SELECTION), KeyBind.GetKey("FILE_SAVE_SELECTION"), KeyBind.GetMod("FILE_SAVE_SELECTION")));
 	Pool.mn_save_sel = menuItem;
 	menu->AddSeparatorItem();
-	menu->AddItem(menuItem = new BMenuItem(Language.get("PREFERENCES"), new BMessage(PREFERENCES), KeyBind.GetKey("PREFERENCES"), KeyBind.GetMod("PREFERENCES")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Preferences..."), new BMessage(PREFERENCES), KeyBind.GetKey("PREFERENCES"), KeyBind.GetMod("PREFERENCES")));
 	menu->AddSeparatorItem();
-	menu->AddItem(menuItem = new BMenuItem(Language.get("FILE_QUIT"), new BMessage(B_QUIT_REQUESTED), KeyBind.GetKey("FILE_QUIT"), KeyBind.GetMod("FILE_QUIT")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Quit"), new BMessage(B_QUIT_REQUESTED), KeyBind.GetKey("FILE_QUIT"), KeyBind.GetMod("FILE_QUIT")));
 
-	menu = new BMenu(Language.get("EDIT_MENU"));
+	menu = new BMenu(B_TRANSLATE("Edit"));
 	Pool.menu_edit = menu;
 	mainMenuBar->AddItem(menu);
-	menu->AddItem(menuItem = new BMenuItem(Language.get("UNDO"), new BMessage(UNDO), KeyBind.GetKey("UNDO"), KeyBind.GetMod("UNDO")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Undo"), new BMessage(UNDO), KeyBind.GetKey("UNDO"), KeyBind.GetMod("UNDO")));
 	Pool.mn_undo = menuItem;
 #ifdef __SAMPLE_STUDIO_LE
-	menu->AddItem(menuItem = new BMenuItem(Language.get("REDO"), new BMessage(REDO), KeyBind.GetKey("REDO"), KeyBind.GetMod("REDO")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Redo"), new BMessage(REDO), KeyBind.GetKey("REDO"), KeyBind.GetMod("REDO")));
 	Pool.mn_redo = menuItem;
 #endif
-	menu->AddItem(menuItem = new BMenuItem(Language.get("UNDO_ENABLE"), new BMessage(UNDO_ENABLE), KeyBind.GetKey("UNDO_ENABLE"), KeyBind.GetMod("UNDO_ENABLE")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Enable Undo"), new BMessage(UNDO_ENABLE), KeyBind.GetKey("UNDO_ENABLE"), KeyBind.GetMod("UNDO_ENABLE")));
 	Pool.mn_undo_enable = menuItem;
 	menuItem->SetMarked(Prefs.save_undo);
 	menu->AddSeparatorItem();
-	menu->AddItem(menuItem = new BMenuItem(Language.get("COPY"), new BMessage(B_COPY), KeyBind.GetKey("COPY"), KeyBind.GetMod("COPY")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy"), new BMessage(B_COPY), KeyBind.GetKey("COPY"), KeyBind.GetMod("COPY")));
 	Pool.mn_copy = menuItem;
-	menu->AddItem(menuItem = new BMenuItem(Language.get("COPY_SILENCE"), new BMessage(COPY_SILENCE), KeyBind.GetKey("COPY_SILENCE"), KeyBind.GetMod("COPY_SILENCE")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy & Silence"), new BMessage(COPY_SILENCE), KeyBind.GetKey("COPY_SILENCE"), KeyBind.GetMod("COPY_SILENCE")));
 	Pool.mn_copy_silence = menuItem;
-	menu->AddItem(menuItem = new BMenuItem(Language.get("CUT"), new BMessage(B_CUT), KeyBind.GetKey("CUT"), KeyBind.GetMod("CUT")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Cut"), new BMessage(B_CUT), KeyBind.GetKey("CUT"), KeyBind.GetMod("CUT")));
 	Pool.mn_cut = menuItem;
-	menu->AddItem(menuItem = new BMenuItem(Language.get("PASTE"), new BMessage(B_PASTE), KeyBind.GetKey("PASTE"), KeyBind.GetMod("PASTE")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Paste"), new BMessage(B_PASTE), KeyBind.GetKey("PASTE"), KeyBind.GetMod("PASTE")));
 	Pool.mn_paste = menuItem;
-	menu->AddItem(menuItem = new BMenuItem(Language.get("PASTE_NEW"), new BMessage(PASTE_NEW), KeyBind.GetKey("PASTE_NEW"), KeyBind.GetMod("PASTE_NEW")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Paste as new"), new BMessage(PASTE_NEW), KeyBind.GetKey("PASTE_NEW"), KeyBind.GetMod("PASTE_NEW")));
 	Pool.mn_paste_new = menuItem;
 #ifdef __SAMPLE_STUDIO_LE
-	menu->AddItem(menuItem = new BMenuItem(Language.get("EDIT_PASTE_MIX"), new BMessage(PASTE_MIXED), KeyBind.GetKey("EDIT_PASTE_MIX"), KeyBind.GetMod("EDIT_PASTE_MIX")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Paste & mix"), new BMessage(PASTE_MIXED), KeyBind.GetKey("EDIT_PASTE_MIX"), KeyBind.GetMod("EDIT_PASTE_MIX")));
 	menuItem->SetEnabled(false);
 	Pool.mn_paste_mix = menuItem;
-	menu->AddItem(menuItem = new BMenuItem(Language.get("COPY_TO_STACK"), new BMessage(TO_STACK), KeyBind.GetKey("COPY_TO_STACK"), KeyBind.GetMod("COPY_TO_STACK")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Copy to stack"), new BMessage(TO_STACK), KeyBind.GetKey("COPY_TO_STACK"), KeyBind.GetMod("COPY_TO_STACK")));
 	Pool.mn_copy_to_stack = menuItem;
 #endif
 	menu->AddSeparatorItem();
-	menu->AddItem(menuItem = new BMenuItem(Language.get("SELECT_ALL"), new BMessage(B_SELECT_ALL), KeyBind.GetKey("SELECT_ALL"), KeyBind.GetMod("SELECT_ALL")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Select All"), new BMessage(B_SELECT_ALL), KeyBind.GetKey("SELECT_ALL"), KeyBind.GetMod("SELECT_ALL")));
 	Pool.mn_select_all = menuItem;
-	menu->AddItem(menuItem = new BMenuItem(Language.get("UNSELECT_ALL"), new BMessage(UNSELECT_ALL), KeyBind.GetKey("UNSELECT_ALL"), KeyBind.GetMod("UNSELECT_ALL")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Unselect All"), new BMessage(UNSELECT_ALL), KeyBind.GetKey("UNSELECT_ALL"), KeyBind.GetMod("UNSELECT_ALL")));
 	Pool.mn_unselect = menuItem;
 	menu->AddSeparatorItem();
-	BMenu *sub = new BMenu(Language.get("ZERO_CROSS"));
+	BMenu *sub = new BMenu(B_TRANSLATE("Zero Crossings"));
 	Pool.menu_zero = sub;
-	sub->AddItem(new BMenuItem(Language.get("ZERO_IN"), new BMessage(ZERO_IN), KeyBind.GetKey("ZERO_IN"), KeyBind.GetMod("ZERO_IN")));
-	sub->AddItem(new BMenuItem(Language.get("ZERO_OUT"), new BMessage(ZERO_OUT), KeyBind.GetKey("ZERO_OUT"), KeyBind.GetMod("ZERO_OUT")));
-	sub->AddItem(new BMenuItem(Language.get("ZERO_LL"), new BMessage(ZERO_LL), KeyBind.GetKey("ZERO_LL"), KeyBind.GetMod("ZERO_LL")));
-	sub->AddItem(new BMenuItem(Language.get("ZERO_LR"), new BMessage(ZERO_LR), KeyBind.GetKey("ZERO_LR"), KeyBind.GetMod("ZERO_LR")));
-	sub->AddItem(new BMenuItem(Language.get("ZERO_RL"), new BMessage(ZERO_RL), KeyBind.GetKey("ZERO_RL"), KeyBind.GetMod("ZERO_RL")));
-	sub->AddItem(new BMenuItem(Language.get("ZERO_RR"), new BMessage(ZERO_RR), KeyBind.GetKey("ZERO_RR"), KeyBind.GetMod("ZERO_RR")));
+	sub->AddItem(new BMenuItem(B_TRANSLATE("Inwards"), new BMessage(ZERO_IN), KeyBind.GetKey("ZERO_IN"), KeyBind.GetMod("ZERO_IN")));
+	sub->AddItem(new BMenuItem(B_TRANSLATE("Outwards"), new BMessage(ZERO_OUT), KeyBind.GetKey("ZERO_OUT"), KeyBind.GetMod("ZERO_OUT")));
+	sub->AddItem(new BMenuItem(B_TRANSLATE("Left to Left"), new BMessage(ZERO_LL), KeyBind.GetKey("ZERO_LL"), KeyBind.GetMod("ZERO_LL")));
+	sub->AddItem(new BMenuItem(B_TRANSLATE("Left to Right"), new BMessage(ZERO_LR), KeyBind.GetKey("ZERO_LR"), KeyBind.GetMod("ZERO_LR")));
+	sub->AddItem(new BMenuItem(B_TRANSLATE("Right to Left"), new BMessage(ZERO_RL), KeyBind.GetKey("ZERO_RL"), KeyBind.GetMod("ZERO_RL")));
+	sub->AddItem(new BMenuItem(B_TRANSLATE("Right to Right"), new BMessage(ZERO_RR), KeyBind.GetKey("ZERO_RR"), KeyBind.GetMod("ZERO_RR")));
 	menu->AddItem(sub);
 	
 	menu->AddSeparatorItem();
-	menu->AddItem(menuItem = new BMenuItem(Language.get("CLEAR"), new BMessage(CLEAR), KeyBind.GetKey("CLEAR"), KeyBind.GetMod("CLEAR")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Clear"), new BMessage(CLEAR), KeyBind.GetKey("CLEAR"), KeyBind.GetMod("CLEAR")));
 	Pool.mn_clear = menuItem;
-	menu->AddItem(menuItem = new BMenuItem(Language.get("TRIM"), new BMessage(TRIM), KeyBind.GetKey("TRIM"), KeyBind.GetMod("TRIM")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Trim"), new BMessage(TRIM), KeyBind.GetKey("TRIM"), KeyBind.GetMod("TRIM")));
 	Pool.mn_trim = menuItem;
-	menu->AddItem(menuItem = new BMenuItem(Language.get("SET_FREQ"), new BMessage(SET_FREQUENCY), KeyBind.GetKey("SET_FREQ"), KeyBind.GetMod("SET_FREQ")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Change frequency..."), new BMessage(SET_FREQUENCY), KeyBind.GetKey("SET_FREQ"), KeyBind.GetMod("SET_FREQ")));
 	Pool.mn_set_freq = menuItem;
-	menu->AddItem(menuItem = new BMenuItem(Language.get("RESAMPLE"), new BMessage(RESAMPLE), KeyBind.GetKey("RESAMPLE"), KeyBind.GetMod("RESAMPLE")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Resample"), new BMessage(RESAMPLE), KeyBind.GetKey("RESAMPLE"), KeyBind.GetMod("RESAMPLE")));
 	Pool.mn_resample = menuItem;
 
-	menu = new BMenu(Language.get("TRANSFORM_MENU"));
+	menu = new BMenu(B_TRANSLATE("Transform"));
 	Pool.menu_transform = menu;
 	mainMenuBar->AddItem(menu);
 
-	menu = new BMenu(Language.get("ANALYZE_MENU"));
+	menu = new BMenu(B_TRANSLATE("Analyze"));
 	Pool.menu_analyze = menu;
 	mainMenuBar->AddItem(menu);
 
 	#ifdef __SAMPLE_STUDIO_LE
-		menu = new BMenu(Language.get("GENERATE_MENU"));
+		menu = new BMenu(B_TRANSLATE("Generate"));
 		Pool.menu_generate = menu;
 		mainMenuBar->AddItem(menu);
 	#endif
 
-	menu = new BMenu(Language.get("HELP_MENU"));
+	menu = new BMenu(B_TRANSLATE("Help"));
 	mainMenuBar->AddItem(menu);
-	menu->AddItem(menuItem = new BMenuItem(Language.get("HELP"), new BMessage(HELP), KeyBind.GetKey("HELP"), KeyBind.GetMod("HELP")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Help"), new BMessage(HELP), KeyBind.GetKey("HELP"), KeyBind.GetMod("HELP")));
 //	menu->AddSeparatorItem();
-	menu->AddItem(menuItem = new BMenuItem(Language.get("HISTORY"), new BMessage(HISTORY), KeyBind.GetKey("HISTORY"), KeyBind.GetMod("HISTORY")));
-	menu->AddItem(menuItem = new BMenuItem(Language.get("HOMEPAGE"), new BMessage(HOMEPAGE), KeyBind.GetKey("HOMEPAGE"), KeyBind.GetMod("HOMEPAGE")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("History"), new BMessage(HISTORY), KeyBind.GetKey("HISTORY"), KeyBind.GetMod("HISTORY")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Homepage"), new BMessage(HOMEPAGE), KeyBind.GetKey("HOMEPAGE"), KeyBind.GetMod("HOMEPAGE")));
 	menu->AddSeparatorItem();
-	menu->AddItem(menuItem = new BMenuItem(Language.get("ABOUT"), new BMessage(ABOUT), KeyBind.GetKey("ABOUT"), KeyBind.GetMod("ABOUT")));
+	menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("About"), new BMessage(ABOUT), KeyBind.GetKey("ABOUT"), KeyBind.GetMod("ABOUT")));
 
 	SetKeyMenuBar(NULL);
 }
@@ -753,13 +752,13 @@ void MainWindow::MessageReceived(BMessage *message)
 	case SAVE_AS:
 		if (Pool.sample_type == NONE)	return;
 		Pool.save_selection = false;
-		((MyApplication*)be_app)->fSavePanel->Window()->SetTitle(Language.get("PANEL_SAVE"));
+		((MyApplication*)be_app)->fSavePanel->Window()->SetTitle(B_TRANSLATE("Save soundfile..."));
 		((MyApplication*)be_app)->fSavePanel->Show();
 		break;
 	
 	case SAVE_SELECTION:
 		if (Pool.selection == NONE || Pool.sample_type == NONE)	return;
-		((MyApplication*)be_app)->fSavePanel->Window()->SetTitle(Language.get("PANEL_SAVE_SELECTION"));
+		((MyApplication*)be_app)->fSavePanel->Window()->SetTitle(B_TRANSLATE("Save selection..."));
 		Pool.save_selection = true;
 		((MyApplication*)be_app)->fSavePanel->Show();
 		break;

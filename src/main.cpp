@@ -30,8 +30,6 @@
 #include <InterfaceKit.h>
 #include <MediaKit.h>
 #include <StorageKit.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <View.h>
 
 #include "Globals.h"
@@ -42,17 +40,23 @@
 #include "PeakFile.h"
 #include "VMSystem.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 extern cookie_record play_cookie;
+
 
 int main()
 {
 	MyApplication	*myApp;
 	myApp = new MyApplication;
+
 	myApp->Run();
-	
+
 	delete (myApp);
 	return (0);
 }
+
 
 MyApplication::MyApplication():BApplication(FABER_MIMETYPE)
 {
@@ -64,7 +68,9 @@ MyApplication::MyApplication():BApplication(FABER_MIMETYPE)
 	mainWindow->Show();
 }
 
-bool MyApplication::QuitRequested()
+
+bool
+MyApplication::QuitRequested()
 {
 	if (mainWindow) {
 		if (mainWindow->Lock() && mainWindow->QuitRequested()) {
@@ -83,7 +89,9 @@ bool MyApplication::QuitRequested()
 	return true;
 }
 
-void MyApplication::MessageReceived(BMessage *message)
+
+void
+MyApplication::MessageReceived(BMessage *message)
 {
 	switch (message->what){
 	case SAVE_AUDIO:
@@ -124,7 +132,9 @@ void MyApplication::MessageReceived(BMessage *message)
 	}
 }
 
-void MyApplication::RefsReceived(BMessage *message)
+
+void
+MyApplication::RefsReceived(BMessage* message)
 {
 //	be_app->Lock();
 
@@ -178,7 +188,7 @@ void MyApplication::RefsReceived(BMessage *message)
 					Pool.size = audTrack->CountFrames()-1;
 					channels = format.u.raw_audio.channel_count;
 
-					Pool.StartProgress(Language.get("LOADING_FILE"), Pool.size);
+					Pool.StartProgress(B_TRANSLATE("Loading file..."), Pool.size);
 					
 					frame_size = (format.u.raw_audio.format & 0xf)*channels;
 
@@ -314,7 +324,7 @@ void MyApplication::RefsReceived(BMessage *message)
 				Pool.sample_bits = 16;
 				Pool.frequency = 41400.0;
 
-		         (new BAlert(NULL,Language.get("MEM_ERROR"),Language.get("OK")))->Go();
+		         (new BAlert(NULL,B_TRANSLATE("Not enough memory, no Undo possible!"),B_TRANSLATE("OK")))->Go();
 
 			}
 			
@@ -352,7 +362,7 @@ void MyApplication::RefsReceived(BMessage *message)
 				Pool.mainWindow->PostMessage(TRANSPORT_PLAYS);
 			
 		}else{
-			(new BAlert(NULL,Language.get("LOADING_NO_AUDIO"),Language.get("OK")))->Go();
+			(new BAlert(NULL,B_TRANSLATE("This file is not supported!"),B_TRANSLATE("OK")))->Go();
 		}
 	}
 	
@@ -371,7 +381,8 @@ void MyApplication::RefsReceived(BMessage *message)
 
 //------------------------------------------------------------------ Save
 
-void MyApplication::Save(BMessage *message){
+void
+MyApplication::Save(BMessage *message){
 	// Grab the stuff we know is there .. or should be :P
 
 	entry_ref dir_ref, file_ref;
@@ -391,7 +402,7 @@ void MyApplication::Save(BMessage *message){
 		
 		BEntry entry(&dir, name);
 		if (entry.InitCheck() != B_OK) {
-			(new BAlert(NULL, Language.get("CANT_OVERWRITE_FILE"), Language.get("OK")))->Go();
+			(new BAlert(NULL, B_TRANSLATE("Can't overwrite file."), B_TRANSLATE("OK")))->Go();
 			return;
 		}
 		entry.GetRef(&file_ref);
@@ -418,7 +429,7 @@ void MyApplication::Save(BMessage *message){
 			// create media file
 			BMediaFile file(&file_ref, fileFormat, B_MEDIA_FILE_REPLACE_MODE);
 			if (file.InitCheck() != B_OK){
-				(new BAlert(NULL, Language.get("CANT_OVERWRITE_FILE"), Language.get("OK")))->Go();
+				(new BAlert(NULL, B_TRANSLATE("Can't overwrite file."), B_TRANSLATE("OK")))->Go();
 				return;
 			}
 			
@@ -449,7 +460,7 @@ void MyApplication::Save(BMessage *message){
 					float *mem = convert_buffer;
 #endif			
 
-				Pool.StartProgress(Language.get("SAVING_FILE"), save_end-save_start);
+				Pool.StartProgress(B_TRANSLATE("Saving file..."), save_end-save_start);
 				for (int64 i=save_start; i<save_end; i+=buffer_step){
 
 				// fill up the buffer
@@ -520,7 +531,7 @@ void MyApplication::Save(BMessage *message){
 				ninfo.SetType(result.Type()); 
 
 			}else{
-				(new BAlert(NULL, Language.get("CODEC_FORMAT_ERROR"), Language.get("OK")))->Go();
+				(new BAlert(NULL, B_TRANSLATE("The selected codec does not support your file settings."), B_TRANSLATE("OK")))->Go();
 			}
 
 			file.CloseFile();
@@ -529,7 +540,7 @@ void MyApplication::Save(BMessage *message){
 			Pool.HideProgress();
 		}
 	}else{
-		(new BAlert(NULL, Language.get("SAVE_ERROR"), Language.get("OK")))->Go();
+		(new BAlert(NULL, B_TRANSLATE("This project has changed. Do you want to save it now?"), B_TRANSLATE("OK")))->Go();
 	}
 
 	if (Pool.save_mode == 2)

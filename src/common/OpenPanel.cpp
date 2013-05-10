@@ -101,9 +101,9 @@ OpenPanel::OpenPanel(BHandler* handler)
 		Window()->Unlock();
 	}
 	
-	SetButtonLabel(B_DEFAULT_BUTTON,Language.get("LOAD"));
-	SetButtonLabel(B_CANCEL_BUTTON,Language.get("CANCEL"));
-	Window()->SetTitle(Language.get("PANEL_OPEN"));
+	SetButtonLabel(B_DEFAULT_BUTTON,B_TRANSLATE("Load"));
+	SetButtonLabel(B_CANCEL_BUTTON,B_TRANSLATE("Cancel"));
+	Window()->SetTitle(B_TRANSLATE("Load a sound file..."));
 }
 
 OpenPanel::~OpenPanel(void)
@@ -196,7 +196,7 @@ void OpenPanel::SelectionChanged(void)
 				line2->SetText(s2);
 				
 			}else{
-				line1->SetText(Language.get("UNSUPPORTED"));
+				line1->SetText(B_TRANSLATE("Unsupported file"));
 				line2->SetText("");
 			}
 		}
@@ -224,11 +224,11 @@ void OpenPanel::MessageReceived(BMessage* msg)
 		if (mSndFile != NULL) {
 			if (mSndFile->IsPlaying()) {
 				mSndFile->StopPlaying();
-				mPlayBtn->SetLabel(Language.get("PLAY"));
+				mPlayBtn->SetLabel(B_TRANSLATE("Play"));
 			}
 			else {
 				mSndFile->StartPlaying();
-				mPlayBtn->SetLabel(Language.get("STOP"));
+				mPlayBtn->SetLabel(B_TRANSLATE("Stop"));
 				
 				// if necessary, start the BMessageRunner
 				// that will will periodically check to see if
@@ -246,7 +246,7 @@ void OpenPanel::MessageReceived(BMessage* msg)
 		//fprintf(stderr,"got kUpdateBtn\n");
 		if (mSndFile != NULL) {
 			if (!mSndFile->IsPlaying()) {
-				mPlayBtn->SetLabel(Language.get("PLAY"));
+				mPlayBtn->SetLabel(B_TRANSLATE("Play"));
 			}
 		}
 		break;

@@ -475,8 +475,11 @@ void KeyControl::DrawKey(BRect r, const char *c)
 /*******************************************************
 *   
 *******************************************************/
-SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView *v) : BWindow(BRect(p.x,p.y,p.x,p.y),Language.get("SET_KEY_WINDOW"), B_TITLED_WINDOW, B_NOT_RESIZABLE|B_NOT_ZOOMABLE)
-	, index(i), parent(v)
+SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView *v)
+	:
+	BWindow(BRect(p.x,p.y,p.x,p.y),
+		B_TRANSLATE("Change Key Binding"), B_TITLED_WINDOW,
+		B_NOT_RESIZABLE|B_NOT_ZOOMABLE), index(i), parent(v)
 {
 	BRect r(0,0,300,150);
 	ResizeTo(r.Width(), r.Height());
@@ -488,12 +491,12 @@ SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView *v) : BWindow(BRect(p.x,p.y,
 	r.InsetBy(8,8);
 	r.bottom = r.top+19;
 	BStringView *st;
-	r.right = r.left + be_bold_font->StringWidth(Language.get("KEY_SETTINGS_FOR"));
-	view->AddChild(st = new BStringView(r, NULL, Language.get("KEY_SETTINGS_FOR") ));
+	r.right = r.left + be_bold_font->StringWidth(B_TRANSLATE("Enter new bindings for:"));
+	view->AddChild(st = new BStringView(r, NULL, B_TRANSLATE("Enter new bindings for:")));
 	st->SetFont(be_bold_font);
 	r.left = r.right+8;
 	r.right = Bounds().right-8;
-	view->AddChild(new BStringView(r, NULL, Language.get(KeyBind.GetID(index)) ));
+	view->AddChild(new BStringView(r, NULL, B_TRANSLATE(KeyBind.GetID(index)) ));
 	
 	// request the installed message
 	key = KeyBind.GetKey( KeyBind.GetID(index) );
@@ -505,24 +508,24 @@ SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView *v) : BWindow(BRect(p.x,p.y,
 
 	r.OffsetBy(0,30);
 	r.left = 8;
-	float x = 8 + MAX( be_plain_font->StringWidth(Language.get("PRIMARY")), be_plain_font->StringWidth(Language.get("ALTERNATE")));
+	float x = 8 + MAX( be_plain_font->StringWidth(B_TRANSLATE("Primary")), be_plain_font->StringWidth(B_TRANSLATE("ALTERNATE")));
 	
 	r.right = Bounds().right -96;
-	view->AddChild(control1 = new KeyControl(r, Language.get("PRIMARY"), key, mod, menu));
+	view->AddChild(control1 = new KeyControl(r, B_TRANSLATE("Primary"), key, mod, menu));
 	control1->SetDivider(x);
-	view->AddChild(new BButton(BRect(r.right+8, r.top, Bounds().right-8, r.bottom), NULL, Language.get("CLEAR"), new BMessage(CLEAR1)) );
+	view->AddChild(new BButton(BRect(r.right+8, r.top, Bounds().right-8, r.bottom), NULL, B_TRANSLATE("CLEAR"), new BMessage(CLEAR1)) );
 	r.OffsetBy(0,30);
-	view->AddChild(control2 = new KeyControl(r, Language.get("ALTERNATE"), key2, mod2, false));
+	view->AddChild(control2 = new KeyControl(r, B_TRANSLATE("Alternate"), key2, mod2, false));
 	control2->SetDivider(x);
-	view->AddChild(new BButton(BRect(r.right+8, r.top, Bounds().right-8, r.bottom), NULL, Language.get("CLEAR"), new BMessage(CLEAR2)) );
+	view->AddChild(new BButton(BRect(r.right+8, r.top, Bounds().right-8, r.bottom), NULL, B_TRANSLATE("CLEAR"), new BMessage(CLEAR2)) );
 
 	r = Bounds();
 	r.InsetBy(8,8);
 	r.top = r.bottom - 23;
 	r.left = r.right - 80;
-	view->AddChild(new BButton(r, NULL, Language.get("APPLY"), new BMessage(SET)) );
+	view->AddChild(new BButton(r, NULL, B_TRANSLATE("Apply"), new BMessage(SET)) );
 	r.OffsetBy(-(r.Width()+8), 0);
-	view->AddChild(new BButton(r, NULL, Language.get("CANCEL"), new BMessage(B_QUIT_REQUESTED)) );
+	view->AddChild(new BButton(r, NULL, B_TRANSLATE("Cancel"), new BMessage(B_QUIT_REQUESTED)) );
 
 	AddChild(view);
 	Run();
@@ -593,9 +596,9 @@ PrefKeys::PrefKeys(BRect frame):BView(frame, "Prefs keys", B_FOLLOW_ALL,0){
 	for (int32 i=0; i<KeyBind.CountBindings(); i++){
 		if (KeyBind.GetMessage(KeyBind.GetID(i)) == SPLITTER){
 			if (item)	list->Collapse(item);
-			list->AddItem(item = new KeyItem(Language.get(KeyBind.GetID(i)), 0, 0, 0, 0, -1));
+			list->AddItem(item = new KeyItem(B_TRANSLATE(KeyBind.GetID(i)), 0, 0, 0, 0, -1));
 		}else{
-			list->AddUnder(new KeyItem(Language.get(KeyBind.GetID(i)), KeyBind.GetKey(KeyBind.GetID(i)), KeyBind.GetMod(KeyBind.GetID(i)), KeyBind.GetKeyAlt(KeyBind.GetID(i)), KeyBind.GetModAlt(KeyBind.GetID(i)), i), item);
+			list->AddUnder(new KeyItem(B_TRANSLATE(KeyBind.GetID(i)), KeyBind.GetKey(KeyBind.GetID(i)), KeyBind.GetMod(KeyBind.GetID(i)), KeyBind.GetKeyAlt(KeyBind.GetID(i)), KeyBind.GetModAlt(KeyBind.GetID(i)), i), item);
 		}
 	}
 	if (item)	list->Collapse(item);
@@ -628,9 +631,9 @@ void PrefKeys::Pulse(){
 		for (int32 i=0; i<KeyBind.CountBindings(); i++){
 			if (KeyBind.GetMessage(KeyBind.GetID(i)) == SPLITTER){
 				if (item)	list->Collapse(item);
-				list->AddItem(item = new KeyItem(Language.get(KeyBind.GetID(i)), 0, 0, 0, 0, -1));
+				list->AddItem(item = new KeyItem(B_TRANSLATE(KeyBind.GetID(i)), 0, 0, 0, 0, -1));
 			}else{
-				list->AddUnder(new KeyItem(Language.get(KeyBind.GetID(i)), KeyBind.GetKey(KeyBind.GetID(i)), KeyBind.GetMod(KeyBind.GetID(i)), KeyBind.GetKeyAlt(KeyBind.GetID(i)), KeyBind.GetModAlt(KeyBind.GetID(i)), i), item);
+				list->AddUnder(new KeyItem(B_TRANSLATE(KeyBind.GetID(i)), KeyBind.GetKey(KeyBind.GetID(i)), KeyBind.GetMod(KeyBind.GetID(i)), KeyBind.GetKeyAlt(KeyBind.GetID(i)), KeyBind.GetModAlt(KeyBind.GetID(i)), i), item);
 			}
 		}
 		if (item)	list->Collapse(item);

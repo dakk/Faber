@@ -77,7 +77,7 @@ SavePanel::SavePanel(BHandler *handler)
 		Window()->SetSizeLimits(minw, maxw, minh, maxh);
 		Window()->ResizeTo(MAX(Window()->Frame().Width(), minw), Window()->Frame().Height());
 
-		Window()->SetTitle(Language.get("PANEL_SAVE"));
+		Window()->SetTitle(B_TRANSLATE("Save soundfile..."));
 
 		// Find all the views that are in the way and move up them up 10 pixels
 		BView *background = Window()->ChildAt(0);
@@ -118,14 +118,14 @@ SavePanel::SavePanel(BHandler *handler)
 //		rect.right = (rect.right+rect.left)/2;
 		rect.OffsetBy(0,26);
 
-		BPopUpMenu *popmenu = new BPopUpMenu(Language.get("FORMAT"));
-		fFormatMenu = new BMenuField(rect, NULL, Language.get("FORMAT"), popmenu , B_FOLLOW_LEFT | B_FOLLOW_BOTTOM, B_WILL_DRAW | B_NAVIGABLE);
+		BPopUpMenu *popmenu = new BPopUpMenu(B_TRANSLATE("Format"));
+		fFormatMenu = new BMenuField(rect, NULL, B_TRANSLATE("Format"), popmenu , B_FOLLOW_LEFT | B_FOLLOW_BOTTOM, B_WILL_DRAW | B_NAVIGABLE);
 		background->AddChild(fFormatMenu);
 	
 		rect.OffsetBy(0,24);
 
-		popmenu = new BPopUpMenu(Language.get("CODEC"));
-		fAudioMenu = new BMenuField(rect, NULL, Language.get("CODEC"), popmenu,B_FOLLOW_LEFT | B_FOLLOW_BOTTOM, B_WILL_DRAW | B_NAVIGABLE);
+		popmenu = new BPopUpMenu(B_TRANSLATE("Codec"));
+		fAudioMenu = new BMenuField(rect, NULL, B_TRANSLATE("Codec"), popmenu,B_FOLLOW_LEFT | B_FOLLOW_BOTTOM, B_WILL_DRAW | B_NAVIGABLE);
 		background->AddChild(fAudioMenu);
 
 		fFormatMenu->SetDivider(50);

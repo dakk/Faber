@@ -28,11 +28,15 @@
 
 #ifndef _POOL_H
 #define _POOL_H
+
+#include <Entry.h>
 #include <SoundPlayer.h>
 
 #include "ProgressWindow.h"
 #include "TransportView.h"
-#include "PrefWindow.h"
+#include "SettingsWindow.h"
+
+class SettingsWindow;
 
 #define PLAY_HOOKS	64		// number of realtime effects possible
 
@@ -104,7 +108,7 @@ class CommonPool{
 	void Undo();				// undo
 
 	BSoundPlayer	*player;
-	PrefWindow	*PrefWin;		// preferences window
+	SettingsWindow	*PrefWin;		// preferences window
 	
 	BCursor *mouseArrow, *mousePencil, *mouseLeftRight, *mouseMove, *mouseArrowMove, *mouseArrowLeft, *mouseArrowRight;
 	

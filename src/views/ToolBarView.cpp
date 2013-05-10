@@ -181,51 +181,51 @@ void ToolBarView::AttachedToWindow()
 {
 	BRect r(0,0,24,22);
 	r.OffsetTo(4,5);
-	AddChild( tool[0] = ToolBarButton( r, 0, Language.get("TIP_NEW"), new BMessage(NEW), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[0] = ToolBarButton( r, 0, B_TRANSLATE("New document"), new BMessage(NEW), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( tool[1] = ToolBarButton( r, 1, Language.get("TIP_OPEN"), new BMessage(OPEN), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[1] = ToolBarButton( r, 1, B_TRANSLATE("Open file"), new BMessage(OPEN), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( tool[22] = ToolBarButton( r, 22, Language.get("TIP_INSERT"), new BMessage(INSERT), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[22] = ToolBarButton( r, 22, B_TRANSLATE("Insert at current location"), new BMessage(INSERT), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( tool[2] = ToolBarButton( r, 2, Language.get("TIP_SAVE"), new BMessage(SAVE), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[2] = ToolBarButton( r, 2, B_TRANSLATE("Save file"), new BMessage(SAVE), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( tool[3] = ToolBarButton( r, 3, Language.get("TIP_SAVE_SELECTION"), new BMessage(SAVE_SELECTION), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[3] = ToolBarButton( r, 3, B_TRANSLATE("Save the current selection"), new BMessage(SAVE_SELECTION), B_ONE_STATE_BUTTON, this));
 
 	r.OffsetBy(25+8,0);
-	AddChild( tool[5] = ToolBarButton( r, 5, Language.get("EDIT_L"), new BMessage(EDIT_L), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[5] = ToolBarButton( r, 5, B_TRANSLATE("Edit left channel"), new BMessage(EDIT_L), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( tool[6] = ToolBarButton( r, 6, Language.get("EDIT_R"), new BMessage(EDIT_R), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[6] = ToolBarButton( r, 6, B_TRANSLATE("Edit right channel"), new BMessage(EDIT_R), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( tool[7] = ToolBarButton( r, 7, Language.get("EDIT_B"), new BMessage(EDIT_B), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[7] = ToolBarButton( r, 7, B_TRANSLATE("Edit both channels"), new BMessage(EDIT_B), B_ONE_STATE_BUTTON, this));
 
 	r.OffsetBy(25+8,0);
-	AddChild( tool[8] = ToolBarButton( r, 8, Language.get("UNDO"), new BMessage(UNDO), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[8] = ToolBarButton( r, 8, B_TRANSLATE("Undo"), new BMessage(UNDO), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
 #ifdef __SAMPLE_STUDIO_LE
-	AddChild( tool[9] = ToolBarButton( r, 9, Language.get("REDO"), new BMessage(REDO), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[9] = ToolBarButton( r, 9, B_TRANSLATE("Redo"), new BMessage(REDO), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
 #endif
-	AddChild( tool[10] = ToolBarButton( r, 10, Language.get("CUT"), new BMessage(B_CUT), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[10] = ToolBarButton( r, 10, B_TRANSLATE("Cut"), new BMessage(B_CUT), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( tool[11] = ToolBarButton( r, 11, Language.get("COPY"), new BMessage(B_COPY), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[11] = ToolBarButton( r, 11, B_TRANSLATE("Copy"), new BMessage(B_COPY), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( tool[12] = ToolBarButton( r, 12, Language.get("PASTE"), new BMessage(B_PASTE), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[12] = ToolBarButton( r, 12, B_TRANSLATE("Paste"), new BMessage(B_PASTE), B_ONE_STATE_BUTTON, this));
 #ifdef __SAMPLE_STUDIO_LE
 	r.OffsetBy(25,0);
-	AddChild( tool[13] = ToolBarButton( r, 13, Language.get("PASTE_MIX"), new BMessage(PASTE_MIXED), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[13] = ToolBarButton( r, 13, B_TRANSLATE("Paste and mix with current wave"), new BMessage(PASTE_MIXED), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( tool[14] = ToolBarButton( r, 14, Language.get("COPY_TO_STACK"), new BMessage(TO_STACK), B_ONE_STATE_BUTTON, this));
+	AddChild( tool[14] = ToolBarButton( r, 14, B_TRANSLATE("Copy to wave-stack"), new BMessage(TO_STACK), B_ONE_STATE_BUTTON, this));
 #endif
 //	r.OffsetBy(25,0);
-//	AddChild( tool[15] = ToolBarButton( r, 15, Language.get("SET_LOOP"), new BMessage(SET_LOOP), B_ONE_STATE_BUTTON, this));
+//	AddChild( tool[15] = ToolBarButton( r, 15, B_TRANSLATE("SET_LOOP"), new BMessage(SET_LOOP), B_ONE_STATE_BUTTON, this));
 	r.OffsetBy(25+8,0);
-	AddChild( tool[16] = ToolBarButton( r, 23, Language.get("TOOL_SELECT"), new BMessage(TOOL_SELECT), B_TWO_STATE_BUTTON, this));
+	AddChild( tool[16] = ToolBarButton( r, 23, B_TRANSLATE("Selection Tool"), new BMessage(TOOL_SELECT), B_TWO_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( tool[17] = ToolBarButton( r, 24, Language.get("TOOL_DRAW"), new BMessage(TOOL_DRAW), B_TWO_STATE_BUTTON, this));
+	AddChild( tool[17] = ToolBarButton( r, 24, B_TRANSLATE("Drawing Tool"), new BMessage(TOOL_DRAW), B_TWO_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( tool[18] = ToolBarButton( r, 25, Language.get("TOOL_PLAY"), new BMessage(TOOL_PLAY), B_TWO_STATE_BUTTON, this));
+	AddChild( tool[18] = ToolBarButton( r, 25, B_TRANSLATE("Playing Tool"), new BMessage(TOOL_PLAY), B_TWO_STATE_BUTTON, this));
 	r.OffsetBy(25,0);
-	AddChild( tool[19] = ToolBarButton( r, 26, Language.get("TOOL_JOGG"), new BMessage(TOOL_JOGG), B_TWO_STATE_BUTTON, this));
+	AddChild( tool[19] = ToolBarButton( r, 26, B_TRANSLATE("Jogg Wheel Tool"), new BMessage(TOOL_JOGG), B_TWO_STATE_BUTTON, this));
 
 	
 }

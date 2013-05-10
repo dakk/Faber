@@ -49,11 +49,6 @@ class CommonClass{
 //	void SetStatus(const char *format,...) const;
 //	void UpdateProgress(int32 precent) const;
    
-	// Get a language specific key from the users language file
-	// To install a new key append your pluginname_key to the 
-	// appropriate language file
-	const char* GetLanguageKey(const char *key);
-	
 public:
 
 private:

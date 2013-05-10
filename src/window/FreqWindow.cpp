@@ -44,7 +44,7 @@
 /*******************************************************
 *   
 *******************************************************/
-FreqWindow::FreqWindow(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),Language.get("FREQ_WINDOW"),B_FLOATING_WINDOW_LOOK,B_FLOATING_APP_WINDOW_FEEL, B_NOT_RESIZABLE|B_NOT_ZOOMABLE)
+FreqWindow::FreqWindow(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),B_TRANSLATE("Set Frequency"),B_FLOATING_WINDOW_LOOK,B_FLOATING_APP_WINDOW_FEEL, B_NOT_RESIZABLE|B_NOT_ZOOMABLE)
 {
 	BRect r(0,0,180,180);
 	ResizeTo(r.Width(), r.Height());
@@ -70,9 +70,9 @@ FreqWindow::FreqWindow(BPoint p) : BWindow(BRect(p.x,p.y,p.x,p.y),Language.get("
 	r.top = r.bottom - 32;
 	r.bottom -=8;
 	r.right -= 8;
-	view->AddChild(new BButton(r, NULL, Language.get("OK"), new BMessage(SET)) );
+	view->AddChild(new BButton(r, NULL, B_TRANSLATE("OK"), new BMessage(SET)) );
 	r.OffsetBy(0,-30);
-	view->AddChild(new BButton(r, NULL, Language.get("CANCEL"), new BMessage(QUIT)) );
+	view->AddChild(new BButton(r, NULL, B_TRANSLATE("Cancel"), new BMessage(QUIT)) );
 
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	AddChild(view);
