@@ -404,9 +404,6 @@ MainWindow::MainWindow(BRect frame)
 	// Now init the keyBindings
 	KeyBind.Init();
 	
-	// Set up the tool tipper
-	// befor we load any other tools or windows
-	Pool.tt = new ToolTip();
 	Pool.progress = new ProgressWindow(BRect(0,0,300,30));
 	Pool.PrefWin = new PrefWindow();
 	

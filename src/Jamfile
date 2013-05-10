@@ -19,7 +19,7 @@ Application Faber :
 	BigView.cpp
 	MyClipBoard.cpp
 	PrefView.cpp
-	ToolTipWindow.cpp
+
 	CommonClass.cpp
 	OpenPanel.cpp
 	PrefWindow.cpp
@@ -37,7 +37,6 @@ Application Faber :
 	PrefGeneral.cpp
 	Shortcut.cpp
 	PrefKeys.cpp
-	ToolTip.cpp
 	MyStringItem.cpp
 	YPreferences.cpp
 	BitmapDrawer.cpp

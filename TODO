@@ -1,12 +1,11 @@
 Rework of the code :
 
-	* Investigate about replacing the ToolTip with the haiku's implementation, if possible.
-	* Rework the About.
 	* Fix codestyle.
 	* Merge window/Settings* classes with the BeAE ones.
 	* Replace image buttons with hvif versions.
 	* Investigate on replace other controls.
 	* Fix hardcoded values like the app name et cetera
+	* Add missing tooltips to the toolbar
 
 New features
 

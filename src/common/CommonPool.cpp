@@ -50,7 +50,6 @@
 #include "Globals.h"
 #include "CommonPool.h"
 #include "ProgressWindow.h"
-#include "ToolTip.h"
 #include "YPreferences.h"
 #include "YLanguageClass.h"
 #include "AboutBox.h"
@@ -82,7 +81,6 @@ CommonPool::CommonPool(){
 
 	// To be save set them to nil 
 	importmenu = NULL;
-	tt = NULL;				// ToolTips
 	progress = NULL;
 	player = NULL;
 	PrefWin = NULL;
@@ -192,7 +190,7 @@ void CommonPool::InitBufferPlayer(float f)
 		player->Stop();
 		delete player;
 	}
-	player = new BSoundPlayer(&format, "BeAE", BufferPlayer, NULL, &play_cookie);
+	player = new BSoundPlayer(&format, "Faber", BufferPlayer, NULL, &play_cookie);
 
 	format = Pool.player->Format();
 	system_frequency = format.frame_rate;
@@ -669,14 +667,6 @@ void CommonPool::DoAbout(){
 	(new AboutBox(p));
 }
 
-/*******************************************************
-*   
-*******************************************************/
-void CommonPool::AddTip(BView *v,const char *tip){
-	if(tt){
-		tt->AddTip(v,tip);
-	}
-}
 
 /*******************************************************
 *

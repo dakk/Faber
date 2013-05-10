@@ -53,10 +53,6 @@ class CommonClass{
 	// To install a new key append your pluginname_key to the 
 	// appropriate language file
 	const char* GetLanguageKey(const char *key);
-   
-	// Add a tool tip to a view
-	// a null tip removes its entry
-	void AddTip(BView *v, const char *tip = NULL);
 	
 public:
 

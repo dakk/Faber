@@ -30,7 +30,6 @@
 #define _POOL_H
 #include <SoundPlayer.h>
 
-#include "ToolTip.h"
 #include "ProgressWindow.h"
 #include "TransportView.h"
 #include "PrefWindow.h"
@@ -92,7 +91,6 @@ class CommonPool{
 	void BuildExportMenu(BMenu*);
 */   
 
-	void AddTip(BView *v, const char *tip = NULL);
 	status_t InstallMimeType(bool force = false);
 
 	void ResetIndexView();			// Create the IndexZoomView data
@@ -104,8 +102,7 @@ class CommonPool{
 	
 	void SaveUndo();			// save Undo data
 	void Undo();				// undo
-	   
-	ToolTip *tt;
+
 	BSoundPlayer	*player;
 	PrefWindow	*PrefWin;		// preferences window
 	

@@ -30,7 +30,6 @@
 #include <Bitmap.h>
 #include <View.h>
 #include <stdio.h>
-#include <PictureButton.h>
 
 #include "Globals.h"
 #include "TransportView.h"
@@ -51,7 +50,6 @@ BPictureButton *TransportButton(BRect buttonsize, const char *file, BMessage *ms
 	Down = view->EndPicture();
 	view->Sync();
 
-//	MyPictureButton *PBut = new MyPictureButton(buttonsize, Up, Down, msg, state);
 	BPictureButton *PBut = new BPictureButton(buttonsize, NULL, Up, Down, msg, state, B_FOLLOW_ALL, B_WILL_DRAW);
 
 	delete up;
