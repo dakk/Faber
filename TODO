@@ -1,11 +1,12 @@
 Rework of the code :
 
 	* Fix codestyle.
-	* Merge window/Settings* classes with the BeAE ones.
+	* Merge window/Settings* classes with the BeAE ones and finish integration with locale_kit.
 	* Replace image buttons with hvif versions.
 	* Investigate on replace other controls.
 	* Fix hardcoded values like the app name et cetera
 	* Add missing tooltips to the toolbar
+	* Update all code to use layouts
 
 New features
 
