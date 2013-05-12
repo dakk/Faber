@@ -26,10 +26,12 @@
 /	Copyright (C) 2000, Carlos Hasan
 /
 *******************************************************************************/
+#include "SpinControl.h"
+
+#include <LayoutBuilder.h>
+#include <String.h>
 
 #include <stdio.h>
-#include <String.h>
-#include "SpinControl.h"
 
 enum {
 	kSpinTextChanged   = 'spTx',
@@ -38,19 +40,44 @@ enum {
 
 SpinControl::SpinControl(BRect frame, const char *name, const char *label,
 	BMessage *message, int32 minValue, int32 maxValue,
-	int32 defaultValue, int32 stepValue, uint32 resizingFlags, uint32 flags) :
+	int32 defaultValue, int32 stepValue, uint32 resizingFlags, uint32 flags)
+	:
 	BControl(frame, name, label, message, resizingFlags, flags),
-	fTextControl(NULL), fSpinButton(NULL)
+	fTextControl(NULL),
+	fSpinButton(NULL),
+	m_scale(1.0)
 {
-	fTextControl = new BTextControl(frame, "TextControl", label, B_EMPTY_STRING,
-		new BMessage(kSpinTextChanged), B_FOLLOW_LEFT_RIGHT | B_FOLLOW_TOP, B_WILL_DRAW | B_NAVIGABLE);
+	_Init(label, minValue, maxValue, defaultValue, stepValue);
+}
 
-	fSpinButton = new SpinButton(frame, "SpinButton",
+
+SpinControl::SpinControl(const char *name, const char *label,
+	BMessage *message, int32 minValue, int32 maxValue,
+	int32 defaultValue, int32 stepValue, uint32 resizingFlags, uint32 flags)
+	:
+	BControl(name, label, message, flags),
+	fTextControl(NULL),
+	fSpinButton(NULL),
+	m_scale(1.0)
+{
+	_Init(label, minValue, maxValue, defaultValue, stepValue);
+}
+
+	
+SpinControl::~SpinControl()
+{
+}
+
+
+void
+SpinControl::_Init(const char *label, int32 minValue, int32 maxValue, int32 defaultValue,
+	int32 stepValue)
+{
+	fTextControl = new BTextControl(label, "control", new BMessage(kSpinTextChanged));
+
+	fSpinButton = new SpinButton(BRect(), "SpinButton",
 		new BMessage(kSpinButtonChanged), minValue, maxValue,
 		defaultValue, stepValue, B_FOLLOW_RIGHT | B_FOLLOW_TOP);
-    
-    AddChild(fTextControl);
-	AddChild(fSpinButton);
 	
 	fTextControl->TextView()->SetMaxBytes(10);
 
@@ -58,18 +85,18 @@ SpinControl::SpinControl(BRect frame, const char *name, const char *label,
 		if (!(code >= '0' && code <= '9') && code != '-' && code != '+')
 			fTextControl->TextView()->DisallowChar(code);
 	}
-	
+
 	SetValue(fSpinButton->Value());
 
-	if (frame.IsValid())
-		FrameResized(frame.Width(), frame.Height());
+	/*if (frame.IsValid())
+		FrameResized(frame.Width(), frame.Height());*/
 
-	m_scale = 1.0;
+	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 2)
+		.Add(fTextControl, 0)
+		.Add(fSpinButton, 1)
+		.End();
 }
-	
-SpinControl::~SpinControl()
-{
-}
+
 
 void SpinControl::AttachedToWindow()
 {

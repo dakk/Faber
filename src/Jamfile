@@ -12,7 +12,7 @@ SEARCH_SOURCE += [ FDirName $(TOP) src preferences ] ;
 
 
 Application Faber :
-	# this is The BeAE code
+	# this is the core code
 	main.cpp
 	MainWindow.cpp
 	AboutBox.cpp
@@ -24,28 +24,21 @@ Application Faber :
 	CommonPool.cpp
 	PeakFile.cpp
 	ProjectManager.cpp
-	VUView.cpp
 	Debug.cpp
-
 	SavePanel.cpp
 	History.cpp
-	MyStringItem.cpp
-	BitmapDrawer.cpp
-	SampleScopeWindow.cpp
 
 	# Settings
-	YPreferences.cpp
-	#YLanguageClass.cpp
+	#YPreferences.cpp
 	Preferences.cpp
 	PrefGeneral.cpp
 	Shortcut.cpp
 	PrefKeys.cpp
-	PrefView.cpp
-	#PrefWindow.cpp
 	PrefColors.cpp
 
 	SettingsWindow.cpp
 	SettingsView.cpp
+	Settings.cpp
 
 	# Implementations were they will merge
 	IndexView.cpp
@@ -54,15 +47,16 @@ Application Faber :
 	TransportView.cpp
 	TimeBarView.cpp
 	ValuesView.cpp
+	VUView.cpp
 
 	AnalyzeWindow.cpp
 	DelayWindow.cpp
 	FreqWindow.cpp
 	ResampleWindow.cpp
 	SpectrumWindow.cpp
+	SampleScopeWindow.cpp
 
 	# app and libstilnovo implementation base classes
-	#Settings.cpp
 	PointersView.cpp
 	SeekSlider.cpp
 	SpinControl.cpp
@@ -72,6 +66,8 @@ Application Faber :
 	SampleView.cpp
 	SpinButton.cpp
 	VolumeSlider.cpp
+	FStringItem.cpp
+	BitmapDrawer.cpp
 
 	# filters
 	AmplifierFilter.cpp

@@ -25,25 +25,43 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#include <ListItem.h>
+#include <View.h>
+#include "FStringItem.h"
 
-#ifndef _PREF_VIEW_H
-#define _PREF_VIEW_H
+#include <string.h>
 
-#include <Application.h>
-#include <AppKit.h>
-#include <InterfaceKit.h>
 
-#define QUIT		'quit'
-#define SET_FACTORY	'fact'
+StringItem::StringItem(const char *label, int32 level, bool expanded)
+	: BListItem(level, expanded)
+{
+	m_label = new char[strlen(label)+1];
+	strcpy(m_label, label);
+}
 
-class PrefView : public BView {
-  public:
-	PrefView(BRect);
-	~PrefView();
-	virtual void AttachedToWindow();
-	virtual void MessageReceived(BMessage*);
-  private:
-	BListView	*list;
-	BBox		*configBox;
-};
-#endif
+StringItem::~StringItem()
+{
+	if (m_label)
+		delete[] m_label;
+}
+
+const char *StringItem::Label() const
+{
+	return m_label;
+}
+
+void StringItem::DrawItem(BView *view, BRect rect, bool all)
+{
+	BFont font;
+	view->GetFont(&font);
+
+	if (IsSelected())
+		view->SetLowColor(150,190,230);
+	else
+		view->SetLowColor(255,255,255);
+
+	view->FillRect(rect, B_SOLID_LOW);
+	view->SetHighColor(0,0,0);
+	view->DrawString( m_label, BPoint( rect.left +5, rect.top +font.Size() ));
+
+}

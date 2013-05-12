@@ -29,8 +29,7 @@
 #include <Window.h>
 #include <View.h>
 #include <InterfaceKit.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <LayoutBuilder.h>
 
 #include "Globals.h"
 #include "RealtimeFilter.h"
@@ -54,11 +53,12 @@ BView *AmplifierFilter::ConfigView()
 	BView *view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	r.InsetBy(8,8);
-	r.bottom = r.top + 23;
-	value = new SpinSlider(r, NULL, B_TRANSLATE("Level (%)"), new BMessage(CONTROL_CHANGED), 1, 300);
+	value = new SpinSlider("level", B_TRANSLATE("Level (%)"), new BMessage(CONTROL_CHANGED), 1, 300);
 	value->SetValue(Prefs.filter_amplifier_value);
-	view->AddChild(value);
+
+	BLayoutBuilder::Group<>(view, B_VERTICAL, 2)
+		.Add(value, 0)
+	.End();
 
 	return view;
 }

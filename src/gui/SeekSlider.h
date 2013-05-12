@@ -9,6 +9,8 @@
 #include <Slider.h>
 #include <String.h>
 
+#include "SpinControl.h"
+
 
 class SeekSlider : public BSlider {
 public:

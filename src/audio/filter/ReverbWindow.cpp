@@ -29,14 +29,16 @@
 #include <Window.h>
 #include <View.h>
 #include <InterfaceKit.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <LayoutBuilder.h>
 
 #include "Globals.h"
 #include "RealtimeFilter.h"
 #include "ReverbFilter.h"
 #include "main.h"
 #include "math.h"
+
+#include <stdlib.h>
+#include <stdio.h>
 
 /*******************************************************
 *   
@@ -48,23 +50,28 @@ ReverbWindow::ReverbWindow(bool b) : RealtimeFilter(B_TRANSLATE("Reverb..."), b)
 /*******************************************************
 *   
 *******************************************************/
-BView *ReverbWindow::ConfigView()
+BView*
+ReverbWindow::ConfigView()
 {
 	BRect r(0,0,200,100);
 
 	BView *view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	r.InsetBy(8,8);
-	r.bottom = r.top + 23;
-	delay = new SpinSlider(r, NULL, B_TRANSLATE("Delay (ms)"), new BMessage(CONTROL_CHANGED), 1, 500);
-	delay->SetValue(Prefs.filter_reverb_delay * 1000);
-	view->AddChild(delay);
+	delay = new SpinSlider("delay", B_TRANSLATE("Delay (ms)"),
+		new BMessage(CONTROL_CHANGED), 1, 500);
 
-	r.OffsetBy(0,40);
-	gain = new SpinSlider(r, NULL, B_TRANSLATE("Gain %"), new BMessage(CONTROL_CHANGED), 1, 100);
+	delay->SetValue(Prefs.filter_reverb_delay * 1000);
+
+	gain = new SpinSlider("gain", B_TRANSLATE("Gain %"),
+		new BMessage(CONTROL_CHANGED), 1, 100);
+
 	gain->SetValue(Prefs.filter_reverb_gain * 200);
-	view->AddChild(gain);
+
+	BLayoutBuilder::Group<>(view, B_VERTICAL, 2)
+		.Add(delay, 0)
+		.Add(gain, 1)
+	.End();
 
 	return view;
 }

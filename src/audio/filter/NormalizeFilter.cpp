@@ -59,7 +59,9 @@ BView *NormalizeFilter::ConfigView()
 
 	r.InsetBy(8,8);
 	r.bottom = r.top + 19;
-	value = new SpinControl(r, NULL, B_TRANSLATE("Normalize Level (%)"), NULL, 1, 100, Prefs.filter_normalize, 1);
+	value = new SpinControl(r, NULL, B_TRANSLATE("Normalize Level (%)"),
+		NULL, 1, 100, Prefs.filter_normalize, 1);
+
 	value->SetDivider(120);
 	view->AddChild(value);
 

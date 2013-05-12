@@ -32,6 +32,7 @@
 */
 #include "SettingsWindow.h"
 
+#include <Alert.h>
 #include <Application.h>
 #include <GroupLayout.h>
 #include <Window.h>
@@ -40,7 +41,7 @@
 #include "SettingsView.h"
 
 #include "Globals.h"
-#include "PrefView.h"
+#include "SettingsView.h"
 #include "Shortcut.h"
 
 #define COLOR_SELECT		'colS'
@@ -48,14 +49,14 @@
 
 SettingsWindow::SettingsWindow() 
 	:
-	BWindow(BRect(100,100,600,450), B_TRANSLATE("Preferences"), B_TITLED_WINDOW,
+	BWindow(BRect(100,100,700,650),
+		B_TRANSLATE("Preferences"), B_TITLED_WINDOW,
 		B_ASYNCHRONOUS_CONTROLS | B_NOT_RESIZABLE | B_NOT_ZOOMABLE)
 {	
-	/*SetLayout(new BGroupLayout(B_VERTICAL));
+	SetLayout(new BGroupLayout(B_VERTICAL));
 
 	fSettingsView = new SettingsView();
-	GetLayout()->AddView(fSettingsView);*/
-	AddChild(new PrefView(Bounds()));
+	GetLayout()->AddView(fSettingsView);
 	Run();
 }
 
@@ -68,15 +69,6 @@ void SettingsWindow::MessageReceived(BMessage* message)
 	switch (message->what){
 	case QUIT:
 		Hide();
-		break;
-	
-	case CHANGE_LANGUAGE:
-		tmpV = ChildAt(0);
-		if (tmpV != NULL){
-			tmpV->RemoveSelf();
-			delete tmpV;
-		}
-		AddChild(new PrefView(Bounds()));
 		break;
 	
 	case SET_FACTORY:

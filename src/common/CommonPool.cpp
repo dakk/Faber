@@ -42,15 +42,11 @@
 #include <SoundPlayer.h>
 #include <Cursor.h>
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <unistd.h> // header with crypt in it :)
-
 #include "Globals.h"
 #include "CommonPool.h"
 #include "ProgressWindow.h"
-#include "YPreferences.h"
+#include "Settings.h"
+//#include "YPreferences.h"
 //#include "YLanguageClass.h"
 #include "AboutBox.h"
 #include "MyClipBoard.h"
@@ -59,6 +55,11 @@
 #include "PeakFile.h"
 #include "VMSystem.h"
 #include "Filters.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h> // header with crypt in it :)
 
 // this is the list with filters for the basic version
 extern filter_info __FilterList[];

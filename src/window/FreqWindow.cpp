@@ -34,7 +34,7 @@
 #include "Globals.h"
 #include "FreqWindow.h"
 #include "SpinControl.h"
-#include "MyStringItem.h"
+#include "FStringItem.h"
 
 #define QUIT			'quit'
 #define SET				'setF'

@@ -29,13 +29,15 @@
 #include <Window.h>
 #include <View.h>
 #include <InterfaceKit.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <LayoutBuilder.h>
 
 #include "Globals.h"
 #include "RealtimeFilter.h"
 //#include "AmplifierFilter.h"
 #include "LimiterFilter.h"
+
+#include <stdlib.h>
+#include <stdio.h>
 
 /*******************************************************
 *   
@@ -55,16 +57,18 @@ BView *LimiterFilter::ConfigView()
 	BView *view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	r.InsetBy(8,8);
-	r.bottom = r.top + 23;
-	value = new SpinSlider(r, NULL, B_TRANSLATE("Level (%)"), new BMessage(CONTROL_CHANGED), 0, 100);
+	value = new SpinSlider("level", B_TRANSLATE("Level (%)"),
+		new BMessage(CONTROL_CHANGED), 0, 100);
 	value->SetValue(Prefs.filter_limiter_value);
-	view->AddChild(value);
 
-	r.OffsetBy(0,40);
-	mix = new SpinSlider(r, NULL, B_TRANSLATE("Mix Level (%)"), new BMessage(CONTROL_CHANGED), 0, 100);
+	mix = new SpinSlider("mixlevel", B_TRANSLATE("Mix Level (%)"),
+		new BMessage(CONTROL_CHANGED), 0, 100);
 	mix->SetValue(Prefs.filter_limiter_mix);
-	view->AddChild(mix);
+
+	BLayoutBuilder::Group<>(view, B_VERTICAL, 2)
+		.Add(value, 0)
+		.Add(mix, 1)
+	.End();
 
 	return view;
 }

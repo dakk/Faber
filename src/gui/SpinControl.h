@@ -44,7 +44,13 @@ class SpinControl : public BControl {
 			int32 maxValue, int32 defaultValue, int32 stepValue,
 			uint32 resizingFlags = B_FOLLOW_LEFT | B_FOLLOW_TOP,
 			uint32 flags = B_WILL_DRAW | B_FRAME_EVENTS | B_NAVIGABLE);
-		
+
+		SpinControl(const char *name,
+			const char *label, BMessage *message, int32 minValue,
+			int32 maxValue, int32 defaultValue, int32 stepValue,
+			uint32 resizingFlags = B_FOLLOW_LEFT | B_FOLLOW_TOP,
+			uint32 flags = B_WILL_DRAW | B_FRAME_EVENTS | B_NAVIGABLE);
+
 		virtual ~SpinControl();
 
 		virtual void AttachedToWindow();
@@ -68,6 +74,9 @@ class SpinControl : public BControl {
 		virtual void MessageReceived(BMessage *message);
 		
 	private:
+		void		_Init(const char *label, int32 minValue,
+			int32 maxValue, int32 defaultValue, int32 stepValue);
+
 		BTextControl *fTextControl;
 		SpinButton *fSpinButton;
 		

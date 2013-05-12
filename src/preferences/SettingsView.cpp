@@ -1,14 +1,14 @@
 /*
  * Copyright (c) Casalinuovo Dario. All rights reserved.
  * Copyright (c) Davide Gessa. All rights reserved.
- * Distributed under the terms of the MIT License for non commercial use.
+ * Distributed under the terms of the MIT License.
  *
  * Authors:
- *		Casalinuovo Dario, barrett666@gmail.com
+ *		Casalinuovo Dario, b.vitruvio@gmail.com
  *		Davide Gessa, dak.linux@gmail.com
  */
-#include <Application.h>
-#include <Alert.h>
+#include "SettingsView.h"
+
 #include <Button.h>
 #include <GroupLayout.h>
 #include <GroupView.h>
@@ -18,18 +18,20 @@
 #include <MenuItem.h>
 #include <Slider.h>
 #include <TextControl.h>
-#include <Window.h>
 #include <TabView.h>
 #include <View.h>
 #include <Box.h>
 #include <Catalog.h>
 #include <CheckBox.h>
-#include <File.h>
-#include <FindDirectory.h>
 #include <Input.h>
 #include <LayoutBuilder.h>
 #include <SpaceLayoutItem.h>
-#include "SettingsView.h"
+
+#include "Globals.h"
+#include "PrefGeneral.h"
+#include "PrefKeys.h"
+#include "PrefColors.h"
+#include "StringItem.h"
 
 
 SettingsView::~SettingsView()
@@ -40,7 +42,7 @@ SettingsView::~SettingsView()
 
 SettingsView::SettingsView()
 	:
-	BView("SettingsView", B_WILL_DRAW, 0)
+	BView("SettingsView", B_FOLLOW_ALL_SIDES)
 {
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	
@@ -62,19 +64,25 @@ SettingsView::SettingsView()
 
 
 	// Interface
-	BView *interfaceView = new BView(" ", B_WILL_DRAW,  0);
+	BView *interfaceView = new PrefGeneral();
 	
 	tab = new BTab();
 	tabView->AddTab(interfaceView, tab);
-	tab->SetLabel("Interface");
-
+	tab->SetLabel(B_TRANSLATE("Interface"));
 
 	// Interface
-	BView *hotkeyView = new BView(" ", B_WILL_DRAW,  0);
+	BView *colorView = new PrefColors();
+	
+	tab = new BTab();
+	tabView->AddTab(colorView, tab);
+	tab->SetLabel(B_TRANSLATE("Color layout"));
+
+	// Interface
+	BView *hotkeyView = new PrefKeys();
 	
 	tab = new BTab();
 	tabView->AddTab(hotkeyView, tab);
-	tab->SetLabel("Hotkeys");
+	tab->SetLabel(B_TRANSLATE("Key bindings"));
 
 
 
@@ -87,17 +95,19 @@ SettingsView::SettingsView()
 	
 	tab = new BTab();
 	tabView->AddTab(audioView, tab);
-	tab->SetLabel("Audio IO");
-	
+	tab->SetLabel(B_TRANSLATE("Audio IO"));
 
-	
 	// Defaults and revert buttons
 	BGroupView* buttonGroup = new BGroupView(B_HORIZONTAL);
 
-	fDefaultsButton = new BButton("Defaults", new BMessage(MSG_SETTINGS_DEFAULTS));						
+	fDefaultsButton = new BButton(B_TRANSLATE("Defaults"),
+		new BMessage(MSG_SETTINGS_DEFAULTS));						
+
 	buttonGroup->GroupLayout()->AddView(fDefaultsButton);
 
-	fRevertButton = new BButton("Revert", new BMessage(MSG_SETTINGS_REVERT));							
+	fRevertButton = new BButton(B_TRANSLATE("Revert"),
+		new BMessage(MSG_SETTINGS_REVERT));							
+
 	buttonGroup->GroupLayout()->AddView(fRevertButton);
 
 	rootLayout->AddView(buttonGroup);

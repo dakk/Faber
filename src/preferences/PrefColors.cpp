@@ -32,12 +32,14 @@
 #include <Path.h>
 #include <TranslationKit.h>
 #include <TranslationUtils.h>
-#include <stdio.h>
+#include <LayoutBuilder.h>
 
 #include "Globals.h"
 #include "PrefColors.h"
 #include "SwatchView.h"
-#include "MyStringItem.h"
+#include "FStringItem.h"
+
+#include <stdio.h>
 
 #define COLOR_SELECT		'colS'
 #define COLOR_CHANGE		'colC'
@@ -48,9 +50,12 @@
 *   Setup the main view. Add in all the niffty components
 *   we have made and get things rolling
 *******************************************************/
-PrefColors::PrefColors(BRect frame):BView(frame, "Prefs color", B_FOLLOW_ALL,0){
+PrefColors::PrefColors()
+	:
+	BView("Prefs color", B_FOLLOW_ALL)
+{
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
-	
+
 	char s[255];
 
 	colors[0] = (void*)&Prefs.back_color;
@@ -97,14 +102,12 @@ PrefColors::PrefColors(BRect frame):BView(frame, "Prefs color", B_FOLLOW_ALL,0){
 	BRect r = Bounds();
 	r.left = r.right-32;	r.right -= 8;
 	r.bottom = 28;	r.top = 4;
-	AddChild(color_view = new SwatchView(r, NULL, new BMessage(SWATCH_DROP)));
+	color_view = new SwatchView(r, "color_view", new BMessage(SWATCH_DROP));
 	color_view->SetEnabled(false);
 
-	r.right -= 32;
-	r.left = 8;
 	scheme = new BPopUpMenu(B_TRANSLATE("Color Scheme"));
 	BMenuItem *menuItem;
-	BMenuField *menu = new BMenuField(r,NULL,B_TRANSLATE("Color Scheme"),scheme);
+	BMenuField *menu = new BMenuField("menu",B_TRANSLATE("Color Scheme"),scheme);
 	BMessage *m;
 	for (int i=0; i<=4; i++){
 		m = new BMessage(NEW_SCHEME);
@@ -115,27 +118,32 @@ PrefColors::PrefColors(BRect frame):BView(frame, "Prefs color", B_FOLLOW_ALL,0){
 	}
 
 	menu->SetDivider(be_plain_font->StringWidth(B_TRANSLATE("Color Scheme")) +10);
-	AddChild(menu);
 
 	// add the prefs list at the left
-	r = Bounds();
-	r.InsetBy(4,8);
-	r.bottom /= 2;	r.bottom+=16;
-	r.right -= B_V_SCROLL_BAR_WIDTH;
-	r.OffsetBy(0,30);
-	list = new BListView(r,"color list");
-	BScrollView *sv = new BScrollView("scroll", list, B_FOLLOW_ALL_SIDES, B_WILL_DRAW, false, true, B_PLAIN_BORDER);
+	list = new BListView("color list");
+	BScrollView *sv = new BScrollView("scroll", list, B_FOLLOW_ALL_SIDES,
+		B_WILL_DRAW, false, true, B_PLAIN_BORDER);
+
 	sv->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	sv->MakeFocus(false);
-	AddChild(sv);
+	//AddChild(sv);
 
 	for (int i=1; i<=36; i++){
 		sprintf(s, "COLOR%d", i);
 		list->AddItem(new StringItem(B_TRANSLATE(s)));
 	}
 
-	AddChild(control = new BColorControl(BPoint(r.left+8, r.bottom+16), B_CELLS_32x8, 1, "colorControl", new BMessage(COLOR_CHANGE)));
+	control = new BColorControl(BPoint(8, 16), B_CELLS_32x8, 1, "colorControl",
+		new BMessage(COLOR_CHANGE));
+
 	control->SetEnabled(false);
+
+	BLayoutBuilder::Group<>(this, B_VERTICAL, 4)
+		.Add(color_view, 0)
+		.Add(menu, 1)
+		.Add(sv, 2)
+		.Add(control, 3)
+	.End();
 }
 
 /*******************************************************
@@ -153,16 +161,16 @@ void PrefColors::AttachedToWindow(){
 	list->SetSelectionMessage(new BMessage(COLOR_SELECT));
 	list->SetInvocationMessage(new BMessage(COLOR_SELECT));
 	control->SetTarget(this);
-	color_view->SetTarget(this);
+	//color_view->SetTarget(this);
 	scheme->SetTargetForItems(this);
 }
 
 /*******************************************************
 *  
 *******************************************************/
-void PrefColors::Draw(BRect rect){
+/*void PrefColors::Draw(BRect rect){
 	
-}
+}*/
 
 /*******************************************************
 *

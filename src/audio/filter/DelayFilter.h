@@ -29,6 +29,8 @@
 #ifndef DELAY_FILTER_H
 #define DELAY_FILTER_H
 
+class SeekSlider;
+
 class DelayWindow : public RealtimeFilter {
   public:
 	DelayWindow(bool r = true);
@@ -42,7 +44,8 @@ class DelayWindow : public RealtimeFilter {
   private:
 	float *delay_buffer;
 	int32 buffer_size, pBuffer;
-	SpinSlider *delay, *gain;
+	SeekSlider *delay;
+	SpinSlider* gain;
 };
 
 #endif

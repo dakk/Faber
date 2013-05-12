@@ -29,12 +29,14 @@
 #include <Window.h>
 #include <View.h>
 #include <InterfaceKit.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <LayoutBuilder.h>
 
 #include "Globals.h"
 #include "RealtimeFilter.h"
 #include "BassBoostFilter.h"
+
+#include <stdlib.h>
+#include <stdio.h>
 
 /*******************************************************
 *   
@@ -47,23 +49,25 @@ BassBoostFilter::BassBoostFilter(bool b) : RealtimeFilter(B_TRANSLATE("Bass Boos
 /*******************************************************
 *   
 *******************************************************/
-BView *BassBoostFilter::ConfigView()
+BView* BassBoostFilter::ConfigView()
 {
 	BRect r(0,0,200,100);
 
 	BView *view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	r.InsetBy(8,8);
-	r.bottom = r.top + 23;
-	freq = new SpinSlider(r, NULL, B_TRANSLATE("Frequency (Hz)"), new BMessage(CONTROL_CHANGED), 1, 1000);
+	freq = new SpinSlider("frequency", B_TRANSLATE("Frequency (Hz)"),
+		new BMessage(CONTROL_CHANGED), 1, 1000);
 	freq->SetValue(Prefs.filter_bassboost_frequency);
-	view->AddChild(freq);
 
-	r.OffsetBy(0,40);
-	boost = new SpinSlider(r, NULL, B_TRANSLATE("Boost (dB)"), new BMessage(CONTROL_CHANGED), 0, 24);
+	boost = new SpinSlider("frequency", B_TRANSLATE("Boost (dB)"),
+		new BMessage(CONTROL_CHANGED), 0, 24);
 	boost->SetValue(Prefs.filter_bassboost_boost);
-	view->AddChild(boost);
+
+	BLayoutBuilder::Group<>(view, B_VERTICAL, 2)
+		.Add(freq, 0)
+		.Add(boost, 1)
+	.End();
 
 	return view;
 }

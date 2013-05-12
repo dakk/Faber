@@ -34,7 +34,7 @@
 
 #include "Globals.h"
 #include "Preferences.h"
-#include "YPreferences.h"
+#include "Settings.h"
 
 // our Global def
 Preferences Prefs;
@@ -58,9 +58,8 @@ void Preferences::Init(){
    BDirectory dir;
    
    FactorySettings();
-   
-   // Get that damn file 
-   YPreferences prefs(SETTINGS_DIR "/" FABER_CONF_NAME);
+
+   Settings prefs = Settings(SETTINGS_DIR"/"FABER_CONF_NAME);
    if (prefs.InitCheck() != B_OK) {
       find_directory(B_USER_SETTINGS_DIRECTORY, &path);
       path.Append(SETTINGS_DIR);
@@ -123,50 +122,50 @@ void Preferences::Init(){
 
 	if(prefs.FindFloat("peak", &peak) != B_OK)	peak = 0.85;
 
-	if(prefs.FindColor("back_color", &back_color) != B_OK){
+	if(prefs.ReadColor("back_color", &back_color) != B_OK){
 		SetColorScheme();		// set default
 	}else{						// load the rest of the colors
-		prefs.FindColor("back_color2", &back_color2);
-		prefs.FindColor("back_selected_color", &back_selected_color);
-		prefs.FindColor("back_selected_color2", &back_selected_color2);
+		prefs.ReadColor("back_color2", &back_color2);
+		prefs.ReadColor("back_selected_color", &back_selected_color);
+		prefs.ReadColor("back_selected_color2", &back_selected_color2);
 
-		prefs.FindColor("index_back_color", &index_back_color);
-		prefs.FindColor("index_back_color2", &index_back_color2);
-		prefs.FindColor("index_mid_color", &index_mid_color);
-		prefs.FindColor("index_left_color", &index_left_color);
-		prefs.FindColor("index_back_selected_color", &index_back_selected_color);
-		prefs.FindColor("index_left_selected_color", &index_left_selected_color);
-		prefs.FindColor("index_left_color2", &index_left_color2);
-		prefs.FindColor("index_back_selected_color2", &index_back_selected_color2);
-		prefs.FindColor("index_left_selected_color2", &index_left_selected_color2);
-		prefs.FindColor("index_mid_selected_color", &index_mid_selected_color);
-		prefs.FindColor("index_pointer_color", &index_pointer_color);
+		prefs.ReadColor("index_back_color", &index_back_color);
+		prefs.ReadColor("index_back_color2", &index_back_color2);
+		prefs.ReadColor("index_mid_color", &index_mid_color);
+		prefs.ReadColor("index_left_color", &index_left_color);
+		prefs.ReadColor("index_back_selected_color", &index_back_selected_color);
+		prefs.ReadColor("index_left_selected_color", &index_left_selected_color);
+		prefs.ReadColor("index_left_color2", &index_left_color2);
+		prefs.ReadColor("index_back_selected_color2", &index_back_selected_color2);
+		prefs.ReadColor("index_left_selected_color2", &index_left_selected_color2);
+		prefs.ReadColor("index_mid_selected_color", &index_mid_selected_color);
+		prefs.ReadColor("index_pointer_color", &index_pointer_color);
 
-		prefs.FindColor("left_color", &left_color);
-		prefs.FindColor("left_selected_color", &left_selected_color);
-		prefs.FindColor("left_color2", &left_color2);
-		prefs.FindColor("left_selected_color2", &left_selected_color2);
+		prefs.ReadColor("left_color", &left_color);
+		prefs.ReadColor("left_selected_color", &left_selected_color);
+		prefs.ReadColor("left_color2", &left_color2);
+		prefs.ReadColor("left_selected_color2", &left_selected_color2);
 
-		prefs.FindColor("right_color", &right_color);
-		prefs.FindColor("right_selected_color", &right_selected_color);
-		prefs.FindColor("right_color2", &right_color2);
-		prefs.FindColor("right_selected_color2", &right_selected_color2);
+		prefs.ReadColor("right_color", &right_color);
+		prefs.ReadColor("right_selected_color", &right_selected_color);
+		prefs.ReadColor("right_color2", &right_color2);
+		prefs.ReadColor("right_selected_color2", &right_selected_color2);
 
-		prefs.FindColor("grid_color", &grid_color);
-		prefs.FindColor("grid_selected_color", &grid_selected_color);
-		prefs.FindColor("peak_color", &peak_color);
-		prefs.FindColor("peak_selected_color", &peak_selected_color);
+		prefs.ReadColor("grid_color", &grid_color);
+		prefs.ReadColor("grid_selected_color", &grid_selected_color);
+		prefs.ReadColor("peak_color", &peak_color);
+		prefs.ReadColor("peak_selected_color", &peak_selected_color);
 
-		prefs.FindColor("mid_left_color", &mid_left_color);
-		prefs.FindColor("mid_right_color", &mid_right_color);
-		prefs.FindColor("mid_left_selected_color", &mid_left_selected_color);
-		prefs.FindColor("mid_right_selected_color", &mid_right_selected_color);
+		prefs.ReadColor("mid_left_color", &mid_left_color);
+		prefs.ReadColor("mid_right_color", &mid_right_color);
+		prefs.ReadColor("mid_left_selected_color", &mid_left_selected_color);
+		prefs.ReadColor("mid_right_selected_color", &mid_right_selected_color);
 
-		prefs.FindColor("pointer_color", &pointer_color);
-		prefs.FindColor("time_back_color", &time_back_color);
-		prefs.FindColor("time_marks_color", &time_marks_color);
-		prefs.FindColor("time_small_marks_color", &time_small_marks_color);
-		prefs.FindColor("time_text_color", &time_text_color);
+		prefs.ReadColor("pointer_color", &pointer_color);
+		prefs.ReadColor("time_back_color", &time_back_color);
+		prefs.ReadColor("time_marks_color", &time_marks_color);
+		prefs.ReadColor("time_small_marks_color", &time_small_marks_color);
+		prefs.ReadColor("time_text_color", &time_text_color);
 	}
 
 	// repeat action
@@ -213,8 +212,7 @@ void Preferences::Init(){
 *
 *******************************************************/
 void Preferences::Sync(){
-	// Save the prefs for the App
-	YPreferences prefs(SETTINGS_DIR "/" FABER_CONF_NAME);
+	Settings prefs = Settings(SETTINGS_DIR"/"FABER_CONF_NAME);
 	if (prefs.InitCheck() != B_OK)	return;
    
 	//prefs.SetString("Language_Name",Language.Name());
@@ -245,48 +243,48 @@ void Preferences::Sync(){
 	prefs.SetInt32("display_time",display_time);
 	prefs.SetFloat("peak", peak);
 
-	prefs.SetColor("back_color", back_color);
-	prefs.SetColor("back_selected_color", back_selected_color);
-	prefs.SetColor("back_color2", back_color2);
-	prefs.SetColor("back_selected_color2", back_selected_color2);
+	prefs.WriteColor("back_color", back_color);
+	prefs.WriteColor("back_selected_color", back_selected_color);
+	prefs.WriteColor("back_color2", back_color2);
+	prefs.WriteColor("back_selected_color2", back_selected_color2);
 
-	prefs.SetColor("index_back_color", index_back_color);
-	prefs.SetColor("index_back_color2", index_back_color2);
-	prefs.SetColor("index_mid_color", index_mid_color);
-	prefs.SetColor("index_left_color", index_left_color);
-	prefs.SetColor("index_left_color2", index_left_color2);
-	prefs.SetColor("index_back_selected_color", index_back_selected_color);
-	prefs.SetColor("index_back_selected_color2", index_back_selected_color2);
-	prefs.SetColor("index_left_selected_color", index_left_selected_color);
-	prefs.SetColor("index_left_selected_color2", index_left_selected_color2);
-	prefs.SetColor("index_mid_selected_color", index_mid_selected_color);
-	prefs.SetColor("index_pointer_color", index_pointer_color);
+	prefs.WriteColor("index_back_color", index_back_color);
+	prefs.WriteColor("index_back_color2", index_back_color2);
+	prefs.WriteColor("index_mid_color", index_mid_color);
+	prefs.WriteColor("index_left_color", index_left_color);
+	prefs.WriteColor("index_left_color2", index_left_color2);
+	prefs.WriteColor("index_back_selected_color", index_back_selected_color);
+	prefs.WriteColor("index_back_selected_color2", index_back_selected_color2);
+	prefs.WriteColor("index_left_selected_color", index_left_selected_color);
+	prefs.WriteColor("index_left_selected_color2", index_left_selected_color2);
+	prefs.WriteColor("index_mid_selected_color", index_mid_selected_color);
+	prefs.WriteColor("index_pointer_color", index_pointer_color);
 
-	prefs.SetColor("left_color", left_color);
-	prefs.SetColor("left_selected_color", left_selected_color);
-	prefs.SetColor("left_color2", left_color2);
-	prefs.SetColor("left_selected_color2", left_selected_color2);
+	prefs.WriteColor("left_color", left_color);
+	prefs.WriteColor("left_selected_color", left_selected_color);
+	prefs.WriteColor("left_color2", left_color2);
+	prefs.WriteColor("left_selected_color2", left_selected_color2);
 
-	prefs.SetColor("right_color", right_color);
-	prefs.SetColor("right_selected_color", right_selected_color);
-	prefs.SetColor("right_color2", right_color2);
-	prefs.SetColor("right_selected_color2", right_selected_color2);
+	prefs.WriteColor("right_color", right_color);
+	prefs.WriteColor("right_selected_color", right_selected_color);
+	prefs.WriteColor("right_color2", right_color2);
+	prefs.WriteColor("right_selected_color2", right_selected_color2);
 
-	prefs.SetColor("grid_color", grid_color);
-	prefs.SetColor("grid_selected_color", grid_selected_color);
-	prefs.SetColor("peak_color", peak_color);
-	prefs.SetColor("peak_selected_color", peak_selected_color);
+	prefs.WriteColor("grid_color", grid_color);
+	prefs.WriteColor("grid_selected_color", grid_selected_color);
+	prefs.WriteColor("peak_color", peak_color);
+	prefs.WriteColor("peak_selected_color", peak_selected_color);
 
-	prefs.SetColor("mid_left_color", mid_left_color);
-	prefs.SetColor("mid_right_color", mid_right_color);
-	prefs.SetColor("mid_left_selected_color", mid_left_selected_color);
-	prefs.SetColor("mid_right_selected_color", mid_right_selected_color);
+	prefs.WriteColor("mid_left_color", mid_left_color);
+	prefs.WriteColor("mid_right_color", mid_right_color);
+	prefs.WriteColor("mid_left_selected_color", mid_left_selected_color);
+	prefs.WriteColor("mid_right_selected_color", mid_right_selected_color);
 
-	prefs.SetColor("pointer_color", pointer_color);
-	prefs.SetColor("time_back_color", time_back_color);
-	prefs.SetColor("time_marks_color", time_marks_color);
-	prefs.SetColor("time_small_marks_color", time_small_marks_color);
-	prefs.SetColor("time_text_color", time_text_color);
+	prefs.WriteColor("pointer_color", pointer_color);
+	prefs.WriteColor("time_back_color", time_back_color);
+	prefs.WriteColor("time_marks_color", time_marks_color);
+	prefs.WriteColor("time_small_marks_color", time_small_marks_color);
+	prefs.WriteColor("time_text_color", time_text_color);
 
 	// repeat action
 	prefs.SetInt32("repeat_message",(int32)repeat_message);

@@ -25,51 +25,21 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
-#ifndef MY_STRING_ITEM_H
-#define MY_STRING_ITEM_H
+#ifndef STRING_ITEM_H
+#define STRING_ITEM_H
 
 #include <ListItem.h>
-#include <View.h>
-#include "MyStringItem.h"
 
-// Needed for string functions with gcc4
-#if defined(__HAIKU__)
-#include <string.h>
-#endif
+class StringItem : public BListItem{
+  public:
+	StringItem(const char *label, int32 level = 0, bool expanded = true);
+	~StringItem();
+	
+	virtual void DrawItem(BView *owner, BRect rect, bool all);
+	const char *Label() const;
 
-StringItem::StringItem(const char *label, int32 level, bool expanded)
-	: BListItem(level, expanded)
-{
-	m_label = new char[strlen(label)+1];
-	strcpy(m_label, label);
-}
-
-StringItem::~StringItem()
-{
-	if (m_label)
-		delete[] m_label;
-}
-
-const char *StringItem::Label() const
-{
-	return m_label;
-}
-
-void StringItem::DrawItem(BView *view, BRect rect, bool all)
-{
-	BFont font;
-	view->GetFont(&font);
-
-	if (IsSelected())
-		view->SetLowColor(150,190,230);
-	else
-		view->SetLowColor(255,255,255);
-
-	view->FillRect(rect, B_SOLID_LOW);
-	view->SetHighColor(0,0,0);
-	view->DrawString( m_label, BPoint( rect.left +5, rect.top +font.Size() ));
-
-}
+  private:
+	char *m_label;
+};
 
 #endif

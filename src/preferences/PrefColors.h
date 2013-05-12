@@ -36,11 +36,11 @@
 
 class PrefColors : public BView {
   public:
-	PrefColors(BRect);
+	PrefColors();
 	~PrefColors();
 	virtual void AttachedToWindow();
 	virtual void MessageReceived(BMessage*);
-	virtual void Draw(BRect);
+	//virtual void Draw(BRect);
 	
   private:
 	BListView *list;

@@ -33,7 +33,7 @@
 
 #include "Globals.h"
 #include "Shortcut.h"
-#include "YPreferences.h"
+#include "Settings.h"
 #include "Filters.h"
 
 // our Global def
@@ -54,7 +54,7 @@ Shortcut::Shortcut(){
 *******************************************************/
 Shortcut::~Shortcut(){
 	// delete everthing in the list :P
-	YPreferences prefs(SETTINGS_DIR "/" KEYBINDINGS_CONF_NAME);
+	Settings prefs = Settings(SETTINGS_DIR"/"KEYBINDINGS_CONF_NAME);
 	prefs.MakeEmpty();
    
 	key_bind *kb = NULL;
@@ -85,7 +85,7 @@ void Shortcut::Init(){
 	// install defaults
 	InstallDefaults();
 
-	YPreferences prefs(SETTINGS_DIR "/" FABER_CONF_NAME);
+	Settings prefs = Settings(SETTINGS_DIR"/"FABER_CONF_NAME);
 	if(prefs.InitCheck() == B_OK){
 		// Init from prefs file
 		const char *ID = NULL;

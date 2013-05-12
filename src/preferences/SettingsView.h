@@ -19,6 +19,8 @@
 
 const int32 MSG_SETTINGS_DEFAULTS		= 0xA1;
 const int32 MSG_SETTINGS_REVERT			= 0xA2;
+#define QUIT		'quit'
+#define SET_FACTORY	'fact'
 
 
 class SettingsView : public BView {

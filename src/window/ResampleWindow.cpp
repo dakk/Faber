@@ -39,7 +39,7 @@
 #include "Globals.h"
 #include "FilterDialogs.h"
 #include "SpinControl.h"
-#include "MyStringItem.h"
+#include "FStringItem.h"
 
 #define SET_TEXT		'setT'
 #define SET_BITS		'setB'

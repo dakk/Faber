@@ -68,27 +68,13 @@ const char *version = "Version 0.0.1 May 1, 2013";
 static const char *txt[] = {
 "Faber - Audio Editor for Haiku",
 "Developers:\n Dario Casalinuovo and Davide Gessa\n",
-"Faber is based on BeAE, Created by Frans van Nispen (frans@xentronix.com)",
 "© 2000 Xentronix Software http://www.xentronix.com",
 "© 2011-2013 Versut http://www.versut.com",
+"Faber is based on BeAE, Created by Frans van Nispen (frans@xentronix.com)",
 "Special thanks goes to:",
-"Preference & Language classes: John 'YNOP' Talton,",
-"Nicholas Blachford, for helping with the filters and effects,",
-"Axel Dörfler & David McPaul for helping out with the MediaKit.",
-"Stephan Assmus - German translation and ColdCut color scheme,",
-"Gilles Richard - French translation,",
-"Giuseppe Gargaro - Italian translation,",
-"Sergei Dolgov - Russian translation,",
-"Carlos Alberto G-M Costa - Spanish translation,",
-"Zsolt Bihari - Hungarian translation,",
-"Bruno G. Albuquerque - Portuguese translation,",
-"Eugenia Loli-Queru & the members of the beta-program.",
-"Michele Frau for the new icon and graphics.",
-"Chris Roberts for the CMake build files and other build fixes.",
-"Humdinger for spiffing up the html help and history pages.",
-"And those who helped pay the $250 Open Source Fee.",
-"Patches welcome...",
-NULL};
+"Everyone who contributed to BeAE\n",
+NULL
+};
 
 AboutView::AboutView(BRect rect)
 	:
