@@ -66,11 +66,11 @@ const char *version = "Version 0.0.1 May 1, 2013";
 // TODO investigate about making about in line with license
 // i'm not sure if the xentronix copyright should be leaved here
 static const char *txt[] = {
-"Faber - Audio Editor for Haiku",
+"Faber Editor for Haiku",
 "Developers:\n Dario Casalinuovo and Davide Gessa\n",
-"© 2000 Xentronix Software http://www.xentronix.com",
-"© 2011-2013 Versut http://www.versut.com",
-"Faber is based on BeAE, Created by Frans van Nispen (frans@xentronix.com)",
+"© 2011-2013 Versut http://www.versut.com\n",
+"Faber is based on BeAE, Created by Frans van Nispen (frans@xentronix.com)\n"
+"http://developer.berlios.de/projects/beae\n",
 "Special thanks goes to:",
 "Everyone who contributed to BeAE\n",
 NULL

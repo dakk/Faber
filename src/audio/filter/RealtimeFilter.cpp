@@ -188,8 +188,11 @@ void RealtimeFilter::MessageReceived(BMessage* msg){
 }		break;
 
 	case CONTROL_CHANGED:
+	{
+		printf("changed\n");
 		UpdateValues();
 		break;
+	}
 
 	default:
 		BWindow::MessageReceived(msg);

@@ -75,9 +75,9 @@ SpinControl::_Init(const char *label, int32 minValue, int32 maxValue, int32 defa
 {
 	fTextControl = new BTextControl(label, "control", new BMessage(kSpinTextChanged));
 
-	fSpinButton = new SpinButton(BRect(), "SpinButton",
+	fSpinButton = new SpinButton("SpinButton",
 		new BMessage(kSpinButtonChanged), minValue, maxValue,
-		defaultValue, stepValue, B_FOLLOW_RIGHT | B_FOLLOW_TOP);
+		defaultValue, stepValue, B_FOLLOW_LEFT | B_FOLLOW_TOP);
 	
 	fTextControl->TextView()->SetMaxBytes(10);
 
@@ -88,12 +88,12 @@ SpinControl::_Init(const char *label, int32 minValue, int32 maxValue, int32 defa
 
 	SetValue(fSpinButton->Value());
 
-	/*if (frame.IsValid())
-		FrameResized(frame.Width(), frame.Height());*/
-
 	BLayoutBuilder::Group<>(this, B_HORIZONTAL, 2)
 		.Add(fTextControl, 0)
-		.Add(fSpinButton, 1)
+		.AddGlue()
+			.AddGroup(B_HORIZONTAL)
+					.Add(fSpinButton, 0)
+			.End()
 		.End();
 }
 
@@ -223,11 +223,11 @@ void SpinControl::MessageReceived(BMessage *message)
 		SetValue(value);
 		Invoke();
 	}
-#if B_BEOS_VERSION >= 0x0500
+
 	else if (message->what == B_MOUSE_WHEEL_CHANGED) {
 		fSpinButton->MessageReceived(message);
 	}
-#endif
+
 	else {
 		BControl::MessageReceived(message);
 	}

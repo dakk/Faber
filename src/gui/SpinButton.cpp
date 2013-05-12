@@ -59,12 +59,17 @@ static const unsigned char kVerticalResizeCursor[] = {
 };
 */
 
-SpinButton::SpinButton(BRect frame, const char *name, BMessage *message,
+SpinButton::SpinButton(const char *name, BMessage *message,
 	int32 minValue, int32 maxValue, int32 defaultValue, int32 stepValue,
-	uint32 resizingFlags, uint32 flags) :
-	BControl(frame, name, B_EMPTY_STRING, message, resizingFlags, flags),
-	fMinValue(minValue), fMaxValue(maxValue), fDefaultValue(defaultValue),
-	fStepValue(stepValue), fButton(kSpinButtonNone), fPoint()
+	uint32 resizingFlags, uint32 flags)
+	:
+	BControl(BRect(10, 10, 50, 50), name, B_EMPTY_STRING, message, resizingFlags, flags),
+	fMinValue(minValue), 
+	fMaxValue(maxValue),
+	fDefaultValue(defaultValue),
+	fStepValue(stepValue),
+	fButton(kSpinButtonNone),
+	fPoint()
 {
 	SetValue(fDefaultValue);
 	ResizeToPreferred();

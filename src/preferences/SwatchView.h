@@ -36,8 +36,8 @@
 class SwatchView : public BControl
 {
  public:
- 	SwatchView(BRect frame, const char *name, BMessage* msg = NULL);
-	SwatchView(BRect frame, const char *name, rgb_color color, BMessage* msg = NULL);
+ 	SwatchView(const char *name, BMessage* msg = NULL);
+	SwatchView(const char *name, rgb_color color, BMessage* msg = NULL);
 	virtual ~SwatchView();
 	
 	virtual	void Draw(BRect update_rect);

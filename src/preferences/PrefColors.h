@@ -32,6 +32,7 @@
 #include <Application.h>
 #include <AppKit.h>
 #include <InterfaceKit.h>
+
 #include "SwatchView.h"
 
 class PrefColors : public BView {

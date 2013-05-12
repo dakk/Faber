@@ -582,13 +582,13 @@ void SetKeyWindow::MessageReceived(BMessage* msg){
 *******************************************************/
 PrefKeys::PrefKeys()
 	:
-	BView("Prefs keys", B_FOLLOW_ALL)
+	BView(BRect(0, 0, 450, 400), "Prefs keys", B_FOLLOW_ALL, B_WILL_DRAW)
 {
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
 	// add the prefs list at the left
 	list = new BOutlineListView("key list");
-	BScrollView *sv = new BScrollView("scroll", list, B_FOLLOW_ALL_SIDES, B_WILL_DRAW, false, true, B_PLAIN_BORDER);
+	BScrollView *sv = new BScrollView("scroll", list, B_FOLLOW_ALL_SIDES, false, true, B_PLAIN_BORDER);
 	sv->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	sv->MakeFocus(false);
 
@@ -606,7 +606,6 @@ PrefKeys::PrefKeys()
 
 	BLayoutBuilder::Group<>(this, B_VERTICAL, 1)
 		.Add(sv, 0)
-		//.AddGlue()
 	.End();
 }
 

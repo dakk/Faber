@@ -49,16 +49,18 @@ char* RGBtoText(const rgb_color& color)
 	return rgbtxt;
 }
 
-SwatchView::SwatchView(BRect frame, const char *name, BMessage* msg)
- : BControl(frame, "", "", msg, B_FOLLOW_NONE, B_WILL_DRAW)
+SwatchView::SwatchView(const char *name, BMessage* msg)
+	:
+	BControl("swatchview", "", msg, B_FOLLOW_ALL)
 {
 	Init();
 	m_name = name;
 	active = false;
 }
 
-SwatchView::SwatchView(BRect frame, const char *name, rgb_color color, BMessage* msg)
- : BControl(frame, "", "", msg, B_FOLLOW_NONE, B_WILL_DRAW)
+SwatchView::SwatchView(const char *name, rgb_color color, BMessage* msg)
+	:
+	BControl("swatchview", "", msg, B_FOLLOW_ALL)
 {
 	Init();
 	m_color = color;
@@ -82,7 +84,7 @@ void SwatchView::Init()
 {
 	BRect frame = Bounds();
 	m_bitmap = new BBitmap(frame, B_RGB32, true);
-	m_view = new BView(frame, "offscreen", B_FOLLOW_NONE, 0);
+	m_view = new BView("offscreen", B_FOLLOW_RIGHT);
 	m_bitmap->AddChild(m_view);
 	m_color.red = m_color.green = m_color.blue = 0;
 	DrawOffscreen();

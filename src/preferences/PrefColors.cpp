@@ -32,7 +32,8 @@
 #include <Path.h>
 #include <TranslationKit.h>
 #include <TranslationUtils.h>
-#include <LayoutBuilder.h>
+#include <GroupLayoutBuilder.h>
+#include <ControlLook.h>
 
 #include "Globals.h"
 #include "PrefColors.h"
@@ -52,7 +53,7 @@
 *******************************************************/
 PrefColors::PrefColors()
 	:
-	BView("Prefs color", B_FOLLOW_ALL)
+	BView(BRect(0,0,500,450), "Prefs color", B_FOLLOW_ALL, B_WILL_DRAW)
 {
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
@@ -99,10 +100,8 @@ PrefColors::PrefColors()
 	colors[34] = (void*)&Prefs.time_small_marks_color;
 	colors[35] = (void*)&Prefs.time_text_color;
 
-	BRect r = Bounds();
-	r.left = r.right-32;	r.right -= 8;
-	r.bottom = 28;	r.top = 4;
-	color_view = new SwatchView(r, "color_view", new BMessage(SWATCH_DROP));
+	rgb_color color;
+	color_view = new SwatchView("color_view", new BMessage(SWATCH_DROP));
 	color_view->SetEnabled(false);
 
 	scheme = new BPopUpMenu(B_TRANSLATE("Color Scheme"));
@@ -116,17 +115,16 @@ PrefColors::PrefColors()
 		scheme->AddItem(menuItem = new BMenuItem(B_TRANSLATE(s), m));
 		if (i==0)	menuItem->SetMarked(true);
 	}
-
 	menu->SetDivider(be_plain_font->StringWidth(B_TRANSLATE("Color Scheme")) +10);
 
 	// add the prefs list at the left
 	list = new BListView("color list");
+
 	BScrollView *sv = new BScrollView("scroll", list, B_FOLLOW_ALL_SIDES,
-		B_WILL_DRAW, false, true, B_PLAIN_BORDER);
+		false, true, B_PLAIN_BORDER);
 
 	sv->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	sv->MakeFocus(false);
-	//AddChild(sv);
 
 	for (int i=1; i<=36; i++){
 		sprintf(s, "COLOR%d", i);
@@ -138,12 +136,18 @@ PrefColors::PrefColors()
 
 	control->SetEnabled(false);
 
-	BLayoutBuilder::Group<>(this, B_VERTICAL, 4)
-		.Add(color_view, 0)
-		.Add(menu, 1)
-		.Add(sv, 2)
-		.Add(control, 3)
-	.End();
+	const float spacing = be_control_look->DefaultItemSpacing();
+	SetLayout(new BGroupLayout(B_VERTICAL, spacing));
+	AddChild(BGroupLayoutBuilder(B_VERTICAL)
+		.AddGroup(B_HORIZONTAL, spacing)
+			.Add(menu)
+			.Add(color_view)
+			.AddGlue()
+		.End()
+		.Add(sv)
+		.Add(control)
+	.End()
+	.SetInsets(spacing, spacing, spacing, spacing));
 }
 
 /*******************************************************
@@ -161,7 +165,7 @@ void PrefColors::AttachedToWindow(){
 	list->SetSelectionMessage(new BMessage(COLOR_SELECT));
 	list->SetInvocationMessage(new BMessage(COLOR_SELECT));
 	control->SetTarget(this);
-	//color_view->SetTarget(this);
+	color_view->SetTarget(this);
 	scheme->SetTargetForItems(this);
 }
 
@@ -181,6 +185,7 @@ void PrefColors::MessageReceived(BMessage *msg){
 
 	switch(msg->what){
 	case COLOR_SELECT:
+		printf("color select\n");
 		i = list->CurrentSelection();
 		if(i < 0){
 			control->SetEnabled(false);

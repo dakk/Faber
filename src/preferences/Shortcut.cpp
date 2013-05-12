@@ -85,7 +85,7 @@ void Shortcut::Init(){
 	// install defaults
 	InstallDefaults();
 
-	Settings prefs = Settings(SETTINGS_DIR"/"FABER_CONF_NAME);
+	Settings prefs = Settings(SETTINGS_DIR"/"KEYBINDINGS_CONF_NAME);
 	if(prefs.InitCheck() == B_OK){
 		// Init from prefs file
 		const char *ID = NULL;

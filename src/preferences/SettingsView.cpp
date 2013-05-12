@@ -12,13 +12,6 @@
 #include <Button.h>
 #include <GroupLayout.h>
 #include <GroupView.h>
-#include <OS.h>
-#include <Menu.h>
-#include <MenuBar.h>
-#include <MenuItem.h>
-#include <Slider.h>
-#include <TextControl.h>
-#include <TabView.h>
 #include <View.h>
 #include <Box.h>
 #include <Catalog.h>
@@ -51,37 +44,36 @@ SettingsView::SettingsView()
 	SetLayout(rootLayout);
 
 	BRect r;
-	BTabView *tabView;
 	BTab *tab;
 	
-	tabView = new BTabView(r, " ");
-	tabView->SetViewColor(216,216,216,0);
+	fTabView = new BTabView(r, " ");
+	fTabView->SetViewColor(216,216,216,0);
 
-	r = tabView->Bounds();
+	r = fTabView->Bounds();
 	r.InsetBy(5,5);
-	r.bottom -= tabView->TabHeight();
-	rootLayout->AddView(tabView);
+	r.bottom -= fTabView->TabHeight();
+	rootLayout->AddView(fTabView);
 
 
 	// Interface
 	BView *interfaceView = new PrefGeneral();
 	
 	tab = new BTab();
-	tabView->AddTab(interfaceView, tab);
+	fTabView->AddTab(interfaceView, tab);
 	tab->SetLabel(B_TRANSLATE("Interface"));
 
 	// Interface
 	BView *colorView = new PrefColors();
 	
 	tab = new BTab();
-	tabView->AddTab(colorView, tab);
+	fTabView->AddTab(colorView, tab);
 	tab->SetLabel(B_TRANSLATE("Color layout"));
 
 	// Interface
 	BView *hotkeyView = new PrefKeys();
 	
 	tab = new BTab();
-	tabView->AddTab(hotkeyView, tab);
+	fTabView->AddTab(hotkeyView, tab);
 	tab->SetLabel(B_TRANSLATE("Key bindings"));
 
 
@@ -94,19 +86,19 @@ SettingsView::SettingsView()
 	
 	
 	tab = new BTab();
-	tabView->AddTab(audioView, tab);
+	fTabView->AddTab(audioView, tab);
 	tab->SetLabel(B_TRANSLATE("Audio IO"));
 
 	// Defaults and revert buttons
 	BGroupView* buttonGroup = new BGroupView(B_HORIZONTAL);
 
-	fDefaultsButton = new BButton(B_TRANSLATE("Defaults"),
-		new BMessage(MSG_SETTINGS_DEFAULTS));						
+	fDefaultsButton = new BButton(B_TRANSLATE("Set Factory"),
+		new BMessage(SET_FACTORY));						
 
 	buttonGroup->GroupLayout()->AddView(fDefaultsButton);
 
-	fRevertButton = new BButton(B_TRANSLATE("Revert"),
-		new BMessage(MSG_SETTINGS_REVERT));							
+	fRevertButton = new BButton(B_TRANSLATE("OK"),
+		new BMessage(QUIT));							
 
 	buttonGroup->GroupLayout()->AddView(fRevertButton);
 
@@ -118,7 +110,7 @@ void SettingsView::AttachedToWindow()
 {
 	fDefaultsButton->SetTarget(this);
 	fRevertButton->SetTarget(this);
-	
+
 	Window()->CenterOnScreen();
 }
 
@@ -127,8 +119,6 @@ void SettingsView::MessageReceived(BMessage *message)
 {
 	switch(message->what)
 	{
-		case MSG_SETTINGS_REVERT:
-		case MSG_SETTINGS_DEFAULTS:
 		default:
 			BView::MessageReceived(message);
 	}			

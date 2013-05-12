@@ -13,7 +13,6 @@
 #include <Region.h>
 #include <Shape.h>
 
-
 static const rgb_color kThumbRed = (rgb_color){ 255, 52, 52, 255 };
 
 
@@ -33,6 +32,7 @@ SeekSlider::SeekSlider(const char* name, BMessage* message, int32 minValue,
 	SetSymbolScale(1.0);
 	rgb_color fillColor = tint_color(ui_color(B_PANEL_BACKGROUND_COLOR),
 		B_DARKEN_3_TINT);
+	rgb_color barColor = { 0, 0, 240 };
 	UseFillColor(true, &fillColor);
 	SetModificationMessage(message);
 }
@@ -46,6 +46,8 @@ SeekSlider::~SeekSlider()
 status_t
 SeekSlider::Invoke(BMessage* message)
 {
+	BMessenger mess(this);
+	mess.SendMessage(new BMessage(CUSTOM_INVOKED));
 	fLastTrackTime = system_time();
 	return BSlider::Invoke(message);
 }

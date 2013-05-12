@@ -49,7 +49,7 @@
 
 SettingsWindow::SettingsWindow() 
 	:
-	BWindow(BRect(100,100,700,650),
+	BWindow(BRect(100,100,600,550),
 		B_TRANSLATE("Preferences"), B_TITLED_WINDOW,
 		B_ASYNCHRONOUS_CONTROLS | B_NOT_RESIZABLE | B_NOT_ZOOMABLE)
 {	

@@ -44,7 +44,7 @@ class DelayWindow : public RealtimeFilter {
   private:
 	float *delay_buffer;
 	int32 buffer_size, pBuffer;
-	SeekSlider *delay;
+	SpinSlider *delay;
 	SpinSlider* gain;
 };
 

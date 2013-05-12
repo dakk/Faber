@@ -11,6 +11,8 @@
 
 #include "SpinControl.h"
 
+#define CUSTOM_INVOKED 'invk'
+
 
 class SeekSlider : public BSlider {
 public:
@@ -20,7 +22,7 @@ public:
 	virtual						~SeekSlider();
 
 	// BSlider interface
-	virtual	status_t			Invoke(BMessage* message);
+	virtual	status_t			Invoke(BMessage* message = NULL);
 	virtual BRect				ThumbFrame() const;
 	virtual void				DrawBar();
 	virtual	void				DrawThumb();

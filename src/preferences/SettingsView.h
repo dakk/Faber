@@ -14,11 +14,9 @@
 #include <Menu.h>
 #include <Button.h>
 #include <Slider.h>
+#include <TabView.h>
 #include <TextControl.h>
 
-
-const int32 MSG_SETTINGS_DEFAULTS		= 0xA1;
-const int32 MSG_SETTINGS_REVERT			= 0xA2;
 #define QUIT		'quit'
 #define SET_FACTORY	'fact'
 
@@ -31,8 +29,9 @@ public:
 	virtual	void	MessageReceived(BMessage* message);
 
 private:
-	BButton			*fDefaultsButton;
-	BButton			*fRevertButton;
+	BButton*		fDefaultsButton;
+	BButton*		fRevertButton;
+	BTabView*		fTabView;
 };
 
 

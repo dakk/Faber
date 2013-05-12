@@ -9,7 +9,7 @@
 #include "SpinControl.h"
 
 
-class SpinSlider : public SeekSlider {
+class SpinSlider : public BView {
 public:
 								SpinSlider(const char* name, const char* label,
 									BMessage* message, int32 minValue,
@@ -18,12 +18,22 @@ public:
 								SpinSlider(BRect r, const char* name,
 									const char* label, BMessage* message,
 									int32 minValue, int32 maxValue);
-
 	virtual						~SpinSlider();
+
+	virtual void				AttachedToWindow();
+	virtual void 				MessageReceived(BMessage* msg);
+			void				MouseDown(BPoint pt);
+
+	// BSlider mimics
+	virtual void				SetLabel(const char* label);
+	virtual float				Value() const;
+	virtual void				SetValue(float value);
+			SeekSlider*			Slider() { return fSlider; }
 
 private:
 			void				_Init(int32 minValue, int32 maxValue);
 			SpinControl*		fSpinControl;
+			SeekSlider*			fSlider;
 };
 
 

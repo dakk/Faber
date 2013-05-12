@@ -107,6 +107,7 @@ Settings::FlattenSettings()
 	printf("flatten\n");
 	_CheckSettings();
 
+	PrintToStream();
 	fSettingsFile->Seek(0, SEEK_SET);
 	return Flatten(fSettingsFile);
 }

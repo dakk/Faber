@@ -35,35 +35,43 @@
 #include "RealtimeFilter.h"
 #include "AmplifierFilter.h"
 
+
 /*******************************************************
 *   
 *******************************************************/
-AmplifierFilter::AmplifierFilter(bool b) : RealtimeFilter(B_TRANSLATE("Amplifier"), b)
+AmplifierFilter::AmplifierFilter(bool b)
+	:
+	RealtimeFilter(B_TRANSLATE("Amplifier"), b)
 {
 
 }
 
+
 /*******************************************************
 *   
 *******************************************************/
-BView *AmplifierFilter::ConfigView()
+BView*
+AmplifierFilter::ConfigView()
 {
 	BRect r(0,0,200,60);
 
 	BView *view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	value = new SpinSlider("level", B_TRANSLATE("Level (%)"), new BMessage(CONTROL_CHANGED), 1, 300);
+	value = new SpinSlider("level", B_TRANSLATE("Level (%)"),
+		new BMessage(CONTROL_CHANGED), 1, 300);
+
 	value->SetValue(Prefs.filter_amplifier_value);
 
-	BLayoutBuilder::Group<>(view, B_VERTICAL, 2)
-		.Add(value, 0)
+	BLayoutBuilder::Group<>(view, B_VERTICAL)
+		.Add(value)
 	.End();
 
 	return view;
 }
 
-void AmplifierFilter::UpdateValues()
+void
+AmplifierFilter::UpdateValues()
 {
 	Prefs.filter_amplifier_value = value->Value();
 }
@@ -71,7 +79,8 @@ void AmplifierFilter::UpdateValues()
 /*******************************************************
 *   
 *******************************************************/
-void AmplifierFilter::FilterBuffer(float *buffer, size_t size)
+void
+AmplifierFilter::FilterBuffer(float *buffer, size_t size)
 {
 	float amp = Prefs.filter_amplifier_value/100.0;
 	float tmp;

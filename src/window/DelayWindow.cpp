@@ -62,7 +62,8 @@ BView *DelayWindow::ConfigView()
 		new BMessage(CONTROL_CHANGED), 1, 500);
 	delay->SetValue(Prefs.filter_delay_delay * 1000);
 
-	gain = new SpinSlider("gain", B_TRANSLATE("Gain %"), new BMessage(CONTROL_CHANGED), 1, 200);
+	gain = new SpinSlider("gain", B_TRANSLATE("Gain %"),
+		new BMessage(CONTROL_CHANGED), 1, 200);
 	gain->SetValue(Prefs.filter_delay_gain * 100);
 
 	BLayoutBuilder::Group<>(view, B_VERTICAL, 2)
@@ -76,6 +77,7 @@ BView *DelayWindow::ConfigView()
 
 void DelayWindow::UpdateValues()
 {
+	printf("update values\n");
 	Prefs.filter_delay_delay = delay->Value()/1000.0;
 	Prefs.filter_delay_gain = gain->Value()/100.0;
 

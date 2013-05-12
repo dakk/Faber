@@ -37,7 +37,7 @@
 
 class SpinButton : public BControl {
 	public:
-		SpinButton(BRect frame, const char *name,
+		SpinButton(const char *name,
 			BMessage *message, int32 minValue, int32 maxValue,
 			int32 defaultValue, int32 stepValue,
 			uint32 resizingFlags = B_FOLLOW_LEFT | B_FOLLOW_TOP,
