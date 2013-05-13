@@ -25,6 +25,7 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#include "main.h"
 
 #include <AppKit.h>
 #include <InterfaceKit.h>
@@ -33,8 +34,7 @@
 #include <View.h>
 
 #include "Globals.h"
-#include "MainWindow.h"
-#include "main.h"
+#include "FaberWindow.h"
 #include "OpenPanel.h"
 #include "SavePanel.h"
 #include "PeakFile.h"
@@ -48,8 +48,8 @@ extern cookie_record play_cookie;
 
 int main()
 {
-	MyApplication	*myApp;
-	myApp = new MyApplication;
+	FaberApp	*myApp;
+	myApp = new FaberApp;
 
 	myApp->Run();
 
@@ -58,23 +58,23 @@ int main()
 }
 
 
-MyApplication::MyApplication():BApplication(FABER_MIMETYPE)
+FaberApp::FaberApp():BApplication(FABER_MIMETYPE)
 {
 	BRect rect(50, 50, WINDOW_DEFAULT_SIZE_X, WINDOW_DEFAULT_SIZE_Y);
-	mainWindow = new MainWindow(rect);
+	fFaberWindow = new FaberWindow(rect);
 	fOpenPanel = new OpenPanel(this);
 	fSavePanel = new SavePanel(this);
 	Pool.UpdateMenu();
-	mainWindow->Show();
+	fFaberWindow->Show();
 }
 
 
 bool
-MyApplication::QuitRequested()
+FaberApp::QuitRequested()
 {
-	if (mainWindow) {
-		if (mainWindow->Lock() && mainWindow->QuitRequested()) {
-			mainWindow->Quit();
+	if (fFaberWindow) {
+		if (fFaberWindow->Lock() && fFaberWindow->QuitRequested()) {
+			fFaberWindow->Quit();
 
 			if (fOpenPanel)
 				delete fOpenPanel;
@@ -82,7 +82,7 @@ MyApplication::QuitRequested()
 			if (fSavePanel)
 				delete fSavePanel;
 
-			mainWindow->Unlock();
+			fFaberWindow->Unlock();
 			return true;
 		}
 	}
@@ -91,7 +91,7 @@ MyApplication::QuitRequested()
 
 
 void
-MyApplication::MessageReceived(BMessage *message)
+FaberApp::MessageReceived(BMessage *message)
 {
 	switch (message->what){
 	case SAVE_AUDIO:
@@ -123,7 +123,7 @@ MyApplication::MessageReceived(BMessage *message)
 	case DROP_PASTE:
 	case B_PASTE:
 	case CHANGE_LANGUAGE:
-		mainWindow->PostMessage(message);
+		fFaberWindow->PostMessage(message);
 		break;
 
 	default:
@@ -134,7 +134,7 @@ MyApplication::MessageReceived(BMessage *message)
 
 
 void
-MyApplication::RefsReceived(BMessage* message)
+FaberApp::RefsReceived(BMessage* message)
 {
 //	be_app->Lock();
 
@@ -159,7 +159,7 @@ MyApplication::RefsReceived(BMessage* message)
 
 			char s[B_FILE_NAME_LENGTH +20];
 			sprintf(s, "Faber - %s", ref.name);
-			mainWindow->SetTitle(s);
+			fFaberWindow->SetTitle(s);
 
 			Pool.sample_view_dirty = true;	// update the sample-view
 			Pool.update_index = true;
@@ -375,14 +375,14 @@ MyApplication::RefsReceived(BMessage* message)
 
 	play_cookie.pause = temp_pause;
 	Pool.UpdateMenu();
-	mainWindow->UpdateRecent();
+	fFaberWindow->UpdateRecent();
 //	be_app->Unlock();
 }
 
 //------------------------------------------------------------------ Save
 
 void
-MyApplication::Save(BMessage *message){
+FaberApp::Save(BMessage *message){
 	// Grab the stuff we know is there .. or should be :P
 
 	entry_ref dir_ref, file_ref;
@@ -441,7 +441,7 @@ MyApplication::Save(BMessage *message){
 				if (save_start == 0){			// save as
 					char s[B_FILE_NAME_LENGTH +20];
 					sprintf(s, "Faber - %s", file_ref.name);
-					mainWindow->SetTitle(s);
+					fFaberWindow->SetTitle(s);
 				}
 
 				raf = &(format.u.raw_audio);
@@ -546,7 +546,7 @@ MyApplication::Save(BMessage *message){
 	if (Pool.save_mode == 2)
 		PostMessage(B_QUIT_REQUESTED);
 	if (Pool.save_mode == 1)
-		mainWindow->PostMessage(OPEN);
+		fFaberWindow->PostMessage(OPEN);
 
 	Pool.save_mode = 0;
 }

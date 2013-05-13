@@ -26,28 +26,30 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _SAMPLE_APP
-#define _SAMPLE_APP
+#ifndef FABER_APP
+#define FABER_APP
 
 #include "Globals.h"
 #include "OpenPanel.h"
-#include "MainWindow.h"
 #include "SavePanel.h"
 
-class MyApplication : public BApplication {
- public:
-					MyApplication();
-	virtual void	MessageReceived(BMessage *message);
-	virtual void	RefsReceived(BMessage *message);
+class FaberWindow;
+
+
+class FaberApp : public BApplication {
+public:
+					FaberApp();
+	virtual void	MessageReceived(BMessage* message);
+	virtual void	RefsReceived(BMessage* message);
 	virtual bool	QuitRequested();
 
-	void	Save(BMessage*);
+			void	Save(BMessage*);
 
-	OpenPanel		*fOpenPanel;
-	SavePanel		*fSavePanel;
- 	MainWindow		*mainWindow;
- private:
- 	int64		save_start, save_end;
+	OpenPanel*		fOpenPanel;
+	SavePanel*		fSavePanel;
+ 	FaberWindow*	fFaberWindow;
+private:
+ 	int64			save_start, save_end;
 };
 
 #endif

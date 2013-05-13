@@ -25,16 +25,16 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#ifndef _FABER_VIEW
+#define _FABER_VIEW
 
-#ifndef _Big_VIEW
-#define _Big_VIEW
 #include <View.h>
 #include <Bitmap.h>
 
-class BigView: public BView{
+class FaberView: public BView{
  public:
-	BigView(BRect r);
-	virtual ~BigView();
+	FaberView(BRect r);
+	virtual ~FaberView();
 	virtual void AttachedToWindow();
 	virtual void Draw(BRect);
 	virtual void Pulse();
@@ -46,6 +46,3 @@ class BigView: public BView{
 };
 
 #endif
-
-
-

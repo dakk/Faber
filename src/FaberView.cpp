@@ -25,20 +25,23 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
+#include "FaberView.h"
 #include <TranslationKit.h>
 #include <Bitmap.h>
-#include <stdio.h>
 
 #include "Globals.h"
-#include "BigView.h"
-#include "MainWindow.h"
+
+#include "FaberWindow.h"
 #include "Preferences.h"
+
+#include <stdio.h>
 
 extern cookie_record play_cookie;
 
-BigView::BigView(BRect r) : 
-	BView(r, "Big view", B_FOLLOW_ALL_SIDES | B_FOLLOW_BOTTOM, B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE | B_PULSE_NEEDED)
+FaberView::FaberView(BRect r)
+	: 
+	BView(r, "Big view", B_FOLLOW_ALL_SIDES | B_FOLLOW_BOTTOM,
+		B_WILL_DRAW | B_FULL_UPDATE_ON_RESIZE | B_PULSE_NEEDED)
 {
 	SetViewColor(B_TRANSPARENT_COLOR);
 	
@@ -52,8 +55,9 @@ BigView::BigView(BRect r) :
 	digits = BTranslationUtils::GetBitmapFile("./Bitmaps/BigDigits.png");
 }
 
+
 //*****************************************************
-BigView::~BigView()
+FaberView::~FaberView()
 {
 	delete back;
 	delete left;
@@ -62,13 +66,17 @@ BigView::~BigView()
 	delete digits;
 }
 
+
 //*****************************************************
-void BigView::AttachedToWindow()
+void
+FaberView::AttachedToWindow()
 {
 }
 
+
 //*****************************************************
-void BigView::Pulse()
+void
+FaberView::Pulse()
 {
 	int64 p = 0;
 	if (Pool.sample_type){
@@ -86,8 +94,10 @@ void BigView::Pulse()
 	}
 }
 
+
 //*****************************************************
-void BigView::Draw(BRect r)
+void
+FaberView::Draw(BRect r)
 {
 	if (full_update){
 		BRect rect = Bounds();
@@ -124,7 +134,8 @@ void BigView::Draw(BRect r)
 					if (c==1 && first && p!=7)	c--;
 			
 					BRect num(20*c, 0, 20*c+19, 29);
-					BRect dest(x + p*20 +7, Bounds().top +18, x + p*20 +26, Bounds().top +47);
+					BRect dest(x + p*20 +7, Bounds().top +18, x + p*20 +26,
+						Bounds().top +47);
 					DrawBitmap(digits, num, dest);
 				}
 			} else
@@ -139,7 +150,8 @@ void BigView::Draw(BRect r)
 				BRect num, dest;
 				
 				if (floor(minutes/10))
-					num.Set(20* (floor(minutes/10)+1), 0, 20*(floor(minutes/10)+1)+19, 29);
+					num.Set(20* (floor(minutes/10)+1), 0,
+						20*(floor(minutes/10)+1)+19, 29);
 				else
 					num.Set(0, 0, 19, 29);
 				dest.Set(x + 7, Bounds().top +18, x +26, Bounds().top +47);

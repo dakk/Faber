@@ -25,23 +25,21 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+#include "FaberWindow.h"
 
 #include <Application.h>
 #include <InterfaceKit.h>
 #include <StorageKit.h>
 #include <MediaKit.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <Cursor.h>
 
-#include "Globals.h"
-#include "MainWindow.h"
-#include "VUView.h"
 #include "main.h"
+#include "FaberView.h"
+#include "Globals.h"
+#include "VUView.h"
 #include "TransportView.h"
 #include "PointersView.h"
 #include "ToolBarView.h"
-#include "BigView.h"
 #include "SampleView.h"
 #include "ValuesView.h"
 #include "IndexView.h"
@@ -54,11 +52,13 @@
 #include "Analyzers.h"
 #include "VMSystem.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+
 cookie_record play_cookie;
 #define UPDATE	'updt'
 
-// URL to the homepage/Tutorials/others
-//char *TUTORIALS_URL = "http://www.xentronix.com/module.php?mod=document";
+
 
 class MyMenuBar : public BMenuBar{
   public:
@@ -66,11 +66,15 @@ class MyMenuBar : public BMenuBar{
 	virtual void MakeFocus(bool b);
 };
 
-MyMenuBar::MyMenuBar(BRect r, const char *name) : BMenuBar(r, name)
+
+MyMenuBar::MyMenuBar(BRect r, const char *name)
+	:
+	BMenuBar(r, name)
 {
 }
 
-void MyMenuBar::MakeFocus(bool b)
+void
+MyMenuBar::MakeFocus(bool b)
 {
 	// This one does make sure the MenuBar does NOT get focus !!!
 	// To avoid the key-navigation to stop working
@@ -79,7 +83,8 @@ void MyMenuBar::MakeFocus(bool b)
 
 #ifdef __VM_SYSTEM
 
-void BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_audio_format &format)
+void 
+BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_audio_format &format)
 {
 	// We're going to be cheap and only work for floating-point audio 
 	if (format.format != media_raw_audio_format::B_AUDIO_FLOAT) { 
@@ -367,8 +372,9 @@ void BufferPlayer(void *theCookie, void *buffer, size_t size, const media_raw_au
 }
 #endif
 
-MainWindow::MainWindow(BRect frame)
-	:BWindow(frame, NULL ,B_TITLED_WINDOW,B_ASYNCHRONOUS_CONTROLS)
+FaberWindow::FaberWindow(BRect frame)
+	:
+	BWindow(frame, NULL ,B_TITLED_WINDOW,B_ASYNCHRONOUS_CONTROLS)
 {
 	Looper()->SetName("Faber");
 
@@ -447,7 +453,7 @@ MainWindow::MainWindow(BRect frame)
 	r.top = r.bottom -62;
 	r.left = 261;
 	r.right -= 260;
-	AddChild(new BigView(r));
+	AddChild(new FaberView(r));
 
 
 // sample Views
@@ -488,7 +494,8 @@ MainWindow::MainWindow(BRect frame)
 	SetPulseRate(50000);
 }
 
-void MainWindow::AddMenu()
+void
+FaberWindow::AddMenu()
 {
 	BMenu		*menu;
 	BMenuItem	*menuItem;
@@ -610,11 +617,14 @@ void MainWindow::AddMenu()
 	SetKeyMenuBar(NULL);
 }
 
-MainWindow::~MainWindow()
+
+FaberWindow::~FaberWindow()
 {
 }
 
-void MainWindow::UpdateRecent()
+
+void
+FaberWindow::UpdateRecent()
 {
 	BMenuItem *menuItem;
 	BMessage msg;
@@ -641,7 +651,9 @@ void MainWindow::UpdateRecent()
 	}
 }
 
-bool MainWindow::QuitRequested()
+
+bool
+FaberWindow::QuitRequested()
 {
 	if (!Pool.IsChanged(2)){
 		Prefs.frame = Frame();
@@ -653,7 +665,9 @@ bool MainWindow::QuitRequested()
 	}
 }
 
-void MainWindow::MessageReceived(BMessage *message)
+
+void
+FaberWindow::MessageReceived(BMessage *message)
 {
 	RealtimeFilter *filter = NULL;
 	int32 x, key, mod, raw_key;
@@ -745,22 +759,22 @@ void MainWindow::MessageReceived(BMessage *message)
 
 	case OPEN:
 		if (!Pool.IsChanged())
-			((MyApplication*)be_app)->fOpenPanel->Show();
+			((FaberApp*)be_app)->fOpenPanel->Show();
 		break;
 	
 	case SAVE:			// need to add default setting in the save-panel for this
 	case SAVE_AS:
 		if (Pool.sample_type == NONE)	return;
 		Pool.save_selection = false;
-		((MyApplication*)be_app)->fSavePanel->Window()->SetTitle(B_TRANSLATE("Save soundfile..."));
-		((MyApplication*)be_app)->fSavePanel->Show();
+		((FaberApp*)be_app)->fSavePanel->Window()->SetTitle(B_TRANSLATE("Save soundfile..."));
+		((FaberApp*)be_app)->fSavePanel->Show();
 		break;
 	
 	case SAVE_SELECTION:
 		if (Pool.selection == NONE || Pool.sample_type == NONE)	return;
-		((MyApplication*)be_app)->fSavePanel->Window()->SetTitle(B_TRANSLATE("Save selection..."));
+		((FaberApp*)be_app)->fSavePanel->Window()->SetTitle(B_TRANSLATE("Save selection..."));
 		Pool.save_selection = true;
-		((MyApplication*)be_app)->fSavePanel->Show();
+		((FaberApp*)be_app)->fSavePanel->Show();
 		break;
 	
 	case UNDO:
@@ -878,7 +892,7 @@ void MainWindow::MessageReceived(BMessage *message)
 	case ZOOM_LEFT:
 		if (Pool.size == 0 || Pool.selection==NONE)	break;
 		x = sample_view->Bounds().IntegerWidth()/6;
-		Pool.l_pointer = Pool.pointer -x/2;				// window to selection
+		Pool.l_pointer = Pool.pointer -x/2;	// window to selection
 		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
 		Pool.r_pointer = Pool.l_pointer + x;
 
@@ -889,7 +903,7 @@ void MainWindow::MessageReceived(BMessage *message)
 	case ZOOM_RIGHT:
 		if (Pool.size == 0 || Pool.selection==NONE)	break;
 		x = sample_view->Bounds().IntegerWidth()/6;
-		Pool.l_pointer = Pool.r_sel_pointer - x/2;		// window to selection
+		Pool.l_pointer = Pool.r_sel_pointer - x/2;	// window to selection
 		if (Pool.l_pointer<0)	Pool.l_pointer = 0;
 		Pool.r_pointer = Pool.l_pointer + x;
 		if (Pool.r_pointer > Pool.size){
@@ -1054,9 +1068,12 @@ void MainWindow::MessageReceived(BMessage *message)
 	}
 		
 	case PREFERENCES:
-		if(Pool.PrefWin != NULL){
-			Pool.PrefWin->Show();
-		}else{
+		if (Pool.PrefWin != NULL && Pool.PrefWin->LockLooper()) {
+			if (Pool.PrefWin->IsHidden())
+				Pool.PrefWin->Show();
+			Pool.PrefWin->Activate();
+			Pool.PrefWin->UnlockLooper();
+		} else {
 			//Create a new Prefs windos?!
 		}
 		break;
@@ -1103,7 +1120,8 @@ void MainWindow::MessageReceived(BMessage *message)
 		break;
 		
 	case SET_FREQUENCY:
-		(new FreqWindow(BPoint( (Frame().left+Frame().right)/2, (Frame().top+Frame().bottom)/2)));
+		(new FreqWindow(BPoint((Frame().left+Frame().right)/2,
+			(Frame().top+Frame().bottom)/2)));
 		break;
 
 	case RESAMPLE_DO:
@@ -1111,7 +1129,8 @@ void MainWindow::MessageReceived(BMessage *message)
 		break;
 
 	case RESAMPLE:
-		(new ResampleWindow(BPoint( (Frame().left+Frame().right)/2, (Frame().top+Frame().bottom)/2)));
+		(new ResampleWindow(BPoint( (Frame().left+Frame().right)/2,
+			(Frame().top+Frame().bottom)/2)));
 		break;
 
 	case CLEAR:
@@ -1124,7 +1143,7 @@ void MainWindow::MessageReceived(BMessage *message)
 		Pool.RedrawWindow();
 		break;
 		
-	case RUN_FILTER:							// run a filter with or without GUI
+	case RUN_FILTER: // run a filter with or without GUI
 {		if (Pool.size == 0) break;
 		const char *tag = NULL;
 		if (message->FindInt32("filter", &mod) == B_OK){
@@ -1135,17 +1154,17 @@ void MainWindow::MessageReceived(BMessage *message)
 		}
 }		break;
 	
-	case EXE_FILTER:							// apply filter, this is send by the filter or repeat function
+	case EXE_FILTER: // apply filter, this is send by the filter or repeat function
 		if (message->FindPointer("filter", (void**)&filter) == B_OK)
 			ExecuteFilter(filter);
 		break;
 	
-	case CANCEL_FILTER:							// apply filter, this is send by the filter or repeat function
+	case CANCEL_FILTER:	// apply filter, this is send by the filter or repeat function
 		if (message->FindPointer("filter", (void**)&filter) == B_OK)
 			CancelFilter(filter);
 		break;
 	
-	case RUN_LAST_FILTER:							// run a filter with or without GUI
+	case RUN_LAST_FILTER: // run a filter with or without GUI
 		RunLastFilter();
 		break;
 	

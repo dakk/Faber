@@ -14,9 +14,35 @@ SEARCH_SOURCE += [ FDirName $(TOP) src preferences ] ;
 Application Faber :
 	# this is the core code
 	main.cpp
-	MainWindow.cpp
+	FaberWindow.cpp
+	FaberView.cpp
+
+	# GUI Code mixed views and windows
+	IndexView.cpp
+	ToolBarView.cpp
+	TransportView.cpp
+	TimeBarView.cpp
+	ValuesView.cpp
+	VUView.cpp
+
+	AnalyzeWindow.cpp
+	SpectrumWindow.cpp
+	SampleScopeWindow.cpp
+	ProgressWindow.cpp
 	AboutBox.cpp
-	BigView.cpp
+
+	# Settings
+	SettingsWindow.cpp
+	SettingsView.cpp
+	Settings.cpp
+	Preferences.cpp
+	PrefGeneral.cpp
+	Shortcut.cpp
+	PrefKeys.cpp
+	PrefColors.cpp
+	SwatchView.cpp
+
+	# Common
 	MyClipBoard.cpp
 	CommonClass.cpp
 	OpenPanel.cpp
@@ -28,39 +54,10 @@ Application Faber :
 	SavePanel.cpp
 	History.cpp
 
-	# Settings
-	#YPreferences.cpp
-	Preferences.cpp
-	PrefGeneral.cpp
-	Shortcut.cpp
-	PrefKeys.cpp
-	PrefColors.cpp
-
-	SettingsWindow.cpp
-	SettingsView.cpp
-	Settings.cpp
-
-	# Implementations were they will merge
-	IndexView.cpp
-	SwatchView.cpp
-	ToolBarView.cpp
-	TransportView.cpp
-	TimeBarView.cpp
-	ValuesView.cpp
-	VUView.cpp
-
-	AnalyzeWindow.cpp
-	DelayWindow.cpp
-	FreqWindow.cpp
-	ResampleWindow.cpp
-	SpectrumWindow.cpp
-	SampleScopeWindow.cpp
-
 	# app and libstilnovo implementation base classes
 	PointersView.cpp
 	SeekSlider.cpp
 	SpinControl.cpp
-	ProgressWindow.cpp
 	SpinSlider.cpp
 	PeakView.cpp
 	SampleView.cpp
@@ -75,11 +72,15 @@ Application Faber :
 	RealtimeFilter.cpp
 	BassBoostFilter.cpp
 	LimiterFilter.cpp
-	ReverbWindow.cpp
 	CompressorFilter.cpp
 	NormalizeFilter.cpp
 	RoomFilter.cpp
 
+	# filters windows
+	ReverbWindow.cpp
+	DelayWindow.cpp
+	FreqWindow.cpp
+	ResampleWindow.cpp
 	: be media $(TARGET_LIBSTDC++) game tracker translation localestub
 	: Faber.rdef
 ;

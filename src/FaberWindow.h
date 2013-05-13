@@ -26,17 +26,17 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef MAIN_WINDOW
-#define MAIN_WINDOW
+#ifndef FABER_WINDOW
+#define FABER_WINDOW
 
 #include <Window.h>
 #include "TransportView.h"
 #include "ToolBarView.h"
 
-class MainWindow : public BWindow {
+class FaberWindow : public BWindow {
  public:
-	MainWindow(BRect frame);
-	virtual	~MainWindow();
+	FaberWindow(BRect frame);
+	virtual	~FaberWindow();
 	virtual bool QuitRequested();
 	virtual void MessageReceived(BMessage *message);
 	

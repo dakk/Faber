@@ -103,7 +103,7 @@ PrefColors::PrefColors()
 	rgb_color color;
 	color_view = new SwatchView("color_view", new BMessage(SWATCH_DROP));
 	color_view->SetEnabled(false);
-	color_view->SetExplicitSize(BSize(25, 25));
+	color_view->SetExplicitSize(BSize(35, 35));
 
 	scheme = new BPopUpMenu(B_TRANSLATE("Color Scheme"));
 	BMenuItem *menuItem;
