@@ -36,7 +36,8 @@
 class FaberWindow;
 
 
-class FaberApp : public BApplication {
+class FaberApp : public BApplication
+{
 public:
 					FaberApp();
 	virtual void	MessageReceived(BMessage* message);

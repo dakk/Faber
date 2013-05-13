@@ -25,32 +25,33 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
 #ifndef FABER_WINDOW
 #define FABER_WINDOW
 
 #include <Window.h>
+
 #include "TransportView.h"
 #include "ToolBarView.h"
 
-class FaberWindow : public BWindow {
- public:
-	FaberWindow(BRect frame);
-	virtual	~FaberWindow();
-	virtual bool QuitRequested();
-	virtual void MessageReceived(BMessage *message);
+class FaberWindow : public BWindow
+{
+public:
+							FaberWindow(BRect frame);
+	virtual					~FaberWindow();
+	virtual bool 			QuitRequested();
+	virtual void 			MessageReceived(BMessage *message);
 	
-	void UpdateRecent();
-	ToolBarView	*toolBar;
+			void 			UpdateRecent();
+			void 			AddMenu();
 
-	void AddMenu();
-	
- private:
- 	friend class SampleView;
-	BMenuBar	*mainMenuBar;
-	BMenu		*recent_menu;
-	BView		*VU_view, *index_view, *sample_view, *pointer_view;
-	TransportView *transport_view;
+			ToolBarView*	toolBar;
+private:
+			BMenuBar*		mainMenuBar;
+			BMenu*			recent_menu;
+			BView*			VU_view, *index_view, *sample_view, *pointer_view;
+			TransportView* 	transport_view;
+
+	friend class SampleView;
 };
 
 #endif
