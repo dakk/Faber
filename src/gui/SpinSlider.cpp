@@ -62,19 +62,19 @@ void SpinSlider::MessageReceived(BMessage* msg)
 void
 SpinSlider::_Init(int32 minValue, int32 maxValue)
 {
+	fSlider->SetHashMarks(B_HASH_MARKS_BOTTOM);
+	fSlider->SetHashMarkCount(10);
+
 	fSpinControl = new SpinControl("SpinControl",
 		NULL, new BMessage(MSG_SPIN_CHANGED),
 		minValue, maxValue, fSlider->Value(), 1);
 
-	fSpinControl->ResizeToPreferred();
 	const float spacing = be_control_look->DefaultItemSpacing();
 
-	SetLayout(new BGroupLayout(B_HORIZONTAL, spacing));
-	AddChild(BGroupLayoutBuilder(B_HORIZONTAL)
-		.AddGroup(B_HORIZONTAL, spacing)
-			.Add(fSlider, 0)
-		.End()
-		.Add(fSpinControl, 0)
+	SetLayout(new BGroupLayout(B_HORIZONTAL));
+	AddChild(BGroupLayoutBuilder(B_HORIZONTAL, spacing)
+		.Add(fSlider)
+		.Add(fSpinControl)
 	);
 }
 

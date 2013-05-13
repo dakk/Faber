@@ -582,7 +582,7 @@ void SetKeyWindow::MessageReceived(BMessage* msg){
 *******************************************************/
 PrefKeys::PrefKeys()
 	:
-	BView(BRect(0, 0, 450, 400), "Prefs keys", B_FOLLOW_ALL, B_WILL_DRAW)
+	BView(BRect(0,0,490,380), "Prefs keys", B_FOLLOW_ALL, B_WILL_DRAW)
 {
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 

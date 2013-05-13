@@ -46,8 +46,6 @@ class SwatchView : public BControl
 	virtual void SetEnabled(bool enabled);
 
 	virtual void MessageReceived(BMessage* msg);
-	virtual void AttachedToWindow();
-	virtual void DetachedFromWindow();
 
 	virtual void SetColor(const rgb_color &color);
 	rgb_color Color(void) const;
@@ -58,14 +56,16 @@ class SwatchView : public BControl
  	virtual void DrawOffscreen();
 	
  private:
+
+	void _StrokeRect(BRect r, rgb_color leftTop, rgb_color rightBottom);
 	virtual void Init(void);
 	BBitmap* make_bitmap(void);	
-	bool active;
+	bool fActive;
 
-	const char *m_name;
- 	BView* m_view;
- 	BBitmap* m_bitmap;
-	rgb_color m_color;
+	const char *fName;
+ 	BView* fView;
+ 	BBitmap* fBitmap;
+	rgb_color fColor;
 };
 
 #endif

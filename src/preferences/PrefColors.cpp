@@ -53,7 +53,7 @@
 *******************************************************/
 PrefColors::PrefColors()
 	:
-	BView(BRect(0,0,500,450), "Prefs color", B_FOLLOW_ALL, B_WILL_DRAW)
+	BView(BRect(0,0,490,380), "Prefs color", B_FOLLOW_ALL, B_WILL_DRAW)
 {
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
@@ -103,6 +103,7 @@ PrefColors::PrefColors()
 	rgb_color color;
 	color_view = new SwatchView("color_view", new BMessage(SWATCH_DROP));
 	color_view->SetEnabled(false);
+	color_view->SetExplicitSize(BSize(25, 25));
 
 	scheme = new BPopUpMenu(B_TRANSLATE("Color Scheme"));
 	BMenuItem *menuItem;
@@ -142,7 +143,6 @@ PrefColors::PrefColors()
 		.AddGroup(B_HORIZONTAL, spacing)
 			.Add(menu)
 			.Add(color_view)
-			.AddGlue()
 		.End()
 		.Add(sv)
 		.Add(control)

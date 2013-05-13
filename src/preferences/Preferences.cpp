@@ -123,6 +123,7 @@ void Preferences::Init(){
 	if(prefs.FindFloat("peak", &peak) != B_OK)	peak = 0.85;
 
 	if(prefs.ReadColor("back_color", &back_color) != B_OK){
+		printf("default\n");
 		SetColorScheme();		// set default
 	}else{						// load the rest of the colors
 		prefs.ReadColor("back_color2", &back_color2);
@@ -211,11 +212,13 @@ void Preferences::Init(){
 /*******************************************************
 *
 *******************************************************/
-void Preferences::Sync(){
+void
+Preferences::Sync()
+{
 	Settings prefs = Settings(SETTINGS_DIR"/"FABER_CONF_NAME);
-	if (prefs.InitCheck() != B_OK)	return;
-   
-	//prefs.SetString("Language_Name",Language.Name());
+	if (prefs.InitCheck() != B_OK)
+		return;
+
 	prefs.SetString("temp_dir",temp_dir.String());
 	prefs.SetRect("window_frame", frame);
 
@@ -371,6 +374,7 @@ void Preferences::FactorySettings(){
 *
 *******************************************************/
 void Preferences::SetColorScheme(int32 i){
+	printf("scheme %d\n", i);
 	switch(i){
 	case 1:
 	// GUI Cool Edit
@@ -515,55 +519,7 @@ void Preferences::SetColorScheme(int32 i){
 		break;
 
 	case 4:
-	// GUI ColdCut
-		index_back_color = (rgb_color){250, 232, 171};
-		index_back_color2 = (rgb_color){231, 208, 168};
-		index_mid_color = (rgb_color){255,255,196};
-		index_left_selected_color = (rgb_color){89,88,132};
-		index_left_selected_color2 = (rgb_color){19,87,87};
-		index_left_color = (rgb_color){156,113,122};
-		index_left_color2 = (rgb_color){123,66,95};
-
-		index_back_selected_color = (rgb_color){192,196,208};
-		index_back_selected_color2 = (rgb_color){159,159,172};
-		index_mid_selected_color = (rgb_color){80,80,80};
-		index_pointer_color = (rgb_color){255,0,64};
-
-		back_color =				(rgb_color){243, 243, 243};
-		back_color2 =				(rgb_color){255, 255, 255};
-		back_selected_color =		(rgb_color){193,197,206};
-		back_selected_color2 =		(rgb_color){246,246,255};
-
-		left_color = 				(rgb_color){55,57,62};
-		left_color2 = 				(rgb_color){140,142,162};
-		left_selected_color = 		(rgb_color){0,0,0};
-		left_selected_color2 = 		(rgb_color){78,80,102};
-
-		right_color = 				(rgb_color){55,57,62};
-		right_color2 = 				(rgb_color){140,142,162};
-		right_selected_color = 		(rgb_color){0,0,0};
-		right_selected_color2 =		(rgb_color){78,80,102};
-
-		grid_color = 				(rgb_color){223,224,235};
-		grid_selected_color = 		(rgb_color){177,177,186};
-
-		peak_color = 				(rgb_color){230,231,235};
-		peak_selected_color = 		(rgb_color){183,187,201};
-
-		mid_left_color = 			(rgb_color){91, 175, 180};
-		mid_right_color = 			(rgb_color){180, 180, 170};
-		mid_left_selected_color =	(rgb_color){0, 80, 80};
-		mid_right_selected_color = 	(rgb_color){80, 80, 0};
-		pointer_color = 			(rgb_color){255,20,62};
-
-		time_back_color = (rgb_color){216,216,216};
-		time_marks_color = (rgb_color){150,150,150};
-		time_small_marks_color = (rgb_color){180,180,180};
-		time_text_color = (rgb_color){118,119,114};
-		break;
-
-	default:
-	// GUI Default
+	// BeAE Color scheme
 		index_back_color = (rgb_color){255, 249, 221};
 		index_back_color2 = (rgb_color){248, 219, 128};
 		index_mid_color = (rgb_color){196,196,196};
@@ -608,6 +564,55 @@ void Preferences::SetColorScheme(int32 i){
 		time_marks_color = (rgb_color){255, 255, 255};
 		time_small_marks_color = (rgb_color){200, 200, 200};
 		time_text_color = (rgb_color){210, 210, 210};
+		break;
+
+	case 0:
+	default:
+	// Faber Default
+		index_back_color = (rgb_color){250, 232, 171};
+		index_back_color2 = (rgb_color){231, 208, 168};
+		index_mid_color = (rgb_color){255,255,196};
+		index_left_selected_color = (rgb_color){89,88,132};
+		index_left_selected_color2 = (rgb_color){19,87,87};
+		index_left_color = (rgb_color){156,113,122};
+		index_left_color2 = (rgb_color){123,66,95};
+
+		index_back_selected_color = (rgb_color){192,196,208};
+		index_back_selected_color2 = (rgb_color){159,159,172};
+		index_mid_selected_color = (rgb_color){80,80,80};
+		index_pointer_color = (rgb_color){255,0,64};
+
+		back_color =				(rgb_color){243, 243, 243};
+		back_color2 =				(rgb_color){255, 255, 255};
+		back_selected_color =		(rgb_color){193,197,206};
+		back_selected_color2 =		(rgb_color){246,246,255};
+
+		left_color = 				(rgb_color){55,57,62};
+		left_color2 = 				(rgb_color){140,142,162};
+		left_selected_color = 		(rgb_color){0,0,0};
+		left_selected_color2 = 		(rgb_color){78,80,102};
+
+		right_color = 				(rgb_color){55,57,62};
+		right_color2 = 				(rgb_color){140,142,162};
+		right_selected_color = 		(rgb_color){0,0,0};
+		right_selected_color2 =		(rgb_color){78,80,102};
+
+		grid_color = 				(rgb_color){223,224,235};
+		grid_selected_color = 		(rgb_color){177,177,186};
+
+		peak_color = 				(rgb_color){230,231,235};
+		peak_selected_color = 		(rgb_color){183,187,201};
+
+		mid_left_color = 			(rgb_color){91, 175, 180};
+		mid_right_color = 			(rgb_color){180, 180, 170};
+		mid_left_selected_color =	(rgb_color){0, 80, 80};
+		mid_right_selected_color = 	(rgb_color){80, 80, 0};
+		pointer_color = 			(rgb_color){255,20,62};
+
+		time_back_color = (rgb_color){216,216,216};
+		time_marks_color = (rgb_color){150,150,150};
+		time_small_marks_color = (rgb_color){180,180,180};
+		time_text_color = (rgb_color){118,119,114};
 		break;
 	}
 }

@@ -102,6 +102,8 @@ class Preferences{
 	uint32	repeat_message;
 	BString	repeat_tag;
 
+	int32	fColorScheme;
+
  private:
 };
 

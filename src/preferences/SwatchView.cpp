@@ -26,12 +26,23 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+/* 
+	Contains code from Icon-O-Matic SwatchView by Stephan Aßmus
+*/
 #include <String.h>
 #include "SwatchView.h"
 
+#include <stdio.h>
+
 #define SET_COLOR	'setC'
 
-char* RGBtoText(const rgb_color& color) 
+const rgb_color kAlphaHigh	= { 0xe0, 0xe0, 0xe0, 0xff };
+const rgb_color kAlphaLow	= { 0xbb, 0xbb, 0xbb, 0xff };
+const pattern kDottedBig	= { { 0x0f, 0x0f, 0x0f, 0x0f, 0xf0, 0xf0, 0xf0, 0xf0 } };
+
+
+char*
+RGBtoText(const rgb_color& color) 
 {
 	static const char* p="0123456789ABCDEF";
 
@@ -54,8 +65,8 @@ SwatchView::SwatchView(const char *name, BMessage* msg)
 	BControl("swatchview", "", msg, B_FOLLOW_ALL)
 {
 	Init();
-	m_name = name;
-	active = false;
+	fName = name;
+	fActive = false;
 }
 
 SwatchView::SwatchView(const char *name, rgb_color color, BMessage* msg)
@@ -63,60 +74,110 @@ SwatchView::SwatchView(const char *name, rgb_color color, BMessage* msg)
 	BControl("swatchview", "", msg, B_FOLLOW_ALL)
 {
 	Init();
-	m_color = color;
-	m_name = name;
+	fColor = color;
+	fName = name;
 	DrawOffscreen();
 }
 
 SwatchView::~SwatchView()
 {
-	m_bitmap->RemoveChild(m_view);
-	delete m_view;
-	delete m_bitmap;
+	fBitmap->RemoveChild(fView);
+	delete fView;
+	delete fBitmap;
 }
 
-void SwatchView::SetActive(bool c)
+void
+SwatchView::SetActive(bool c)
 {
-	active = c;
+	fActive = c;
 }
 
-void SwatchView::Init()
+void
+SwatchView::Init()
 {
 	BRect frame = Bounds();
-	m_bitmap = new BBitmap(frame, B_RGB32, true);
-	m_view = new BView("offscreen", B_FOLLOW_RIGHT);
-	m_bitmap->AddChild(m_view);
-	m_color.red = m_color.green = m_color.blue = 0;
+	fBitmap = new BBitmap(frame, B_RGB32, true);
+	fView = new BView("offscreen", B_FOLLOW_LEFT);
+	fBitmap->AddChild(fView);
+	fColor.red = fColor.green = fColor.blue = 0;
 	DrawOffscreen();
 }
 
-void SwatchView::AttachedToWindow()
+
+inline void
+blend_color(rgb_color& a, const rgb_color& b, float alpha)
 {
+	float alphaInv = 1.0 - alpha;
+	a.red = (uint8)(b.red * alphaInv + a.red * alpha);
+	a.green = (uint8)(b.green * alphaInv + a.green * alpha);
+	a.blue = (uint8)(b.blue * alphaInv + a.blue * alpha);
 }
 
-void SwatchView::DetachedFromWindow()
-{
-//	ICommon->AddTip(this,NULL);
-}
 
-void SwatchView::Draw(BRect update_rect)
+void
+SwatchView::Draw(BRect updateRect)
 {
-	if (m_bitmap){
-		SetDrawingMode(B_OP_COPY);
-		DrawBitmap(m_bitmap, Bounds());
+	BRect r(Bounds());
+
+	rgb_color colorLight = tint_color(fColor, B_LIGHTEN_2_TINT);
+	rgb_color colorShadow = tint_color(fColor, B_DARKEN_2_TINT);
+
+	if (fColor.alpha < 255) {
+		// left/top
+		float alpha = fColor.alpha / 255.0;
+
+		rgb_color h = colorLight;
+		blend_color(h, kAlphaHigh, alpha);
+		rgb_color l = colorLight;
+		blend_color(l, kAlphaLow, alpha);
+
+		SetHighColor(h);
+		SetLowColor(l);
+		
+		StrokeLine(BPoint(r.left, r.bottom - 1),
+				   BPoint(r.left, r.top), kDottedBig);
+		StrokeLine(BPoint(r.left + 1, r.top),
+				   BPoint(r.right, r.top), kDottedBig);
+
+		// right/bottom
+		h = colorShadow;
+		blend_color(h, kAlphaHigh, alpha);
+		l = colorShadow;
+		blend_color(l, kAlphaLow, alpha);
+
+		SetHighColor(h);
+		SetLowColor(l);
+		
+		StrokeLine(BPoint(r.right, r.top + 1),
+				   BPoint(r.right, r.bottom), kDottedBig);
+		StrokeLine(BPoint(r.right - 1, r.bottom),
+				   BPoint(r.left, r.bottom), kDottedBig);
+
+		// fill
+		r.InsetBy(1.0, 1.0);
+
+		h = fColor;
+		blend_color(h, kAlphaHigh, alpha);
+		l = fColor;
+		blend_color(l, kAlphaLow, alpha);
+
+		SetHighColor(h);
+		SetLowColor(l);		
+
+		FillRect(r, kDottedBig);
+	} else {
+		_StrokeRect(r, colorLight, colorShadow);
+		r.InsetBy(1.0, 1.0);
+		SetHighColor(fColor);
+		FillRect(r);
 	}
 }
+
 
 void SwatchView::MouseDown(BPoint where)
 {
 	if (!IsEnabled())
 		return;
-
-//	BMessage *mesg = Window()->CurrentMessage();
-//	int32 clicks = mesg->FindInt32("clicks");
-
-//	if (m_clicks == clicks)
-//		SetColorWindow(ICommon, m_name, m_color, this);
 
 	BPoint w2;
 	uint32 mods;
@@ -134,8 +195,8 @@ void SwatchView::MouseDown(BPoint where)
 	snooze(40000);
 
 	BMessage msg(B_PASTE);
-	msg.AddData("RGBColor",B_RGB_COLOR_TYPE,(const void**)&m_color,sizeof(rgb_color));
-	BString s = RGBtoText(m_color);
+	msg.AddData("RGBColor",B_RGB_COLOR_TYPE,(const void**)&fColor,sizeof(rgb_color));
+	BString s = RGBtoText(fColor);
 	msg.AddData("text/plain",B_MIME_DATA,(const void**)s.String(),s.Length());
 	msg.AddString("be:types", "text/plain");
 	msg.AddInt32("be:actions", B_COPY_TARGET);
@@ -147,7 +208,9 @@ void SwatchView::MouseDown(BPoint where)
 	DragMessage(&msg, bitmap, B_OP_ALPHA, pt, Window());
 }
 
-BBitmap* SwatchView::make_bitmap(void)
+
+BBitmap*
+SwatchView::make_bitmap(void)
 {
 	BRect rect(0.0, 0.0, 12.0, 12.0);
 	
@@ -159,7 +222,7 @@ BBitmap* SwatchView::make_bitmap(void)
 	bitmap->AddChild(view);
 
 	view->SetDrawingMode(B_OP_ALPHA);
-	view->SetHighColor(m_color);
+	view->SetHighColor(fColor);
 	view->FillRect(rect);
 	
 	view->SetDrawingMode(B_OP_COPY);
@@ -175,132 +238,45 @@ BBitmap* SwatchView::make_bitmap(void)
 	return bitmap;
 }
 
-void SwatchView::SetColor(const rgb_color &color)
+
+void
+SwatchView::SetColor(const rgb_color &color)
 {
-	m_color = color;
+	fColor = color;
 	DrawOffscreen();
 }
 
-void SwatchView::SetEnabled(bool enabled)
+
+void
+SwatchView::SetEnabled(bool enabled)
 {
 	BControl::SetEnabled(enabled);
 	DrawOffscreen();
 }
 
-void SwatchView::DrawOffscreen()
+
+void
+SwatchView::DrawOffscreen()
 {
-	BRect rect, frame;
-	rect = frame = m_bitmap->Bounds();
-
-	m_bitmap->Lock();
-	
-	// draw frame
-	rect.InsetBy(1.0, 1.0);
-
-	m_view->SetDrawingMode(B_OP_COPY);
-
-	if (IsEnabled())
-	{
-		if (!active){
-			// draw frame
-			m_view->SetHighColor(184,184,184,255);
-			m_view->StrokeLine(BPoint(rect.left-1.0, rect.top-1.0), BPoint(rect.left-1.0, rect.bottom+1.0));
-			m_view->StrokeLine(BPoint(rect.left-1.0, rect.top-1.0), BPoint(rect.right+1.0, rect.top-1.0));
-			m_view->SetHighColor(255,255,255,255);
-			m_view->StrokeLine(BPoint(rect.left, rect.bottom+1.0), BPoint(rect.right+1.0, rect.bottom+1.0));
-			m_view->StrokeLine(BPoint(rect.right+1.0, rect.bottom+1.0), BPoint(rect.right+1.0, rect.top));
-			m_view->SetHighColor(216,216,216,216);
-			m_view->StrokeLine(rect.LeftBottom(), rect.RightBottom());
-			m_view->StrokeLine(rect.RightTop(), rect.RightBottom());
-			m_view->SetHighColor(96,96,96,255);
-			m_view->StrokeLine(rect.LeftBottom(), rect.LeftTop());
-			m_view->StrokeLine(rect.LeftTop(), rect.RightTop());
-	
-			// draw checkerboard
-			rect.InsetBy(1.0, 1.0);	
-			m_view->SetLowColor(255,255,255,255);
-			m_view->SetHighColor(226,226,226,255);
-			pattern checkerboard = (pattern){ { 240, 240, 240, 240, 15, 15, 15, 15 } };
-			m_view->FillRect(rect, checkerboard);
-	
-			// draw color (with alpha)
-			m_view->SetDrawingMode(B_OP_ALPHA);
-			m_view->SetHighColor(m_color);
-			m_view->FillRect(rect, B_SOLID_HIGH);
-		}else{
-			rect.InsetBy(-1.0, -1.0);	
-			m_view->SetHighColor(0,0,0);
-			m_view->StrokeRect(rect);
-			rect.InsetBy(1.0, 1.0);	
-			m_view->SetHighColor(255,255,255);
-			m_view->StrokeRect(rect);
-			m_view->SetHighColor(0,0,0);
-			rect.InsetBy(1.0, 1.0);	
-			m_view->StrokeRect(rect);
-
-			// draw frame
-/*			m_view->SetHighColor(184,184,184,255);
-			m_view->StrokeLine(BPoint(rect.left-1.0, rect.top-1.0), BPoint(rect.left-1.0, rect.bottom+1.0));
-			m_view->StrokeLine(BPoint(rect.left-1.0, rect.top-1.0), BPoint(rect.right+1.0, rect.top-1.0));
-			m_view->SetHighColor(255,255,255,255);
-			m_view->StrokeLine(BPoint(rect.left, rect.bottom+1.0), BPoint(rect.right+1.0, rect.bottom+1.0));
-			m_view->StrokeLine(BPoint(rect.right+1.0, rect.bottom+1.0), BPoint(rect.right+1.0, rect.top));
-			m_view->SetHighColor(216,216,216,216);
-			m_view->StrokeLine(rect.LeftBottom(), rect.RightBottom());
-			m_view->StrokeLine(rect.RightTop(), rect.RightBottom());
-			m_view->SetHighColor(96,96,96,255);
-			m_view->StrokeLine(rect.LeftBottom(), rect.LeftTop());
-			m_view->StrokeLine(rect.LeftTop(), rect.RightTop());
-*/			
-			// draw checkerboard
-			rect.InsetBy(1.0, 1.0);	
-			m_view->SetLowColor(255,255,255,255);
-			m_view->SetHighColor(226,226,226,255);
-			pattern checkerboard = (pattern){ { 240, 240, 240, 240, 15, 15, 15, 15 } };
-			m_view->FillRect(rect, checkerboard);
-	
-			// draw color (with alpha)
-			m_view->SetDrawingMode(B_OP_ALPHA);
-			m_view->SetHighColor(m_color);
-			m_view->FillRect(rect, B_SOLID_HIGH);
-		}
-	}	
-	else
-	{
-		m_view->SetDrawingMode(B_OP_COPY);
-
-		m_view->SetHighColor(239,239,239,255);
-		m_view->StrokeLine(BPoint(rect.left, rect.bottom+1.0), BPoint(rect.right+1.0, rect.bottom+1.0));
-		m_view->StrokeLine(BPoint(rect.right+1.0, rect.bottom+1.0), BPoint(rect.right+1.0, rect.top));
-		m_view->SetHighColor(152,152,152,255);
-		m_view->StrokeLine(rect.LeftBottom(), rect.LeftTop());
-		m_view->StrokeLine(rect.LeftTop(), rect.RightTop());
-
-		rect.InsetBy(1.0, 1.0);	
-
-		m_view->SetHighColor(239, 239, 239);
-		m_view->FillRect(rect);
-	}
-	
-	m_view->Sync();
-	m_bitmap->Unlock();
-
 	// blit to screen if attached to window
-	if (Window())
-	{
-		if(Window()->Lock()){
+	if (Window()) {
+		if (Window()->Lock()) {
 			Draw(Bounds());
 			Window()->Unlock();
 		}
 	}
 }
 
-rgb_color SwatchView::Color(void) const
+
+rgb_color
+SwatchView::Color(void) const
 {
-	return m_color;
+	return fColor;
 }
 
-void SwatchView::MessageReceived(BMessage *msg){
+
+void
+SwatchView::MessageReceived(BMessage *msg){
 	switch(msg->what) {
 	case B_PASTE:
 	case B_OK:
@@ -317,20 +293,36 @@ void SwatchView::MessageReceived(BMessage *msg){
 		break;
 
 	case SET_COLOR:
-{		const char *title;
-		rgb_color *color;
-		ssize_t n = sizeof(struct rgb_color);
-		if (msg->FindData("RGBColor", (type_code) B_RGB_COLOR_TYPE, (const void **) &color, &n) == B_OK
-			&& msg->FindString("Title", (const char **) &title) == B_OK) {
-			
-			SetColor(*color);
-			Invoke();
+		{
+			const char *title;
+			rgb_color *color;
+			ssize_t n = sizeof(struct rgb_color);
+			if (msg->FindData("RGBColor", (type_code) B_RGB_COLOR_TYPE,
+				(const void **) &color, &n) == B_OK
+					&& msg->FindString("Title", (const char **) &title) == B_OK) {
+				SetColor(*color);
+				Invoke();
+			}
 		}
-}		break;
-
+		break;
 
 	default:
 		BControl::MessageReceived(msg);
 	}
 }
 
+
+void
+SwatchView::_StrokeRect(BRect r, rgb_color leftTop, rgb_color rightBottom)
+{
+	BeginLineArray(4);
+
+	AddLine(BPoint(r.left, r.bottom - 1), BPoint(r.left, r.top), leftTop);
+	AddLine(BPoint(r.left + 1, r.top), BPoint(r.right, r.top), leftTop);
+	AddLine(BPoint(r.right, r.top + 1), BPoint(r.right, r.bottom),
+		rightBottom);
+	AddLine(BPoint(r.right - 1, r.bottom), BPoint(r.left, r.bottom),
+		rightBottom);
+
+	EndLineArray();
+}

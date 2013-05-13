@@ -24,10 +24,10 @@ SeekSlider::SeekSlider(const char* name, BMessage* message, int32 minValue,
 	fTracking(false),
 	fLastTrackTime(0),
 	fDisabledString(""),
-	fScale(0.0f)
+	fScale(0.5)
 {
 	BFont font(be_plain_font);
-	font.SetSize(9.0);
+	font.SetSize(11.0);
 	SetFont(&font);
 	SetSymbolScale(1.0);
 	rgb_color fillColor = tint_color(ui_color(B_PANEL_BACKGROUND_COLOR),

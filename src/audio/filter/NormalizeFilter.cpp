@@ -29,20 +29,25 @@
 #include <Window.h>
 #include <View.h>
 #include <InterfaceKit.h>
-#include <stdio.h>
+#include <LayoutBuilder.h>
 
 #include "Globals.h"
 #include "RealtimeFilter.h"
 #include "NormalizeFilter.h"
 #include "main.h"
 
+#include <stdio.h>
+
 #define SET_TEXT		'setT'
 #define SELECT			'slct'
+
 
 /*******************************************************
 *   
 *******************************************************/
-NormalizeFilter::NormalizeFilter() : RealtimeFilter(B_TRANSLATE("Normalize..."), false)
+NormalizeFilter::NormalizeFilter()
+	:
+	RealtimeFilter(B_TRANSLATE("Normalize..."), false)
 {
 	// can do some initiation here
 }
@@ -50,20 +55,22 @@ NormalizeFilter::NormalizeFilter() : RealtimeFilter(B_TRANSLATE("Normalize..."),
 /*******************************************************
 *   
 *******************************************************/
-BView *NormalizeFilter::ConfigView()
+BView*
+NormalizeFilter::ConfigView()
 {
 	BRect r(0,0,180,80);
 
 	BView *view = new BView(r, NULL, B_FOLLOW_ALL, B_WILL_DRAW);
 	view->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
-	r.InsetBy(8,8);
-	r.bottom = r.top + 19;
-	value = new SpinControl(r, NULL, B_TRANSLATE("Normalize Level (%)"),
+	value = new SpinControl(NULL, B_TRANSLATE("Normalize Level (%)"),
 		NULL, 1, 100, Prefs.filter_normalize, 1);
 
 	value->SetDivider(120);
-	view->AddChild(value);
+
+	BLayoutBuilder::Group<>(view, B_HORIZONTAL)
+		.Add(value)
+	.End();
 
 	return view;
 }
@@ -71,7 +78,8 @@ BView *NormalizeFilter::ConfigView()
 /*******************************************************
 *   
 *******************************************************/
-void NormalizeFilter::UpdateValues()
+void
+NormalizeFilter::UpdateValues()
 {
 	Prefs.filter_normalize = value->Value();
 }
@@ -79,7 +87,8 @@ void NormalizeFilter::UpdateValues()
 /*******************************************************
 *   Init & exit
 *******************************************************/
-bool NormalizeFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
+bool
+NormalizeFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
 {
 	RealtimeFilter::InitFilter(f, c, pass, size);
 	if (pass == 0){
@@ -106,7 +115,8 @@ bool NormalizeFilter::InitFilter(float f, int32 c, int32 pass, int32 size)
 /*******************************************************
 *   
 *******************************************************/
-void NormalizeFilter::FilterBuffer(float *buffer, size_t size)
+void
+NormalizeFilter::FilterBuffer(float *buffer, size_t size)
 {
 	if (m_pass == 0)	// check level
 	{
@@ -143,4 +153,3 @@ void NormalizeFilter::FilterBuffer(float *buffer, size_t size)
 		}
 	}
 }
-
