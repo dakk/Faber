@@ -31,7 +31,6 @@
 #include <stdio.h>
 
 #include "TimeBarView.h"
-#include "MainWindow.h"
 #include "Globals.h"
 
 TimeBarView::TimeBarView(BRect r) : 

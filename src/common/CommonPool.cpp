@@ -46,11 +46,9 @@
 #include "CommonPool.h"
 #include "ProgressWindow.h"
 #include "Settings.h"
-//#include "YPreferences.h"
-//#include "YLanguageClass.h"
 #include "AboutBox.h"
 #include "MyClipBoard.h"
-#include "MainWindow.h"
+#include "FaberWindow.h"
 #include "Shortcut.h"
 #include "PeakFile.h"
 #include "VMSystem.h"
@@ -448,7 +446,7 @@ void CommonPool::UpdateMenu()
 	mn_copy_to_stack->SetEnabled(selection != NONE);	// copy to stack
 #endif
 
-	((MainWindow*)mainWindow)->toolBar->Update();
+	((FaberWindow*)mainWindow)->toolBar->Update();
 	mainWindow->Unlock();
 }
 

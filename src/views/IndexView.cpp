@@ -32,7 +32,6 @@
 #include <StopWatch.h>
 
 #include "IndexView.h"
-#include "MainWindow.h"
 #include "Globals.h"
 #include "PeakFile.h"
 #include "VMSystem.h"

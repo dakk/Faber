@@ -31,7 +31,6 @@
 #include <stdio.h>
 
 #include "ValuesView.h"
-#include "MainWindow.h"
 #include "Globals.h"
 
 ValuesView::ValuesView(BRect r) : 

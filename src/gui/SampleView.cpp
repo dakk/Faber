@@ -31,7 +31,7 @@
 #include <TranslationKit.h>
 
 #include "SampleView.h"
-#include "MainWindow.h"
+#include "FaberWindow.h"
 #include "Globals.h"
 #include "PeakFile.h"
 #include "BitmapDrawer.h"
@@ -355,7 +355,7 @@ void SampleView::MouseDown(BPoint p)
 
 				menu->AddItem(new BMenuItem(B_TRANSLATE("Play"), new BMessage(TRANSPORT_PLAYS), KeyBind.GetKey("TRANSPORT_PLAYS"), KeyBind.GetMod("TRANSPORT_PLAYS")));
 				menu->AddItem(menuItem = new BMenuItem(B_TRANSLATE("Pause"), new BMessage(TRANSPORT_PAUSE_MAN), KeyBind.GetKey("TRANSPORT_PAUSE"), KeyBind.GetMod("TRANSPORT_PAUSE")));
-				if (((MainWindow*)Pool.mainWindow)->transport_view->pause->Value() == B_CONTROL_ON)
+				if (((FaberWindow*)Pool.mainWindow)->transport_view->pause->Value() == B_CONTROL_ON)
 					menuItem->SetMarked(true);
 				menu->AddItem(new BMenuItem(B_TRANSLATE("Stop"), new BMessage(TRANSPORT_STOP), KeyBind.GetKey("TRANSPORT_STOP"), KeyBind.GetMod("TRANSPORT_STOP")));
 				menu->AddSeparatorItem();
