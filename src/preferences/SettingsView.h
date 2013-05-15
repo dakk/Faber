@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Casalinuovo Dario. All rights reserved.
  * Copyright (c) Davide Gessa. All rights reserved.
- * Distributed under the terms of the MIT License for non commercial use.
+ * Distributed under the terms of the MIT License.
  *
  * Authors:
  *		Davide Gessa, dak.linux@gmail.com

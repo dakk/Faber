@@ -60,10 +60,10 @@ cookie_record play_cookie;
 
 
 
-class MyMenuBar : public BMenuBar{
-  public:
-  	MyMenuBar(BRect frame, const char *name);
-	virtual void MakeFocus(bool b);
+class MyMenuBar : public BMenuBar {
+public:
+  					MyMenuBar(BRect frame, const char *name);
+	virtual void	MakeFocus(bool b);
 };
 
 

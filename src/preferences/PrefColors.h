@@ -26,8 +26,8 @@
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#ifndef _PREF_2_H
-#define _PREF_2_H
+#ifndef PREF_COLORS_H
+#define PREF_COLORS_H
 
 #include <Application.h>
 #include <AppKit.h>
@@ -36,18 +36,19 @@
 #include "SwatchView.h"
 
 class PrefColors : public BView {
-  public:
-	PrefColors();
-	~PrefColors();
-	virtual void AttachedToWindow();
-	virtual void MessageReceived(BMessage*);
-	//virtual void Draw(BRect);
-	
+public:
+						PrefColors();
+						~PrefColors();
+	virtual void		AttachedToWindow();
+	virtual void		MessageReceived(BMessage*);
+
   private:
-	BListView *list;
-	BPopUpMenu	*scheme;
-	void *colors[40];
-	BColorControl *control;
-	SwatchView *color_view;
+			BListView*	list;
+			BPopUpMenu*	scheme;
+			SwatchView*	color_view;
+			void* 		colors[40];
+
+			BColorControl* control;
 };
+
 #endif

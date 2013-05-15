@@ -25,7 +25,6 @@
 	LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 	OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-
 #include <InterfaceKit.h>
 #include <StorageKit.h>
 #include <String.h>
@@ -47,6 +46,64 @@
 #define SWATCH_DROP			'swtc'
 #define NEW_SCHEME			'schm'
 
+struct defaultSchemeNames {
+	const char* schemeString;
+};
+
+struct colorNames {
+	const char* colorString;
+};
+
+static struct defaultSchemeNames gColorSchemes[] = {
+{ B_TRANSLATE("Cold Cut") },
+{ B_TRANSLATE("Shades of blue") },
+{ B_TRANSLATE("Cool Colors") },
+{ B_TRANSLATE("Black & White") },
+{ B_TRANSLATE("BeAE (Soft Colors)") },
+{ NULL }
+};
+
+static struct colorNames gColorsNames[] = {
+{ B_TRANSLATE("Background") },
+{ B_TRANSLATE("Background 2") },
+{ B_TRANSLATE("Background selected") },
+{ B_TRANSLATE("Background selected 2") },
+{ B_TRANSLATE("Index background") },
+{ B_TRANSLATE("Index background 2") },
+{ B_TRANSLATE("Index middle") },
+{ B_TRANSLATE("Index wave") },
+{ B_TRANSLATE("Index wave 2") },
+{ B_TRANSLATE("Index background selected") },
+{ B_TRANSLATE("Index background selected 2") },
+{ B_TRANSLATE("Index wave selected") },
+{ B_TRANSLATE("Index wave selected 2") },
+{ B_TRANSLATE("Index middle selected") },
+{ B_TRANSLATE("Index pointer") },
+{ B_TRANSLATE("Left channel") },
+{ B_TRANSLATE("Left channel 2") },
+{ B_TRANSLATE("Left selected") },
+{ B_TRANSLATE("Left selected 2") },
+{ B_TRANSLATE("Right channel") },
+{ B_TRANSLATE("Right channel 2") },
+{ B_TRANSLATE("Right selected") },
+{ B_TRANSLATE("Right selected 2") },
+{ B_TRANSLATE("Grid") },
+{ B_TRANSLATE("Grid selected") },
+{ B_TRANSLATE("Peak lines") },
+{ B_TRANSLATE("Peak lines selected") },
+{ B_TRANSLATE("Middle left") },
+{ B_TRANSLATE("Middle right") },
+{ B_TRANSLATE("Middle left selected") },
+{ B_TRANSLATE("Middle right selected") },
+{ B_TRANSLATE("Pointer") },
+{ B_TRANSLATE("Timeline background") },
+{ B_TRANSLATE("Timeline marks") },
+{ B_TRANSLATE("Timeline small marks") },
+{ B_TRANSLATE("Timeline text") },
+{ NULL }
+};
+
+
 /*******************************************************
 *   Setup the main view. Add in all the niffty components
 *   we have made and get things rolling
@@ -56,8 +113,6 @@ PrefColors::PrefColors()
 	BView(BRect(0,0,490,380), "Prefs color", B_FOLLOW_ALL, B_WILL_DRAW)
 {
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
-
-	char s[255];
 
 	colors[0] = (void*)&Prefs.back_color;
 	colors[1] = (void*)&Prefs.back_color2;
@@ -100,23 +155,26 @@ PrefColors::PrefColors()
 	colors[34] = (void*)&Prefs.time_small_marks_color;
 	colors[35] = (void*)&Prefs.time_text_color;
 
-	rgb_color color;
 	color_view = new SwatchView("color_view", new BMessage(SWATCH_DROP));
 	color_view->SetEnabled(false);
 	color_view->SetExplicitSize(BSize(35, 35));
 
 	scheme = new BPopUpMenu(B_TRANSLATE("Color Scheme"));
-	BMenuItem *menuItem;
+	BMenuItem* menuItem;
 	BMenuField *menu = new BMenuField("menu",B_TRANSLATE("Color Scheme"),scheme);
-	BMessage *m;
-	for (int i=0; i<=4; i++){
+	BMessage* m;
+
+	for (int i = 0; gColorSchemes[i].schemeString != NULL; i++) {
 		m = new BMessage(NEW_SCHEME);
 		m->AddInt32("scheme",i);
-		sprintf(s, "SCHEME%d", i+1);
-		scheme->AddItem(menuItem = new BMenuItem(B_TRANSLATE(s), m));
-		if (i==0)	menuItem->SetMarked(true);
+		scheme->AddItem(
+			menuItem = new BMenuItem(gColorSchemes[i].schemeString, m));
+
+		if (i==0)
+			menuItem->SetMarked(true);
 	}
-	menu->SetDivider(be_plain_font->StringWidth(B_TRANSLATE("Color Scheme")) +10);
+
+	menu->SetDivider(be_plain_font->StringWidth(B_TRANSLATE("Color Scheme"))+10);
 
 	// add the prefs list at the left
 	list = new BListView("color list");
@@ -127,9 +185,9 @@ PrefColors::PrefColors()
 	sv->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	sv->MakeFocus(false);
 
-	for (int i=1; i<=36; i++){
-		sprintf(s, "COLOR%d", i);
-		list->AddItem(new StringItem(B_TRANSLATE(s)));
+	for (int i = 0; gColorsNames[i].colorString != NULL; i++) {
+		list->AddItem(
+			new StringItem(gColorsNames[i].colorString));
 	}
 
 	control = new BColorControl(BPoint(8, 16), B_CELLS_32x8, 1, "colorControl",
@@ -150,17 +208,15 @@ PrefColors::PrefColors()
 	.SetInsets(spacing, spacing, spacing, spacing));
 }
 
-/*******************************************************
-*  
-*******************************************************/
+
 PrefColors::~PrefColors()
 {
 }
 
-/*******************************************************
-*  
-*******************************************************/
-void PrefColors::AttachedToWindow(){
+
+void
+PrefColors::AttachedToWindow()
+{
 	list->SetTarget(this);
 	list->SetSelectionMessage(new BMessage(COLOR_SELECT));
 	list->SetInvocationMessage(new BMessage(COLOR_SELECT));
@@ -169,23 +225,15 @@ void PrefColors::AttachedToWindow(){
 	scheme->SetTargetForItems(this);
 }
 
-/*******************************************************
-*  
-*******************************************************/
-/*void PrefColors::Draw(BRect rect){
-	
-}*/
 
-/*******************************************************
-*
-*******************************************************/
-void PrefColors::MessageReceived(BMessage *msg){
+void
+PrefColors::MessageReceived(BMessage *msg)
+{
 	int32 i;
 	rgb_color c, *col;
 
 	switch(msg->what){
 	case COLOR_SELECT:
-		printf("color select\n");
 		i = list->CurrentSelection();
 		if(i < 0){
 			control->SetEnabled(false);

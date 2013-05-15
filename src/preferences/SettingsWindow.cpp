@@ -70,7 +70,7 @@ void SettingsWindow::MessageReceived(BMessage* message)
 	case QUIT:
 		Hide();
 		break;
-	
+
 	case SET_FACTORY:
 		k = (new BAlert(NULL,B_TRANSLATE("Restore the factory settings overwrites all user settings!"),B_TRANSLATE("Apply"),B_TRANSLATE("Cancel")))->Go();
 		if (k==0){
@@ -101,10 +101,8 @@ void SettingsWindow::MessageReceived(BMessage* message)
 }
 
 
-
 bool SettingsWindow::QuitRequested()
 {
    Hide();
    return false;
 }
-

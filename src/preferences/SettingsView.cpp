@@ -35,7 +35,7 @@ SettingsView::~SettingsView()
 
 SettingsView::SettingsView()
 	:
-	BView("SettingsView", B_FOLLOW_ALL_SIDES)
+	BView("SettingsView", B_FOLLOW_ALL)
 {
 	SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	
@@ -53,7 +53,6 @@ SettingsView::SettingsView()
 	r.InsetBy(5,5);
 	r.bottom -= fTabView->TabHeight();
 	rootLayout->AddView(fTabView);
-
 
 	// Interface
 	BView *interfaceView = new PrefGeneral();
@@ -76,14 +75,8 @@ SettingsView::SettingsView()
 	fTabView->AddTab(hotkeyView, tab);
 	tab->SetLabel(B_TRANSLATE("Key bindings"));
 
-
-
 	// Audio I/O
 	BView *audioView = new BView(" ", B_WILL_DRAW,  0);
-	
-	//engineCombo = new BComboBox(BRect(0,0, 200, 30), " ", "Engine", new BMessage(MSG_SETTINGS_DEFAULTS));
-	//audioView->AddView(engineCombo);
-	
 	
 	tab = new BTab();
 	fTabView->AddTab(audioView, tab);
@@ -92,7 +85,7 @@ SettingsView::SettingsView()
 	// Defaults and revert buttons
 	BGroupView* buttonGroup = new BGroupView(B_HORIZONTAL);
 
-	fDefaultsButton = new BButton(B_TRANSLATE("Set Factory"),
+	fDefaultsButton = new BButton(B_TRANSLATE("Defaults"),
 		new BMessage(SET_FACTORY));						
 
 	buttonGroup->GroupLayout()->AddView(fDefaultsButton);
@@ -123,5 +116,3 @@ void SettingsView::MessageReceived(BMessage *message)
 			BView::MessageReceived(message);
 	}			
 }
-
-

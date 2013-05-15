@@ -42,7 +42,7 @@
 
 #define SELECT		'selK'
 
-//================================================================================================= Item
+// Item
 
 class KeyItem : public StringItem{
   public:
@@ -74,32 +74,38 @@ KeyItem::~KeyItem()
 {
 }
 
-int32 KeyItem::GetID()
+int32
+KeyItem::GetID()
 {
 	return m_id;
 }
 
-void KeyItem::SetKey(char key)
+void
+KeyItem::SetKey(char key)
 {
 	m_key = key;
 }
 
-void KeyItem::SetKeyAlt(char key)
+void
+KeyItem::SetKeyAlt(char key)
 {
 	m_key2 = key;
 }
 
-void KeyItem::SetMod(int32 mod)
+void
+KeyItem::SetMod(int32 mod)
 {
 	m_mod = mod;
 }
 
-void KeyItem::SetModAlt(int32 mod)
+void
+KeyItem::SetModAlt(int32 mod)
 {
 	m_mod2 = mod;
 }
 
-void KeyItem::DrawItem(BView *view, BRect rect, bool all)
+void
+KeyItem::DrawItem(BView *view, BRect rect, bool all)
 {
 	BFont font;
 	view->GetFont(&font);
@@ -206,7 +212,8 @@ void KeyItem::DrawItem(BView *view, BRect rect, bool all)
 	}
 }
 
-void KeyItem::DrawMods(BView *view, BRect r, int32 mod)
+void
+KeyItem::DrawMods(BView *view, BRect r, int32 mod)
 {
 	float w = -(r.Width()+2);
 	if (mod & B_SHIFT_KEY){
@@ -227,7 +234,8 @@ void KeyItem::DrawMods(BView *view, BRect r, int32 mod)
 	}
 }
 
-void KeyItem::DrawKey(BView *view, BRect r, const char *c)
+void
+KeyItem::DrawKey(BView *view, BRect r, const char *c)
 {
 	BFont font;
 	view->GetFont(&font);
@@ -249,7 +257,7 @@ void KeyItem::DrawKey(BView *view, BRect r, const char *c)
 }
 
 
-//================================================================================================= Dialog
+// Dialog
 
 class KeyControl : public BControl{
   public:
@@ -473,9 +481,7 @@ void KeyControl::DrawKey(BRect r, const char *c)
 #define CLEAR1			'clr1'
 #define CLEAR2			'clr2'
 
-/*******************************************************
-*   
-*******************************************************/
+
 SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView *v)
 	:
 	BWindow(BRect(p.x,p.y,p.x,p.y),
@@ -533,17 +539,17 @@ SetKeyWindow::SetKeyWindow(BPoint p, int32 i, BView *v)
 	Show();
 }
 
-/*******************************************************
-*   
-*******************************************************/
-bool SetKeyWindow::QuitRequested(){
+
+bool
+SetKeyWindow::QuitRequested()
+{
 	return true;
 }
 
-/*******************************************************
-*   
-*******************************************************/
-void SetKeyWindow::MessageReceived(BMessage* msg){
+
+void
+SetKeyWindow::MessageReceived(BMessage* msg)
+{
 	switch(msg->what){
 	case SET:
 		key = control1->GetKey();
@@ -571,9 +577,6 @@ void SetKeyWindow::MessageReceived(BMessage* msg){
 		BWindow::MessageReceived(msg);
 	}
 }
-
-//================================================================================================= View
-
 
 
 /*******************************************************
@@ -609,26 +612,24 @@ PrefKeys::PrefKeys()
 	.End();
 }
 
-/*******************************************************
-*  
-*******************************************************/
+
 PrefKeys::~PrefKeys()
 {
 }
 
-/*******************************************************
-*  
-*******************************************************/
-void PrefKeys::AttachedToWindow(){
+
+void
+PrefKeys::AttachedToWindow()
+{
 	list->SetTarget(this);
 //	list->SetSelectionMessage(new BMessage(SELECT));
 	list->SetInvocationMessage(new BMessage(SELECT));
 }
 
-/*******************************************************
-*  
-*******************************************************/
-void PrefKeys::Pulse(){
+
+void
+PrefKeys::Pulse()
+{
 	BListItem *item = NULL;
 	if (m_index<0){
 		while ((item = list->RemoveItem((int32)0)))	delete item;
@@ -659,10 +660,10 @@ void PrefKeys::Pulse(){
 	be_app->PostMessage(CHANGE_LANGUAGE);
 }
 
-/*******************************************************
-*
-*******************************************************/
-void PrefKeys::MessageReceived(BMessage *msg){
+
+void
+PrefKeys::MessageReceived(BMessage *msg)
+{
 	char s[255];
 	int32 i, index;
 	BScreen screen;

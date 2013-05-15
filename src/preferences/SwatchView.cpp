@@ -67,6 +67,10 @@ SwatchView::SwatchView(const char *name, BMessage* msg)
 	Init();
 	fName = name;
 	fActive = false;
+	fColor = { 0, 0, 0, 0 };
+	SetViewColor(B_TRANSPARENT_32_BIT);
+	SetHighColor(fColor);
+	DrawOffscreen();
 }
 
 SwatchView::SwatchView(const char *name, rgb_color color, BMessage* msg)
@@ -76,6 +80,8 @@ SwatchView::SwatchView(const char *name, rgb_color color, BMessage* msg)
 	Init();
 	fColor = color;
 	fName = name;
+	SetViewColor(B_TRANSPARENT_32_BIT);
+	SetHighColor(fColor);
 	DrawOffscreen();
 }
 

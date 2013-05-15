@@ -32,7 +32,6 @@
 
 #include "Globals.h"
 #include "PointersView.h"
-#include "MainWindow.h"
 #include "Preferences.h"
 
 #include <stdio.h>
